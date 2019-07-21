@@ -15,6 +15,8 @@
   "dependencies": {
     "@nuxtjs/vuetify": "0.5.5",
     "nuxt": "^2.0.0",
+    "pug": "^2.0.4",
+    "pug-plain-loader": "^1.0.0",
     "ts-node": "^8.3.0",
     "vue-property-decorator": "^8.2.1",
     "vuex-module-decorators": "^0.9.9"

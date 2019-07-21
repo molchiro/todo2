@@ -1,10 +1,8 @@
-<template>
-  <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
-      <div>{{ testHoge }}</div>
-      <v-btn @click="incr">!</v-btn>
-    </v-flex>
-  </v-layout>
+<template lang="pug">
+  v-layout(column justify-center align-center)
+    v-flex(xs12 sm8 md6)
+      div {{ testHoge }}
+      v-btn(@click="incr") !
 </template>
 
 <script lang="ts">
