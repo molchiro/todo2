@@ -16,7 +16,8 @@
     "@nuxtjs/vuetify": "0.5.5",
     "nuxt": "^2.0.0",
     "ts-node": "^8.3.0",
-    "vue-property-decorator": "^8.2.1"
+    "vue-property-decorator": "^8.2.1",
+    "vuex-module-decorators": "^0.9.9"
   },
   "devDependencies": {
     "@nuxt/typescript": "^2.8.1",

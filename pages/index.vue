@@ -1,7 +1,7 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
-      <div>{{ message }}</div>
+      <div>{{ testHoge }}</div>
       <v-btn @click="incr">!</v-btn>
     </v-flex>
   </v-layout>
@@ -9,13 +9,19 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { getModule } from 'vuex-module-decorators'
+import TestModule from '@/store/modules/test'
 
 @Component
 export default class indexPage extends Vue {
-  message: string = 'hello world!!'
+  testModule = getModule(TestModule, this.$store)
+
+  get testHoge() {
+    return this.testModule.hoge
+  }
 
   incr(): void {
-    this.message = this.message + '!'
+    this.testModule.incr()
   }
 }
 </script>
