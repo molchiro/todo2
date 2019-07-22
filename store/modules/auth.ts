@@ -1,7 +1,11 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { auth, provider } from '@/plugins/firebase'
 
-@Module({ namespaced: true, name: 'auth' })
+@Module({
+  namespaced: true,
+  name: 'auth',
+  stateFactory: true
+})
 export default class TestModule extends VuexModule {
   authedUserUid: string = ''
 
