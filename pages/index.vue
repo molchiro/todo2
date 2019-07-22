@@ -1,25 +1,30 @@
 <template lang="pug">
   v-layout(column justify-center align-center)
     v-flex(xs12 sm8 md6)
-      div {{ testHoge }}
-      v-btn(@click="incr") !
+      v-btn(@click="signIn") signIn
+      v-btn(@click="getUser") getUser
+      div {{ authedUserUid }}
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
-import TestModule from '@/store/modules/test'
+import AuthModule from '@/store/modules/auth'
 
 @Component
 export default class indexPage extends Vue {
-  testModule = getModule(TestModule, this.$store)
+  authModule = getModule(AuthModule, this.$store)
 
-  get testHoge() {
-    return this.testModule.hoge
+  get authedUserUid(): string {
+    return this.authModule.authedUserUid
   }
 
-  incr(): void {
-    this.testModule.incr()
+  signIn(): void {
+    this.authModule.signIn()
+  }
+
+  getUser(): void {
+    this.authModule.getCurrentUser()
   }
 }
 </script>
