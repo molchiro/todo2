@@ -1,8 +1,7 @@
 <template lang="pug">
   v-layout(column justify-center align-center)
     v-flex(xs12 sm8 md6)
-      v-btn(@click="signOut") SIGNOUT
-      div {{ authedUserUid }}
+      v-btn(@click="signIn") SIGNIN
 </template>
 
 <script lang="ts">
@@ -14,13 +13,8 @@ import AuthModule from '@/store/modules/auth'
 export default class indexPage extends Vue {
   authModule = getModule(AuthModule, this.$store)
 
-  get authedUserUid(): string {
-    return this.authModule.authedUserUid
-  }
-
-  signOut(): void {
-    this.authModule.signOut()
-    this.$router.push('sign_in')
+  signIn(): void {
+    this.authModule.signIn()
   }
 }
 </script>

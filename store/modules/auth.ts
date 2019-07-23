@@ -1,5 +1,6 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { auth, provider } from '@/plugins/firebase'
+import { resolve } from 'dns';
 
 @Module({
   namespaced: true,
@@ -8,6 +9,10 @@ import { auth, provider } from '@/plugins/firebase'
 })
 export default class TestModule extends VuexModule {
   authedUserUid: string = ''
+
+  get isAuthed(): boolean {
+    return this.authedUserUid !== ''
+  }
 
   @Mutation
   setUid(uid: string) {
@@ -18,10 +23,18 @@ export default class TestModule extends VuexModule {
     auth.signInWithRedirect(provider)
   }
   @Action
+  signOut() {
+    auth.signOut()
+    this.setUid('')
+  }
+  @Action
   async getCurrentUser() {
-    await auth.onAuthStateChanged(user => {
-      const uid = user ? user.uid : ''
-      this.setUid(uid)
+    const currentUser: firebase.User | null = await new Promise(resolve => {
+      auth.onAuthStateChanged(user => {
+        resolve(user)
+      })
     })
+    const uid = currentUser ? currentUser.uid : ''
+    this.setUid(uid)
   }
 }

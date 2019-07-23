@@ -38,6 +38,9 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [],
+  router: {
+    middleware: 'authRouter'
+  },
   /*
    ** Nuxt.js modules
    */
