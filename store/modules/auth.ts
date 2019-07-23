@@ -1,6 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { auth, provider } from '@/plugins/firebase'
-import { resolve } from 'dns';
 
 @Module({
   namespaced: true,
