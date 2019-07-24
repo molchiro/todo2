@@ -14,13 +14,13 @@ import TodosModule from '@/store/modules/todos'
 
 @Component
 export default class TodoPost extends Vue {
-  authModule = getModule(TodosModule, this.$store)
+  todosModule = getModule(TodosModule, this.$store)
 
   content: string = ''
 
   add(): void {
     if (this.content) {
-      this.authModule.add(this.content)
+      this.todosModule.add(this.content)
       this.content = ''
     }
   }

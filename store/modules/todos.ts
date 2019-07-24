@@ -9,7 +9,8 @@ const todosRef = db.collection('todos')
 })
 export default class TodosModule extends VuexModule {
   @Action
-  add(content: string) {
+  // 初回の投稿時、priorityでバグりそう
+  add(content: string): void {
     todosRef.add({
       uid: this.context.rootState.auth.authedUserUid,
       content: content,
