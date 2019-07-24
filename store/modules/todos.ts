@@ -3,7 +3,7 @@ import { db } from '@/plugins/firebase'
 const todosRef = db.collection('todos')
 
 interface todo {
-  key: string,
+  id: string,
   uid: string,
   content: string,
   priority: number,
@@ -23,6 +23,10 @@ export default class TodosModule extends VuexModule {
   addTodo(todo: todo) {
     this.todos.push(todo)
   }
+  @Mutation
+  removeTodo(removedTodoId: string) {
+    this.todos = this.todos.filter(todo => todo.id !== removedTodoId)
+  }
 
   @Action
   // 初回の投稿時、priorityでバグりそう
@@ -36,6 +40,10 @@ export default class TodosModule extends VuexModule {
     })
   }
   @Action
+  delete(id: string): void {
+    todosRef.doc(id).delete()
+  }
+  @Action
   bind(): void {
     todosRef.where("uid", "==", this.context.rootState.auth.authedUserUid)
       .onSnapshot(snapshot =>  {
@@ -43,7 +51,7 @@ export default class TodosModule extends VuexModule {
           if (change.type === "added") {
             const doc = change.doc
             this.addTodo({
-              key: doc.id,
+              id: doc.id,
               uid: doc.data().uid,
               content: doc.data().content,
               priority: doc.data().priority,
@@ -55,7 +63,7 @@ export default class TodosModule extends VuexModule {
             console.log("Modified: ", change.doc.data());
           }
           if (change.type === "removed") {
-            console.log("Removed: ", change.doc.data());
+            this.removeTodo(change.doc.id)
           }
         })
       })

@@ -3,9 +3,11 @@
     v-list
       v-list-tile(
         v-for="todo in todos"
-        :key="todo.key"
+        :key="todo.id"
       )
-        v-list-tile-content {{ todo.content }}
+        todo-item(
+          :todo="todo"
+        )
 </template>
 
 <script lang="ts">
@@ -13,7 +15,11 @@ import { Vue, Component } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
 
-@Component
+@Component({
+  components: {
+    TodoItem: () => import('@/components/TodoItem.vue')
+  }
+})
 export default class TodoPost extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
