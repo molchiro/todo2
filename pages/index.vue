@@ -3,6 +3,7 @@
     v-flex(xs12 sm8 md6)
       v-btn(@click="signOut") SIGNOUT
       todo-post
+      todo-list
 </template>
 
 <script lang="ts">
@@ -12,7 +13,8 @@ import AuthModule from '@/store/modules/auth'
 
 @Component({
   components: {
-    TodoPost: () => import('@/components/TodoPost.vue')
+    TodoPost: () => import('@/components/TodoPost.vue'),
+    TodoList: () => import('@/components/TodoList.vue')
   }
 })
 export default class indexPage extends Vue {
