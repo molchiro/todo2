@@ -1,13 +1,17 @@
 <template lang="pug">
   v-layout
     v-list
-      v-list-tile(
-        v-for="todo in todos"
-        :key="todo.id"
+      draggable(
+        :list="todos"
+        @end="draggableEnd"
       )
-        todo-item(
-          :todo="todo"
+        v-list-tile(
+          v-for="todo in todos"
+          :key="todo.id"
         )
+          todo-item(
+            :todo="todo"
+          )
 </template>
 
 <script lang="ts">
@@ -17,7 +21,8 @@ import TodosModule from '@/store/modules/todos'
 
 @Component({
   components: {
-    TodoItem: () => import('@/components/TodoItem.vue')
+    TodoItem: () => import('@/components/TodoItem.vue'),
+    draggable: () => import('vuedraggable')
   }
 })
 export default class TodoPost extends Vue {
@@ -31,6 +36,10 @@ export default class TodoPost extends Vue {
 
   created(): void {
     this.todosModule.bind()
+  }
+
+  draggableEnd(e): void {
+    this.todosModule.updatePriority(e)
   }
 }
 </script>

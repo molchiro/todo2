@@ -71,6 +71,14 @@ export default class TodosModule extends VuexModule {
     })
   }
   @Action
+  updatePriority(e) {
+    const targetId = this.todos[e.oldIndex].id
+    const newPriority = (this.todos[e.newIndex].priority + this.todos[e.newIndex + 1].priority) / 2
+    todosRef.doc(targetId).update({
+      priority: newPriority
+    })
+  }
+  @Action
   bind(): void {
     todosRef.where("uid", "==", this.context.rootState.auth.authedUserUid)
       .onSnapshot(snapshot =>  {
