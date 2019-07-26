@@ -32,7 +32,22 @@ export default class TodosModule extends VuexModule {
     const updatedTodoIndex: number = this.todos.findIndex(el => el.id === todo.id)
     this.todos.splice(updatedTodoIndex, 1, todo)
   }
-
+  @Mutation
+  sort() {
+    this.todos = [...this.todos.sort((a, b) => {
+      if (a.done < b.done) return -1
+      if (a.done > b.done) return 1
+      if (!a.doneAt && b.doneAt) return -1
+      if (a.doneAt && !b.doneAt) return 1
+      if (a.doneAt && b.doneAt) {
+        if (a.doneAt > b.doneAt) return -1
+        if (a.doneAt < b.doneAt) return 1
+      }
+      if (a.priority > b.priority) return -1
+      if (a.priority < b.priority) return 1
+      return 0
+    })]
+  }
   @Action
   // 初回の投稿時、priorityでバグりそう
   add(content: string): void {
@@ -52,7 +67,7 @@ export default class TodosModule extends VuexModule {
   done(payload: { id: string, done: boolean }): void {
     todosRef.doc(payload.id).update({
       done: payload.done,
-      doneAt: serverTimeStamp
+      doneAt: payload.done ? serverTimeStamp : null
     })
   }
   @Action
@@ -86,6 +101,7 @@ export default class TodosModule extends VuexModule {
             this.removeTodo(change.doc.id)
           }
         })
+      this.sort()
       })
     }
 }
