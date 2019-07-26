@@ -1,6 +1,7 @@
 <template lang="pug">
-  v-flex
-    v-list-tile-content {{ todo.content }}
+  v-layout(row)
+    v-checkbox(v-model="done")
+    v-flex {{ todo.content }}
     v-icon(
       @click="deleteMe"
     ) delete
@@ -16,6 +17,14 @@ export default class TodoItem extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
   @Prop() todo
+
+  get done() {
+    return this.todo.done
+  }
+
+  set done(val) {
+    this.todosModule.done({ id: this.todo.id, done: val })
+  }
 
   deleteMe() {
     this.todosModule.delete(this.todo.id)

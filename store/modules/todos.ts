@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { db } from '@/plugins/firebase'
+import { db, serverTimeStamp } from '@/plugins/firebase'
 const todosRef = db.collection('todos')
 
 interface todo {
@@ -8,7 +8,7 @@ interface todo {
   content: string,
   priority: number,
   done: boolean,
-  doneAt: Date | null
+  doneAt: firebase.firestore.FieldValue | null
 }
 
 @Module({
@@ -25,7 +25,12 @@ export default class TodosModule extends VuexModule {
   }
   @Mutation
   removeTodo(removedTodoId: string) {
-    this.todos = this.todos.filter(todo => todo.id !== removedTodoId)
+    this.todos = this.todos.filter(el => el.id !== removedTodoId)
+  }
+  @Mutation
+  updateTodo(todo: todo) {
+    const updatedTodoIndex: number = this.todos.findIndex(el => el.id === todo.id)
+    this.todos.splice(updatedTodoIndex, 1, todo)
   }
 
   @Action
@@ -44,6 +49,13 @@ export default class TodosModule extends VuexModule {
     todosRef.doc(id).delete()
   }
   @Action
+  done(payload: { id: string, done: boolean }): void {
+    todosRef.doc(payload.id).update({
+      done: payload.done,
+      doneAt: serverTimeStamp
+    })
+  }
+  @Action
   bind(): void {
     todosRef.where("uid", "==", this.context.rootState.auth.authedUserUid)
       .onSnapshot(snapshot =>  {
@@ -60,7 +72,15 @@ export default class TodosModule extends VuexModule {
             })
           }
           if (change.type === "modified") {
-            console.log("Modified: ", change.doc.data());
+            const doc = change.doc
+            this.updateTodo({
+              id: doc.id,
+              uid: doc.data().uid,
+              content: doc.data().content,
+              priority: doc.data().priority,
+              done: doc.data().done,
+              doneAt: doc.data().doneAt
+            })
           }
           if (change.type === "removed") {
             this.removeTodo(change.doc.id)
