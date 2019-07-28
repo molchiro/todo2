@@ -31,7 +31,7 @@ export default class TodoPost extends Vue {
   content: string = ''
 
   get todos() {
-    return this.todosModule.todos
+    return this.todosModule.getTodos
   }
 
   created(): void {

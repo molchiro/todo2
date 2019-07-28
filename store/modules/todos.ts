@@ -19,6 +19,10 @@ interface todo {
 export default class TodosModule extends VuexModule {
   todos: todo[] = []
 
+  get getTodos(): todo[] {
+    return [...this.todos]
+  }
+
   @Mutation
   addTodo(todo: todo) {
     this.todos.push(todo)
@@ -48,6 +52,7 @@ export default class TodosModule extends VuexModule {
       return 0
     })]
   }
+  
   @Action
   // 初回の投稿時、priorityでバグりそう
   add(content: string): void {
