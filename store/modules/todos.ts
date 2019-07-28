@@ -22,6 +22,12 @@ export default class TodosModule extends VuexModule {
   get getTodos(): todo[] {
     return [...this.todos]
   }
+  get maxPriority(): number {
+    return Math.max(0, ...this.todos.map(x => x.priority))
+  }
+  get lowestNotYetTodoIndex(): number {
+    return this.todos.filter(x => x.done === false).length - 1
+  }
 
   @Mutation
   addTodo(todo: todo) {
@@ -52,14 +58,13 @@ export default class TodosModule extends VuexModule {
       return 0
     })]
   }
-  
+
   @Action
-  // 初回の投稿時、priorityでバグりそう
   add(content: string): void {
     todosRef.add({
       uid: this.context.rootState.auth.authedUserUid,
       content: content,
-      priority: Math.random() * 10,
+      priority: this.maxPriority + 1,
       done: false,
       doneAt: null
     })
@@ -77,8 +82,18 @@ export default class TodosModule extends VuexModule {
   }
   @Action
   updatePriority(e) {
+    if (this.todos[e.oldIndex].done) return
     const targetId = this.todos[e.oldIndex].id
-    const newPriority = (this.todos[e.newIndex].priority + this.todos[e.newIndex + 1].priority) / 2
+    let newPriority: number = 0
+    if (e.newIndex === 0) {
+      newPriority = this.maxPriority + 1
+    } else if (e.newIndex >= this.lowestNotYetTodoIndex) {
+      newPriority = this.todos[this.lowestNotYetTodoIndex].priority * 0.9
+    } else if (e.newIndex > e.oldIndex) {
+      newPriority = (this.todos[e.newIndex].priority + this.todos[e.newIndex + 1].priority) / 2
+    } else {
+      newPriority = (this.todos[e.newIndex - 1].priority + this.todos[e.newIndex].priority) / 2
+    }
     todosRef.doc(targetId).update({
       priority: newPriority
     })
