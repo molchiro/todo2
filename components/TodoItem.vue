@@ -1,6 +1,9 @@
 <template lang="pug">
-  v-layout(row)
-    v-checkbox(v-model="done")
+  v-layout.my-2(row)
+    v-checkbox.mt-0.pt-0(
+      v-model="done"
+      hide-details
+    )
     v-flex {{ todo.content }}
     v-icon(
       @click="deleteMe"

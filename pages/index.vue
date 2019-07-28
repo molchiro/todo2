@@ -1,7 +1,10 @@
 <template lang="pug">
-  v-layout(column justify-center align-center)
-    v-flex(xs12 sm8 md6)
-      v-btn(@click="signOut") SIGNOUT
+  v-layout
+    v-flex
+      v-btn(
+        @click="signOut"
+        block
+      ) SIGNOUT
       todo-post
       todo-list
 </template>

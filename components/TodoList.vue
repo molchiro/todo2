@@ -1,11 +1,12 @@
 <template lang="pug">
-  v-layout
-    v-list
+  v-card
+    v-container
       draggable(
         :list="todos"
         @end="draggableEnd"
+        :delay="50"
       )
-        v-list-tile(
+        v-flex(
           v-for="todo in todos"
           :key="todo.id"
         )

@@ -1,10 +1,11 @@
 <template lang="pug">
-  v-layout
-    v-text-field(
-      v-model="content"
-      append-icon="create"
-      @click:append="add"
-    )
+  v-card
+    v-container.py-0.my-2
+      v-text-field(
+        v-model="content"
+        append-icon="create"
+        @click:append="add"
+      )
 </template>
 
 <script lang="ts">
