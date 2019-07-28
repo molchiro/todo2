@@ -45,16 +45,14 @@ export default class TodosModule extends VuexModule {
   @Mutation
   sort() {
     this.todos = [...this.todos.sort((a, b) => {
-      if (a.done < b.done) return -1
-      if (a.done > b.done) return 1
+      return b.priority - a.priority
+    }).sort((a, b) => {
       if (!a.doneAt && b.doneAt) return -1
       if (a.doneAt && !b.doneAt) return 1
       if (a.doneAt && b.doneAt) {
         if (a.doneAt > b.doneAt) return -1
         if (a.doneAt < b.doneAt) return 1
       }
-      if (a.priority > b.priority) return -1
-      if (a.priority < b.priority) return 1
       return 0
     })]
   }
