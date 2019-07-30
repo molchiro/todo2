@@ -17,19 +17,22 @@ export default class TestModule extends VuexModule {
   setUid(uid: string) {
     this.authedUserUid = uid
   }
+
   @Action
   signIn() {
     auth.signInWithRedirect(provider)
   }
+
   @Action
   signOut() {
     auth.signOut()
     this.setUid('')
   }
+
   @Action
   async getCurrentUser() {
-    const currentUser: firebase.User | null = await new Promise(resolve => {
-      auth.onAuthStateChanged(user => {
+    const currentUser: firebase.User | null = await new Promise((resolve) => {
+      auth.onAuthStateChanged((user) => {
         resolve(user)
       })
     })
