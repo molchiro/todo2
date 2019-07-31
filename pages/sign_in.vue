@@ -13,7 +13,7 @@ import { getModule } from 'vuex-module-decorators'
 import AuthModule from '@/store/modules/auth'
 
 @Component
-export default class indexPage extends Vue {
+export default class signInPage extends Vue {
   authModule = getModule(AuthModule, this.$store)
 
   signIn(): void {
