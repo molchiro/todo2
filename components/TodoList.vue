@@ -10,9 +10,7 @@
           v-for="todo in todos"
           :key="todo.id"
         )
-          todo-item(
-            :todo="todo"
-          )
+          todo-item(:todo="todo")
 </template>
 
 <script lang="ts">

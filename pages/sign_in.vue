@@ -1,6 +1,9 @@
 <template lang="pug">
-  v-layout(column justify-center align-center)
-    v-flex(xs12 sm8 md6)
+  v-layout(
+    column
+    align-center
+  )
+    v-flex
       v-btn(@click="signIn") SIGNIN
 </template>
 
