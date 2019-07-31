@@ -26,7 +26,7 @@ import TodosModule from '@/store/modules/todos'
     draggable: () => import('vuedraggable')
   }
 })
-export default class TodoPost extends Vue {
+export default class TodoList extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
   content: string = ''
