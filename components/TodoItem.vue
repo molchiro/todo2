@@ -14,12 +14,13 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
+import { todo } from '@/types/index'
 
 @Component
 export default class TodoItem extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
-  @Prop() todo
+  @Prop() todo: todo
 
   get done() {
     return this.todo.done

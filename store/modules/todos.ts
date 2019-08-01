@@ -1,15 +1,7 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db, serverTimeStamp } from '@/plugins/firebase'
+import { todo } from '@/types/index'
 const todosRef = db.collection('todos')
-
-interface todo {
-  id: string
-  uid: string
-  content: string
-  priority: number
-  done: boolean
-  doneAt: firebase.firestore.FieldValue | null
-}
 
 @Module({
   namespaced: true,

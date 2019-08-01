@@ -17,6 +17,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
+import { todo } from '@/types/index'
 
 @Component({
   components: {
@@ -29,7 +30,7 @@ export default class TodoList extends Vue {
 
   content: string = ''
 
-  get todos() {
+  get todos(): todo[] {
     return this.todosModule.getTodos
   }
 
