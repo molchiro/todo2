@@ -5,6 +5,7 @@
         v-model="content"
         append-icon="create"
         @click:append="add"
+        @keypress.enter="add"
       )
 </template>
 
