@@ -23,10 +23,6 @@ import AuthModule from '@/store/modules/auth'
 export default class indexPage extends Vue {
   authModule = getModule(AuthModule, this.$store)
 
-  get authedUserUid(): string {
-    return this.authModule.authedUserUid
-  }
-
   signOut(): void {
     this.authModule.signOut()
     this.$router.push('sign_in')

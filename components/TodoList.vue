@@ -28,7 +28,6 @@ import { todo } from '@/types/index'
 export default class TodoList extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
-  content: string = ''
 
   get todos(): todo[] {
     return this.todosModule.getTodos
