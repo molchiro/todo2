@@ -6,8 +6,8 @@
     )
     v-flex {{ todo.content }}
     v-icon(
-      @click="deleteMe"
-    ) delete
+      @click="startEdit"
+    ) edit
 </template>
 
 <script lang="ts">
@@ -17,7 +17,7 @@ import TodosModule from '@/store/modules/todos'
 import { todo } from '@/types/index'
 
 @Component
-export default class TodoItem extends Vue {
+export default class TodoItemShow extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
   @Prop() todo: todo
@@ -27,11 +27,11 @@ export default class TodoItem extends Vue {
   }
 
   set done(val) {
-    this.todosModule.done({ id: this.todo.id, done: val })
+    this.todosModule.updateDone({ id: this.todo.id, done: val })
   }
 
-  deleteMe() {
-    this.todosModule.delete(this.todo.id)
+  startEdit() {
+    this.$emit('startEdit')
   }
 }
 </script>

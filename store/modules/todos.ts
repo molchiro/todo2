@@ -43,7 +43,7 @@ export default class TodosModule extends VuexModule {
       return el.id !== removedTodoId
     })
   }
-
+  
   @Mutation
   updateTodo(todo: todo) {
     const updatedTodoIndex: number = this.todos.findIndex((el) => {
@@ -94,11 +94,16 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  done(payload: { id: string; done: boolean }): void {
+  updateDone(payload: { id: string; done: boolean }): void {
     todosRef.doc(payload.id).update({
       done: payload.done,
       doneAt: payload.done ? serverTimeStamp : null
     })
+  }
+
+  @Action
+  updateContent(payload: { id: string; content: string }): void {
+    todosRef.doc(payload.id).update({ content: payload.content })
   }
 
   @Action

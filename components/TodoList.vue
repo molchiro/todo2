@@ -10,7 +10,16 @@
           v-for="todo in todos"
           :key="todo.id"
         )
-          todo-item(:todo="todo")
+          todo-item-edit(
+            v-if="todo.id === selectedTodoId"
+            :todo="todo"
+            @endEdit="setSelectedTodoId('')"
+          )
+          todo-item-show(
+            v-else
+            :todo="todo"
+            @startEdit="setSelectedTodoId(todo.id)"
+          )
 </template>
 
 <script lang="ts">
@@ -21,13 +30,15 @@ import { todo } from '@/types/index'
 
 @Component({
   components: {
-    TodoItem: () => import('@/components/TodoItem.vue'),
+    TodoItemEdit: () => import('@/components/TodoItemEdit.vue'),
+    TodoItemShow: () => import('@/components/TodoItemShow.vue'),
     draggable: () => import('vuedraggable')
   }
 })
 export default class TodoList extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
+  selectedTodoId: string = ''
 
   get todos(): todo[] {
     return this.todosModule.getTodos
@@ -39,6 +50,10 @@ export default class TodoList extends Vue {
 
   draggableEnd(e): void {
     this.todosModule.updatePriority(e)
+  }
+
+  setSelectedTodoId(id: string) {
+    this.selectedTodoId = id
   }
 }
 </script>
