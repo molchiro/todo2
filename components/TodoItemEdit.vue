@@ -1,32 +1,26 @@
 <template lang="pug">
-  v-layout.my-2(column)
+  v-layout.pt-2.grey.lighten-3(column)
     v-layout(row)
-      v-flex(xs-1)
-        v-checkbox.mt-0.pt-0(
-          v-model="done"
-          hide-details
-        )
-      v-flex(grow)
-        v-text-field(
+      v-flex(
+        offset-xs1
+      )
+        v-text-field.white(
           v-model="content"
           outline
           single-line
           hide-details
         )
+      v-flex(xs1)
+        v-icon(
+          @click="deleteMe"
+        ) delete
     v-layout(row)
+      v-spacer(grow)
       v-flex(
-        offset-xs1
         @click="updateContent"
+        shrink
       ) 更新
-      v-flex(
-        @click="cancelEdit"
-      ) キャンセル
-      v-spacer
-      v-flex(
-        xs-1
-        @click="deleteMe"
-      ) 削除
-      v-spacer(xs-1)
+      v-flex(xs1)
 </template>
 
 <script lang="ts">
@@ -43,24 +37,12 @@ export default class TodoItemEdit extends Vue {
 
   @Prop() todo: todo
 
-  get done() {
-    return this.todo.done
-  }
-
-  set done(val) {
-    this.todosModule.updateDone({ id: this.todo.id, done: val })
-  }
-
   created() {
     this.content = this.todo.content
   }
 
   updateContent() {
     this.todosModule.updateContent({ id: this.todo.id, content: this.content })
-    this.$emit('endEdit')
-  }
-
-  cancelEdit() {
     this.$emit('endEdit')
   }
 
