@@ -42,7 +42,12 @@ export default class TodoItemEdit extends Vue {
   }
 
   updateContent() {
-    this.todosModule.updateContent({ id: this.todo.id, content: this.content })
+    if (this.content) {
+      this.todosModule.updateContent({
+        id: this.todo.id,
+        content: this.content
+      })
+    }
     this.$emit('endEdit')
   }
 
