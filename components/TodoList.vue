@@ -13,11 +13,12 @@
           todo-item-edit(
             v-if="todo.id === selectedTodoId"
             :todo="todo"
-            @endEdit="setSelectedTodoId('')"
+            @endEdit="clearSelectedTodoId"
           )
           todo-item-show(
             v-else
             :todo="todo"
+            @click.native.capture="clearSelectedTodoId"
             @startEdit="setSelectedTodoId(todo.id)"
           )
 </template>
@@ -54,6 +55,10 @@ export default class TodoList extends Vue {
 
   setSelectedTodoId(id: string) {
     this.selectedTodoId = id
+  }
+
+  clearSelectedTodoId() {
+    this.selectedTodoId = ''
   }
 }
 </script>
