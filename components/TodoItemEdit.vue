@@ -1,26 +1,24 @@
 <template lang="pug">
-  v-layout.pt-2.grey.lighten-3(column)
-    v-layout(row)
-      v-flex(
-        offset-xs1
+  v-layout.py-2.grey.lighten-3
+    v-flex(
+      offset-xs1
+    )
+      v-text-field.white(
+        v-model="content"
+        outline
+        single-line
+        hide-details
       )
-        v-text-field.white(
-          v-model="content"
-          outline
-          single-line
-          hide-details
-        )
-      v-flex(xs1)
-        v-icon(
-          @click="deleteMe"
-        ) delete
-    v-layout(row)
-      v-spacer(grow)
-      v-flex(
-        @click="updateContent"
-        shrink
-      ) 更新
-      v-flex(xs1)
+    v-flex(xs1)
+      v-layout(wrap)
+        v-flex
+          v-icon(
+            @click="updateContent"
+          ) edit
+        v-flex
+          v-icon(
+            @click="deleteMe"
+          ) delete
 </template>
 
 <script lang="ts">

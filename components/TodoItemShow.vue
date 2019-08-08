@@ -7,7 +7,7 @@
     v-flex {{ todo.content }}
     v-icon(
       @click="startEdit"
-    ) edit
+    ) more_horiz
 </template>
 
 <script lang="ts">
