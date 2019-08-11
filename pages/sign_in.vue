@@ -12,7 +12,9 @@ import { Vue, Component } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import AuthModule from '@/store/modules/auth'
 
-@Component
+@Component({
+  layout: 'titleOnly'
+})
 export default class signInPage extends Vue {
   authModule = getModule(AuthModule, this.$store)
 
