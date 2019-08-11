@@ -1,5 +1,20 @@
 <template lang="pug">
   v-layout.py-2.grey.lighten-3
+    v-dialog(v-model="isShowDeleteDialog")
+      v-card
+        v-card-text 削除しますか？
+        v-divider
+        v-card-actions
+          v-spacer
+          v-btn(
+            flat
+            @click="isShowDeleteDialog = false"
+            ) いいえ
+          v-divider(vertical)
+          v-btn(
+            flat
+            @click="deleteMe"
+            ) はい
     v-flex(
       offset-xs1
     )
@@ -10,14 +25,15 @@
         hide-details
       )
     v-flex(xs1)
-      v-layout(wrap)
+      v-layout.pl-1(wrap)
         v-flex
           v-icon(
             @click="updateContent"
+            :color="canUpdate ? 'primary' : 'grey lighten-1'"
           ) edit
-        v-flex
+        v-flex.pt-1
           v-icon(
-            @click="deleteMe"
+            @click="showDeleteDialog"
           ) delete
 </template>
 
@@ -33,24 +49,35 @@ export default class TodoItemEdit extends Vue {
 
   content: string = ''
 
+  isShowDeleteDialog = false
+
   @Prop() todo: todo
+
+  get canUpdate() {
+    return this.content !== this.todo.content && this.content
+  }
 
   created() {
     this.content = this.todo.content
   }
 
   updateContent() {
-    if (this.content) {
+    if (this.canUpdate) {
       this.todosModule.updateContent({
         id: this.todo.id,
         content: this.content
       })
+      this.$emit('endEdit')
     }
-    this.$emit('endEdit')
+  }
+
+  showDeleteDialog() {
+    this.isShowDeleteDialog = true
   }
 
   deleteMe() {
     this.todosModule.delete(this.todo.id)
+    this.isShowDeleteDialog = false
   }
 }
 </script>
