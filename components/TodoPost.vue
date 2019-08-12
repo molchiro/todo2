@@ -1,6 +1,6 @@
 <template lang="pug">
   v-card
-    v-container.py-0.my-2
+    v-container.py-0
       v-text-field(
         v-model="content"
         append-icon="create"

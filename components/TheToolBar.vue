@@ -1,5 +1,10 @@
 <template lang="pug">
-  v-toolbar(color="indigo" dark fixed app)
+  v-toolbar(
+    color="primary"
+    dark
+    fixed
+    app
+  )
     v-toolbar-side-icon(@click.stop="toggleSideNav")
     v-toolbar-title Todo List
 </template>

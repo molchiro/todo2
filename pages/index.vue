@@ -1,7 +1,7 @@
 <template lang="pug">
   v-layout
     v-flex
-      todo-post
+      todo-post.mb-2
       todo-list
 </template>
 
