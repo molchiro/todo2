@@ -6,7 +6,7 @@ import { auth, provider } from '@/plugins/firebase'
   name: 'auth',
   stateFactory: true
 })
-export default class TestModule extends VuexModule {
+export default class AuthModule extends VuexModule {
   authedUserUid: string = ''
 
   get isAuthed(): boolean {
