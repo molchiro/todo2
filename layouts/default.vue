@@ -21,7 +21,7 @@ import TheSideNav from '@/components/TheSideNav.vue'
 export default class defaultLayout extends Vue {
   isShowSideNav: boolean | null = null
 
-  toggleSideNav() {
+  toggleSideNav(): void {
     this.isShowSideNav = !this.isShowSideNav
   }
 }

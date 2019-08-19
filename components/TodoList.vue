@@ -56,11 +56,11 @@ export default class TodoList extends Vue {
     this.todosModule.updatePriority(e)
   }
 
-  setSelectedTodoId(id: string) {
+  setSelectedTodoId(id: string): void {
     this.selectedTodoId = id
   }
 
-  clearSelectedTodoId() {
+  clearSelectedTodoId(): void {
     this.selectedTodoId = ''
   }
 }

@@ -33,19 +33,19 @@ export default class TodosModule extends VuexModule {
   }
 
   @Mutation
-  addTodo(todo: todo) {
+  private addTodo_(todo: todo): void {
     this.todos.push(todo)
   }
 
   @Mutation
-  removeTodo(removedTodoId: string) {
+  private removeTodo_(removedTodoId: string): void {
     this.todos = this.todos.filter((el) => {
       return el.id !== removedTodoId
     })
   }
   
   @Mutation
-  updateTodo(todo: todo) {
+  private updateTodo_(todo: todo): void {
     const updatedTodoIndex: number = this.todos.findIndex((el) => {
       return el.id === todo.id
     })
@@ -53,7 +53,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Mutation
-  sort() {
+  private sort_(): void {
     this.todos = [
       ...this.todos
         .sort((a, b) => {
@@ -107,7 +107,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  updatePriority(e) {
+  updatePriority(e): void {
     if (this.todos[e.oldIndex].done) return
     const targetId = this.todos[e.oldIndex].id
     let newPriority: number = 0
@@ -139,7 +139,7 @@ export default class TodosModule extends VuexModule {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
             const doc = change.doc
-            this.addTodo({
+            this.addTodo_({
               id: doc.id,
               uid: doc.data().uid,
               content: doc.data().content,
@@ -150,7 +150,7 @@ export default class TodosModule extends VuexModule {
           }
           if (change.type === 'modified') {
             const doc = change.doc
-            this.updateTodo({
+            this.updateTodo_({
               id: doc.id,
               uid: doc.data().uid,
               content: doc.data().content,
@@ -160,10 +160,10 @@ export default class TodosModule extends VuexModule {
             })
           }
           if (change.type === 'removed') {
-            this.removeTodo(change.doc.id)
+            this.removeTodo_(change.doc.id)
           }
         })
-        this.sort()
+        this.sort_()
       })
   }
 }

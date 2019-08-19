@@ -37,7 +37,7 @@ export default class TodoItemShow extends Vue {
 
   @Prop() todo: todo
 
-  get done() {
+  get done(): boolean {
     return this.todo.done
   }
 
@@ -45,7 +45,7 @@ export default class TodoItemShow extends Vue {
     this.todosModule.updateDone({ id: this.todo.id, done: val })
   }
 
-  startEdit() {
+  startEdit(): void {
     this.$emit('startEdit')
   }
 }

@@ -10,7 +10,7 @@ export default class AuthModule extends VuexModule {
   authedUserUid: string = ''
 
   @Mutation
-  setUid(uid: string) {
+  private setUid_(uid: string): void {
     this.authedUserUid = uid
   }
 
@@ -22,7 +22,7 @@ export default class AuthModule extends VuexModule {
   @Action
   signOut(): void {
     auth.signOut()
-    this.setUid('')
+    this.setUid_('')
   }
 
   @Action
@@ -35,7 +35,7 @@ export default class AuthModule extends VuexModule {
           })
         })
         const uid = currentUser ? currentUser.uid : ''
-        this.setUid(uid)
+        this.setUid_(uid)
       }
       resolve(this.authedUserUid)
     })

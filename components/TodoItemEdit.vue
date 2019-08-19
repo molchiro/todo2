@@ -54,19 +54,19 @@ export default class TodoItemEdit extends Vue {
 
   content: string = ''
 
-  isShowDeleteDialog = false
+  isShowDeleteDialog: boolean = false
 
   @Prop() todo: todo
 
-  get canUpdate() {
-    return this.content !== this.todo.content && this.content
+  get canUpdate(): boolean {
+    return this.content !== this.todo.content && !!this.content
   }
 
-  created() {
+  created(): void {
     this.content = this.todo.content
   }
 
-  updateContent() {
+  updateContent(): void {
     if (this.canUpdate) {
       this.todosModule.updateContent({
         id: this.todo.id,
@@ -76,11 +76,11 @@ export default class TodoItemEdit extends Vue {
     }
   }
 
-  showDeleteDialog() {
+  showDeleteDialog(): void {
     this.isShowDeleteDialog = true
   }
 
-  deleteMe() {
+  deleteMe(): void {
     this.todosModule.delete(this.todo.id)
     this.isShowDeleteDialog = false
   }
