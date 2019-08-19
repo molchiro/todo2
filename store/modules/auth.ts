@@ -9,34 +9,35 @@ import { auth, provider } from '@/plugins/firebase'
 export default class AuthModule extends VuexModule {
   authedUserUid: string = ''
 
-  get isAuthed(): boolean {
-    return this.authedUserUid !== ''
-  }
-
   @Mutation
   setUid(uid: string) {
     this.authedUserUid = uid
   }
 
   @Action
-  signIn() {
+  signIn(): void {
     auth.signInWithRedirect(provider)
   }
 
   @Action
-  signOut() {
+  signOut(): void {
     auth.signOut()
     this.setUid('')
   }
 
   @Action
-  async getCurrentUser() {
-    const currentUser: firebase.User | null = await new Promise((resolve) => {
-      auth.onAuthStateChanged((user) => {
-        resolve(user)
-      })
+  getCurrentUserUid() {
+    return new Promise(async (resolve) => {
+      if (!this.authedUserUid) {
+        const currentUser: firebase.User | null = await new Promise((resolve) => {
+          auth.onAuthStateChanged((user) => {
+            resolve(user)
+          })
+        })
+        const uid = currentUser ? currentUser.uid : ''
+        this.setUid(uid)
+      }
+      resolve(this.authedUserUid)
     })
-    const uid = currentUser ? currentUser.uid : ''
-    this.setUid(uid)
   }
 }
