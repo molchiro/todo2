@@ -25,16 +25,21 @@
         hide-details
       )
     v-flex(xs1)
-      v-layout.pl-1(wrap)
+      v-layout(
+        wrap
+        column
+      )
         v-flex
-          v-icon(
-            @click="updateContent"
-            :color="canUpdate ? 'primary' : 'grey lighten-1'"
-          ) edit
+          v-layout(justify-center)
+            v-icon(
+              @click="updateContent"
+              :color="canUpdate ? 'primary' : 'grey lighten-1'"
+            ) edit
         v-flex.pt-1
-          v-icon(
-            @click="showDeleteDialog"
-          ) delete
+          v-layout(justify-center)
+            v-icon(
+              @click="showDeleteDialog"
+            ) delete
 </template>
 
 <script lang="ts">
