@@ -133,31 +133,27 @@ export default class TodosModule extends VuexModule {
 
   @Action
   bind(): void {
+    const mapDoc2Todo = (doc: firebase.firestore.QueryDocumentSnapshot) => {
+      return {
+        id: doc.id,
+        uid: doc.data().uid,
+        content: doc.data().content,
+        priority: doc.data().priority,
+        done: doc.data().done,
+        doneAt: doc.data().doneAt
+      }
+    }
     todosRef
       .where('uid', '==', this.context.rootState.auth.authedUserUid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
             const doc = change.doc
-            this.addTodo_({
-              id: doc.id,
-              uid: doc.data().uid,
-              content: doc.data().content,
-              priority: doc.data().priority,
-              done: doc.data().done,
-              doneAt: doc.data().doneAt
-            })
+            this.addTodo_(mapDoc2Todo(doc))
           }
           if (change.type === 'modified') {
             const doc = change.doc
-            this.updateTodo_({
-              id: doc.id,
-              uid: doc.data().uid,
-              content: doc.data().content,
-              priority: doc.data().priority,
-              done: doc.data().done,
-              doneAt: doc.data().doneAt
-            })
+            this.updateTodo_(mapDoc2Todo(doc))
           }
           if (change.type === 'removed') {
             this.removeTodo_(change.doc.id)
