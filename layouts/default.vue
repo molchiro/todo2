@@ -9,11 +9,13 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import TheToolBar from '@/components/TheToolBar.vue'
+import TheSideNav from '@/components/TheSideNav.vue'
 
 @Component({
   components: {
-    TheToolBar: () => import('@/components/TheToolBar.vue'),
-    TheSideNav: () => import('@/components/TheSideNav.vue')
+    TheToolBar,
+    TheSideNav
   }
 })
 export default class defaultLayout extends Vue {

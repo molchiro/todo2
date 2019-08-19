@@ -7,11 +7,13 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import TodoPost from '@/components/TodoPost.vue'
+import TodoList from '@/components/TodoList.vue'
 
 @Component({
   components: {
-    TodoPost: () => import('@/components/TodoPost.vue'),
-    TodoList: () => import('@/components/TodoList.vue')
+    TodoPost,
+    TodoList
   }
 })
 export default class indexPage extends Vue {}

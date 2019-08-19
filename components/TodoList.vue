@@ -26,14 +26,17 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
+import draggable from 'vuedraggable'
 import TodosModule from '@/store/modules/todos'
 import { todo } from '@/types/index'
+import TodoItemEdit from '@/components/TodoItemEdit.vue'
+import TodoItemShow from '@/components/TodoItemShow.vue'
 
 @Component({
   components: {
-    TodoItemEdit: () => import('@/components/TodoItemEdit.vue'),
-    TodoItemShow: () => import('@/components/TodoItemShow.vue'),
-    draggable: () => import('vuedraggable')
+    TodoItemEdit,
+    TodoItemShow,
+    draggable
   }
 })
 export default class TodoList extends Vue {
