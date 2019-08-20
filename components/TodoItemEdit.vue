@@ -15,7 +15,7 @@
             flat
             @click="deleteMe"
             ) はい
-    v-flex(
+    v-flex.mr-1(
       offset-xs1
     )
       v-text-field.white(
@@ -35,7 +35,7 @@
               @click="updateContent"
               :color="canUpdate ? 'primary' : 'grey lighten-1'"
             ) edit
-        v-flex.pt-1
+        v-flex.pt-2
           v-layout(justify-center)
             v-icon(
               @click="showDeleteDialog"
