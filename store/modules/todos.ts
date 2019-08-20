@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { db, serverTimeStamp } from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 import { todo, todoData } from '@/types/index'
 const todosRef = db.collection('todos')
 
