@@ -59,18 +59,21 @@ export default class TodoItemEdit extends Vue {
   @Prop() todo: todo
 
   get canUpdate(): boolean {
-    return this.content !== this.todo.content && !!this.content
+    return this.content !== this.todo.data.content && !!this.content
   }
 
   created(): void {
-    this.content = this.todo.content
+    this.content = this.todo.data.content
   }
 
   updateContent(): void {
     if (this.canUpdate) {
-      this.todosModule.updateContent({
+      this.todosModule.update({
         id: this.todo.id,
-        content: this.content
+        data: {
+          ...this.todo.data,
+          content: this.content
+        }
       })
       this.$emit('endEdit')
     }

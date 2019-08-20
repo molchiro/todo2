@@ -45,7 +45,12 @@ export default class TodoList extends Vue {
   selectedTodoId: string = ''
 
   get todos(): todo[] {
-    return this.todosModule.getTodos
+    return this.todosModule.todos.map((todo) => {
+      return {
+        id: todo.id,
+        data: { ...todo.data }
+      }
+    })
   }
 
   created(): void {
@@ -53,7 +58,10 @@ export default class TodoList extends Vue {
   }
 
   draggableEnd(e): void {
-    this.todosModule.updatePriority(e)
+    this.todosModule.move({
+      oldIndex: e.oldIndex,
+      newIndex: e.newIndex
+    })
   }
 
   setSelectedTodoId(id: string): void {

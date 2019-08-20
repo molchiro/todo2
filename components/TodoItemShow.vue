@@ -13,7 +13,7 @@
           )
     v-flex(xs10)
       v-layout(justify-center)
-        div {{ todo.content }}
+        div {{ todo.data.content }}
     v-flex(xs1)
       v-layout(
         align-center
@@ -30,6 +30,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
 import { todo } from '@/types/index'
+import { serverTimeStamp } from '@/plugins/firebase'
 
 @Component
 export default class TodoItemShow extends Vue {
@@ -38,11 +39,18 @@ export default class TodoItemShow extends Vue {
   @Prop() todo: todo
 
   get done(): boolean {
-    return this.todo.done
+    return this.todo.data.done
   }
 
   set done(val) {
-    this.todosModule.updateDone({ id: this.todo.id, done: val })
+    this.todosModule.update({
+      id: this.todo.id,
+      data: {
+        ...this.todo.data,
+        done: val,
+        doneAt: val ? serverTimeStamp : null
+      }
+    })
   }
 
   startEdit(): void {
