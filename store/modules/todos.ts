@@ -12,7 +12,9 @@ export default class TodosModule extends VuexModule {
   todos: todo[] = []
 
   get getTodos(): todo[] {
-    return [...this.todos]
+    return this.todos.map((todo) => {
+      return { ...todo }
+    })
   }
 
   get maxPriority(): number {
