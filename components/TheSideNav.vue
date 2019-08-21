@@ -1,9 +1,9 @@
 <template lang="pug">
   v-navigation-drawer(
     :value="value"
+    @input="$emit('input', $event)"
     fixed
     app
-    @input="$emit('input', $event)"
   )
     v-list
       v-list-tile(@click="signOut")

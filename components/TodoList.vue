@@ -3,8 +3,8 @@
     v-container
       draggable(
         :list="todos"
-        @end="draggableEnd"
         :delay="50"
+        @end="draggableEnd"
       )
         v-flex(
           v-for="todo in todos"

@@ -7,14 +7,14 @@
         v-card-actions
           v-spacer
           v-btn(
-            flat
             @click="isShowDeleteDialog = false"
-            ) いいえ
+            flat
+          ) いいえ
           v-divider(vertical)
           v-btn(
-            flat
             @click="deleteMe"
-            ) はい
+            flat
+          ) はい
     v-flex.mr-1(
       offset-xs1
     )
@@ -32,14 +32,12 @@
         v-flex
           v-layout(justify-center)
             v-icon(
-              @click="updateContent"
               :color="canUpdate ? 'primary' : 'grey lighten-1'"
+              @click="updateContent"
             ) edit
         v-flex.pt-2
           v-layout(justify-center)
-            v-icon(
-              @click="showDeleteDialog"
-            ) delete
+            v-icon(@click="showDeleteDialog") delete
 </template>
 
 <script lang="ts">

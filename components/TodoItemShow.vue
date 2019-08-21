@@ -20,9 +20,7 @@
         justify-center
         fill-height
       )
-        v-icon(
-          @click="startEdit"
-        ) more_horiz
+        v-icon(@click="startEdit") more_horiz
 </template>
 
 <script lang="ts">

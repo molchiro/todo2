@@ -3,9 +3,9 @@
     v-container.py-0
       v-text-field(
         v-model="content"
-        append-icon="create"
         @click:append="add"
         @keypress.enter="add"
+        append-icon="create"
       )
 </template>
 
