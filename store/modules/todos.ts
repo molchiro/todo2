@@ -56,19 +56,14 @@ export default class TodosModule extends VuexModule {
           return b.data.priority - a.data.priority
         })
         .sort((a, b) => {
-          if (!a.data.done && b.data.done) return -1
-          if (a.data.done && !b.data.done) return 1
-          return 0
+          return Number(a.data.done) - Number(b.data.done)
         })
         .sort((a, b) => {
-          // doneにしてもdoneAtに値が入るまで時間差があるため、
-          // done === false and doneAt === nullのレコードを上位にする
-          if (!a.data.doneAt && b.data.doneAt) return -1 
-          if (a.data.doneAt && b.data.doneAt) {
-            if (a.data.doneAt > b.data.doneAt) return -1
-            if (a.data.doneAt < b.data.doneAt) return 1
-          }
-          return 0
+          // @ts-ignore
+          const doneAta = a.data.doneAt ? a.data.doneAt.seconds : Infinity
+          // @ts-ignore
+          const doneAtb = b.data.doneAt ? b.data.doneAt.seconds : Infinity
+          return doneAtb - doneAta
         })
     ]
   }
