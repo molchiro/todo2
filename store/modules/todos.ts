@@ -120,7 +120,7 @@ export default class TodosModule extends VuexModule {
       }
     }
     todosRef
-      .where('uid', '==', this.context.rootState.auth.authedUserUid)
+      .where('uid', '==', this.context.rootGetters['auth/currentUserUid'])
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {

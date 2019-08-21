@@ -26,7 +26,7 @@ export default class TodoPost extends Vue {
   add(): void {
     if (this.content) {
       this.todosModule.add({
-        uid: this.authModule.authedUserUid,
+        uid: this.authModule.currentUserUid,
         content: this.content,
         priority: this.todosModule.maxPriority + 1,
         done: false,
