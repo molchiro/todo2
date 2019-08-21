@@ -85,26 +85,19 @@ export default class TodosModule extends VuexModule {
 
   @Action
   move({ oldIndex, newIndex}): void {
-    if (this.todos[oldIndex].data.done) return
-    const targetId = this.todos[oldIndex].id
     let newPriority: number = 0
     if (newIndex === 0) {
       newPriority = this.maxPriority + 1
     } else if (newIndex >= this.lowestNotYetTodoIndex) {
       newPriority = this.todos[this.lowestNotYetTodoIndex].data.priority * 0.9
-    } else if (newIndex > oldIndex) {
-      newPriority =
-        (this.todos[newIndex].data.priority +
-          this.todos[newIndex + 1].data.priority) /
-        2
     } else {
-      newPriority =
-        (this.todos[newIndex - 1].data.priority +
-          this.todos[newIndex].data.priority) /
-        2
-    }
+      const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
+      const prevPriority = this.todos[prevIndex - 1].data.priority
+      const nextPriority = this.todos[prevIndex].data.priority
+      newPriority = (prevPriority + nextPriority ) / 2
+    } 
     this.update({
-      id: targetId,
+      id: this.todos[oldIndex].id,
       data: {
         ...this.todos[oldIndex].data,
         priority: newPriority
