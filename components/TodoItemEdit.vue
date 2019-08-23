@@ -66,7 +66,7 @@ export default class TodoItemEdit extends Vue {
 
   updateContent(): void {
     if (this.canUpdate) {
-      this.todosModule.update({
+      this.todosModule.updateTodo({
         id: this.todo.id,
         data: {
           ...this.todo.data,
@@ -82,7 +82,7 @@ export default class TodoItemEdit extends Vue {
   }
 
   deleteMe(): void {
-    this.todosModule.delete(this.todo.id)
+    this.todosModule.deleteTodo(this.todo.id)
     this.isShowDeleteDialog = false
   }
 }

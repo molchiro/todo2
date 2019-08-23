@@ -29,19 +29,19 @@ export default class TodosModule extends VuexModule {
   }
 
   @Mutation
-  private add_(todo: todo): void {
+  private PUSH_TODO(todo: todo): void {
     this.todos.push(todo)
   }
 
   @Mutation
-  private delete_(todo: todo): void {
+  private REMOVE_TODO(todo: todo): void {
     this.todos = this.todos.filter((el) => {
       return el.id !== todo.id
     })
   }
   
   @Mutation
-  private update_(todo: todo): void {
+  private REPLACE_TODO(todo: todo): void {
     const updatedTodoIndex: number = this.todos.findIndex((el) => {
       return el.id === todo.id
     })
@@ -49,7 +49,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Mutation
-  private sort_(): void {
+  private SORT_TODOS(): void {
     this.todos = [
       ...this.todos
         .sort((a, b) => {
@@ -69,22 +69,22 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  add(todoData: todoData): void {
+  addTodo(todoData: todoData): void {
     todosRef.add(todoData)
   }
 
   @Action
-  delete(id: string): void {
+  deleteTodo(id: string): void {
     todosRef.doc(id).delete()
   }
 
   @Action
-  update(todo: todo): void {
+  updateTodo(todo: todo): void {
     todosRef.doc(todo.id).update(todo.data)
   }
 
   @Action
-  move({ oldIndex, newIndex}): void {
+  moveTodo({ oldIndex, newIndex}): void {
     let newPriority: number = 0
     if (newIndex === 0) {
       newPriority = this.maxPriority + 1
@@ -96,7 +96,7 @@ export default class TodosModule extends VuexModule {
       const nextPriority = this.todos[prevIndex].data.priority
       newPriority = (prevPriority + nextPriority ) / 2
     } 
-    this.update({
+    this.updateTodo({
       id: this.todos[oldIndex].id,
       data: {
         ...this.todos[oldIndex].data,
@@ -106,7 +106,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  bind(): void {
+  bindTodos(): void {
     const mapDoc2Todo = (doc: firebase.firestore.QueryDocumentSnapshot) => {
       return {
         id: doc.id,
@@ -124,16 +124,16 @@ export default class TodosModule extends VuexModule {
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
-            this.add_(mapDoc2Todo(change.doc))
+            this.PUSH_TODO(mapDoc2Todo(change.doc))
           }
           if (change.type === 'modified') {
-            this.update_(mapDoc2Todo(change.doc))
+            this.REPLACE_TODO(mapDoc2Todo(change.doc))
           }
           if (change.type === 'removed') {
-            this.delete_(mapDoc2Todo(change.doc))
+            this.REMOVE_TODO(mapDoc2Todo(change.doc))
           }
         })
-        this.sort_()
+        this.SORT_TODOS()
       })
   }
 }

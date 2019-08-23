@@ -41,7 +41,7 @@ export default class TodoItemShow extends Vue {
   }
 
   set done(val) {
-    this.todosModule.update({
+    this.todosModule.updateTodo({
       id: this.todo.id,
       data: {
         ...this.todo.data,
