@@ -84,7 +84,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  moveTodo({ oldIndex, newIndex}): void {
+  moveTodo({ oldIndex, newIndex }): void {
     let newPriority: number = 0
     if (newIndex === 0) {
       newPriority = this.maxPriority + 1
