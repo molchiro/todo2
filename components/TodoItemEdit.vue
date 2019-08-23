@@ -12,7 +12,7 @@
           ) いいえ
           v-divider(vertical)
           v-btn(
-            @click="deleteMe"
+            @click="deleteTodo"
             flat
           ) はい
     v-flex.mr-1(
@@ -81,7 +81,7 @@ export default class TodoItemEdit extends Vue {
     this.isShowDeleteDialog = true
   }
 
-  deleteMe(): void {
+  deleteTodo(): void {
     this.todosModule.deleteTodo(this.todo.id)
     this.isShowDeleteDialog = false
   }
