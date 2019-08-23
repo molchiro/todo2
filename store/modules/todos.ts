@@ -106,7 +106,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  bindTodos(): void {
+  bindTodos(uid: string): void {
     const mapDoc2Todo = (doc: firebase.firestore.QueryDocumentSnapshot) => {
       return {
         id: doc.id,
@@ -120,7 +120,7 @@ export default class TodosModule extends VuexModule {
       }
     }
     todosRef
-      .where('uid', '==', this.context.rootGetters['auth/currentUserUid'])
+      .where('uid', '==', uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {

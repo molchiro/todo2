@@ -28,6 +28,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import draggable from 'vuedraggable'
 import TodosModule from '@/store/modules/todos'
+import AuthModule from '@/store/modules/auth'
 import { todo } from '@/types/index'
 import TodoItemEdit from '@/components/TodoItemEdit.vue'
 import TodoItemShow from '@/components/TodoItemShow.vue'
@@ -42,6 +43,8 @@ import TodoItemShow from '@/components/TodoItemShow.vue'
 export default class TodoList extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
+  authModule = getModule(AuthModule, this.$store)
+
   selectedTodoId: string = ''
 
   get todos(): todo[] {
@@ -54,7 +57,7 @@ export default class TodoList extends Vue {
   }
 
   created(): void {
-    this.todosModule.bindTodos()
+    this.todosModule.bindTodos(this.authModule.currentUserUid)
   }
 
   draggableEnd(e): void {
