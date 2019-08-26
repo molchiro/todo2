@@ -27,28 +27,27 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
-import { todo } from '@/types/index'
+import { Todo } from '@/models/todo'
 import { serverTimeStamp } from '@/plugins/firebase'
 
 @Component
 export default class TodoItemShow extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
-  @Prop() todo: todo
+  @Prop() todo: Todo
 
   get done(): boolean {
     return this.todo.data.done
   }
 
   set done(val) {
-    this.todosModule.updateTodo({
-      id: this.todo.id,
-      data: {
+    this.todosModule.updateTodo(
+      new Todo(this.todo.id, {
         ...this.todo.data,
         done: val,
         doneAt: val ? serverTimeStamp : null
-      }
-    })
+      })
+    )
   }
 
   startEdit(): void {

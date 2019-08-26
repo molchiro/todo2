@@ -29,7 +29,7 @@ import { getModule } from 'vuex-module-decorators'
 import draggable from 'vuedraggable'
 import TodosModule from '@/store/modules/todos'
 import AuthModule from '@/store/modules/auth'
-import { todo } from '@/types/index'
+import { Todo } from '@/models/todo'
 import TodoItemEdit from '@/components/TodoItemEdit.vue'
 import TodoItemShow from '@/components/TodoItemShow.vue'
 
@@ -47,13 +47,8 @@ export default class TodoList extends Vue {
 
   selectedTodoId: string = ''
 
-  get todos(): todo[] {
-    return this.todosModule.todos.map((todo) => {
-      return {
-        id: todo.id,
-        data: { ...todo.data }
-      }
-    })
+  get todos(): Todo[] {
+    return this.todosModule.getTodos
   }
 
   created(): void {

@@ -2,7 +2,7 @@
   v-card
     v-container.py-0
       v-text-field(
-        v-model="content"
+        v-model="todo.data.content"
         @click:append="add"
         @keypress.enter="add"
         append-icon="create"
@@ -14,6 +14,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
 import AuthModule from '@/store/modules/auth'
+import { Todo } from '@/models/todo'
 
 @Component
 export default class TodoPost extends Vue {
@@ -21,18 +22,14 @@ export default class TodoPost extends Vue {
 
   authModule = getModule(AuthModule, this.$store)
 
-  content: string = ''
+  todo = new Todo()
 
   add(): void {
-    if (this.content) {
-      this.todosModule.addTodo({
-        uid: this.authModule.currentUserUid,
-        content: this.content,
-        priority: this.todosModule.maxPriority + 1,
-        done: false,
-        doneAt: null
-      })
-      this.content = ''
+    if (this.todo.data.content) {
+      this.todo.data.uid = this.authModule.currentUserUid
+      this.todo.data.priority = this.todosModule.maxPriority + 1
+      this.todosModule.addTodo(this.todo)
+      this.todo = new Todo()
     }
   }
 }

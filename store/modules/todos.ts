@@ -1,6 +1,7 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db } from '@/plugins/firebase'
-import { todo, todoData } from '@/types/index'
+import { ITodo, ITodoData } from '@/types/todo'
+import { Todo } from '@/models/todo'
 const todosRef = db.collection('todos')
 
 @Module({
@@ -9,7 +10,13 @@ const todosRef = db.collection('todos')
   stateFactory: true
 })
 export default class TodosModule extends VuexModule {
-  todos: todo[] = []
+  todos: ITodo[] = []
+
+  get getTodos(): Todo[] {
+    return this.todos.map((todo) => {
+      return new Todo(todo.id, { ...todo.data })
+    })
+  }
 
   get maxPriority(): number {
     return Math.max(
@@ -29,19 +36,19 @@ export default class TodosModule extends VuexModule {
   }
 
   @Mutation
-  private PUSH_TODO(todo: todo): void {
+  private PUSH_TODO(todo: ITodo): void {
     this.todos.push(todo)
   }
 
   @Mutation
-  private REMOVE_TODO(todo: todo): void {
+  private REMOVE_TODO(todo: ITodo): void {
     this.todos = this.todos.filter((el) => {
       return el.id !== todo.id
     })
   }
-  
+
   @Mutation
-  private REPLACE_TODO(todo: todo): void {
+  private REPLACE_TODO(todo: ITodo): void {
     const updatedTodoIndex: number = this.todos.findIndex((el) => {
       return el.id === todo.id
     })
@@ -69,17 +76,17 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  addTodo(todoData: todoData): void {
-    todosRef.add(todoData)
+  addTodo(todo: Todo): void {
+    todosRef.add(todo.data)
   }
 
   @Action
-  deleteTodo(id: string): void {
-    todosRef.doc(id).delete()
+  deleteTodo(todo: Todo): void {
+    todosRef.doc(todo.id).delete()
   }
 
   @Action
-  updateTodo(todo: todo): void {
+  updateTodo(todo: Todo): void {
     todosRef.doc(todo.id).update(todo.data)
   }
 
@@ -94,8 +101,8 @@ export default class TodosModule extends VuexModule {
       const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
       const prevPriority = this.todos[prevIndex - 1].data.priority
       const nextPriority = this.todos[prevIndex].data.priority
-      newPriority = (prevPriority + nextPriority ) / 2
-    } 
+      newPriority = (prevPriority + nextPriority) / 2
+    }
     this.updateTodo({
       id: this.todos[oldIndex].id,
       data: {
@@ -108,16 +115,15 @@ export default class TodosModule extends VuexModule {
   @Action
   bindTodos(uid: string): void {
     const mapDoc2Todo = (doc: firebase.firestore.QueryDocumentSnapshot) => {
-      return {
-        id: doc.id,
-        data: {
+      return new Todo(doc.id,
+        {
           uid: doc.data().uid,
           content: doc.data().content,
           priority: doc.data().priority,
           done: doc.data().done,
           doneAt: doc.data().doneAt
         }
-      }
+      )
     }
     todosRef
       .where('uid', '==', uid)

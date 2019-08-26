@@ -1,4 +1,4 @@
-export interface todoData {
+export interface ITodoData {
   uid: string
   content: string
   priority: number
@@ -6,7 +6,7 @@ export interface todoData {
   doneAt: firebase.firestore.FieldValue | null
 }
 
-export interface todo {
+export interface ITodo {
   id: string
-  data: todoData
+  data: ITodoData
 }
