@@ -13,7 +13,7 @@
           )
     v-flex(xs10)
       v-layout(justify-center)
-        div {{ todo.data.content }}
+        div {{ todo.content }}
     v-flex(xs1)
       v-layout(
         align-center
@@ -37,13 +37,13 @@ export default class TodoItemShow extends Vue {
   @Prop() todo: Todo
 
   get done(): boolean {
-    return this.todo.data.done
+    return this.todo.done
   }
 
   set done(val) {
     this.todosModule.updateTodo(
-      new Todo(this.todo.id, {
-        ...this.todo.data,
+      new Todo({
+        ...this.todo,
         done: val,
         doneAt: val ? serverTimeStamp : null
       })

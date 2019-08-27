@@ -14,7 +14,7 @@ export default class TodosModule extends VuexModule {
 
   get getTodos(): Todo[] {
     return this.todos.map((todo) => {
-      return new Todo(todo.id, { ...todo.data })
+      return new Todo({ ...todo })
     })
   }
 
@@ -22,7 +22,7 @@ export default class TodosModule extends VuexModule {
     return Math.max(
       0,
       ...this.todos.map((x) => {
-        return x.data.priority
+        return x.priority
       })
     )
   }
@@ -30,7 +30,7 @@ export default class TodosModule extends VuexModule {
   get lowestNotYetTodoIndex(): number {
     return (
       this.todos.filter((x) => {
-        return x.data.done === false
+        return x.done === false
       }).length - 1
     )
   }
@@ -60,16 +60,16 @@ export default class TodosModule extends VuexModule {
     this.todos = [
       ...this.todos
         .sort((a, b) => {
-          return b.data.priority - a.data.priority
+          return b.priority - a.priority
         })
         .sort((a, b) => {
-          return Number(a.data.done) - Number(b.data.done)
+          return Number(a.done) - Number(b.done)
         })
         .sort((a, b) => {
           // @ts-ignore
-          const doneAta = a.data.doneAt ? a.data.doneAt.seconds : Infinity
+          const doneAta = a.doneAt ? a.doneAt.seconds : Infinity
           // @ts-ignore
-          const doneAtb = b.data.doneAt ? b.data.doneAt.seconds : Infinity
+          const doneAtb = b.doneAt ? b.doneAt.seconds : Infinity
           return doneAtb - doneAta
         })
     ]
@@ -77,7 +77,7 @@ export default class TodosModule extends VuexModule {
 
   @Action
   addTodo(todo: Todo): void {
-    todosRef.add(todo.data)
+    todosRef.add(todo.data())
   }
 
   @Action
@@ -87,7 +87,7 @@ export default class TodosModule extends VuexModule {
 
   @Action
   updateTodo(todo: Todo): void {
-    todosRef.doc(todo.id).update(todo.data)
+    todosRef.doc(todo.id).update(todo.data())
   }
 
   @Action
@@ -96,32 +96,26 @@ export default class TodosModule extends VuexModule {
     if (newIndex === 0) {
       newPriority = this.maxPriority + 1
     } else if (newIndex >= this.lowestNotYetTodoIndex) {
-      newPriority = this.todos[this.lowestNotYetTodoIndex].data.priority * 0.9
+      newPriority = this.todos[this.lowestNotYetTodoIndex].priority * 0.9
     } else {
       const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
-      const prevPriority = this.todos[prevIndex - 1].data.priority
-      const nextPriority = this.todos[prevIndex].data.priority
+      const prevPriority = this.todos[prevIndex - 1].priority
+      const nextPriority = this.todos[prevIndex].priority
       newPriority = (prevPriority + nextPriority) / 2
     }
-    this.updateTodo({
-      id: this.todos[oldIndex].id,
-      data: {
-        ...this.todos[oldIndex].data,
-        priority: newPriority
-      }
-    })
+    this.updateTodo(new Todo({
+      ...this.todos[oldIndex],
+      priority: newPriority
+    }))
   }
 
   @Action
   bindTodos(uid: string): void {
     const mapDoc2Todo = (doc: firebase.firestore.QueryDocumentSnapshot) => {
-      return new Todo(doc.id,
+      return new Todo(
         {
-          uid: doc.data().uid,
-          content: doc.data().content,
-          priority: doc.data().priority,
-          done: doc.data().done,
-          doneAt: doc.data().doneAt
+          ...doc.data(),
+          id: doc.id,
         }
       )
     }

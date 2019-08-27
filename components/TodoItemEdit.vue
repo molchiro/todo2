@@ -19,7 +19,7 @@
       offset-xs1
     )
       v-text-field.white(
-        v-model="localTodo.data.content"
+        v-model="localTodo.content"
         outline
         single-line
         hide-details
@@ -54,12 +54,11 @@ export default class TodoItemEdit extends Vue {
 
   @Prop() todo: Todo
 
-  localTodo: Todo = new Todo(this.todo.id, { ...this.todo.data })
+  localTodo: Todo = new Todo({ ...this.todo })
 
   get canUpdate(): boolean {
     return (
-      this.localTodo.data.content !== this.todo.data.content &&
-      !!this.localTodo.data.content
+      this.localTodo.content !== this.todo.content && !!this.localTodo.content
     )
   }
 

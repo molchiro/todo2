@@ -2,7 +2,7 @@
   v-card
     v-container.py-0
       v-text-field(
-        v-model="todo.data.content"
+        v-model="todo.content"
         @click:append="add"
         @keypress.enter="add"
         append-icon="create"
@@ -22,14 +22,14 @@ export default class TodoPost extends Vue {
 
   authModule = getModule(AuthModule, this.$store)
 
-  todo = new Todo()
+  todo = new Todo({})
 
   add(): void {
-    if (this.todo.data.content) {
-      this.todo.data.uid = this.authModule.currentUserUid
-      this.todo.data.priority = this.todosModule.maxPriority + 1
+    if (this.todo.content) {
+      this.todo.uid = this.authModule.currentUserUid
+      this.todo.priority = this.todosModule.maxPriority + 1
       this.todosModule.addTodo(this.todo)
-      this.todo = new Todo()
+      this.todo = new Todo({})
     }
   }
 }
