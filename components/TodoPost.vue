@@ -30,7 +30,7 @@ export default class TodoPost extends Vue {
   }
 
   add(): void {
-    if (this.todo.content) {
+    if (this.todo.isValid()) {
       this.todosModule.addTodo(this.todo)
       this.todo = new Todo({ uid: this.authModule.currentUserUid })
     }

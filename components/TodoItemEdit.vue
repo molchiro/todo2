@@ -57,9 +57,8 @@ export default class TodoItemEdit extends Vue {
   localTodo: Todo = new Todo({ ...this.todo })
 
   get canUpdate(): boolean {
-    return (
-      this.localTodo.content !== this.todo.content && !!this.localTodo.content
-    )
+    const isChanged = this.localTodo.content !== this.todo.content
+    return isChanged && this.localTodo.isValid()
   }
 
   updateContent(): void {

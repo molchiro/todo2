@@ -28,4 +28,8 @@ export class Todo implements ITodo {
       doneAt: this.doneAt
     }
   }
+
+  isValid(): boolean {
+    return !!this.content
+  }
 }
