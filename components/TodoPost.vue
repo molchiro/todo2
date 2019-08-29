@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
 import AuthModule from '@/store/modules/auth'
@@ -22,14 +22,17 @@ export default class TodoPost extends Vue {
 
   authModule = getModule(AuthModule, this.$store)
 
-  todo = new Todo({})
+  todo = new Todo({ uid: this.authModule.currentUserUid })
+
+  @Watch('todosModule.maxPriority')
+  onMaxPriorityChanged(newVal: number) {
+    this.todo.priority = newVal + 1
+  }
 
   add(): void {
     if (this.todo.content) {
-      this.todo.uid = this.authModule.currentUserUid
-      this.todo.priority = this.todosModule.maxPriority + 1
       this.todosModule.addTodo(this.todo)
-      this.todo = new Todo({})
+      this.todo = new Todo({ uid: this.authModule.currentUserUid })
     }
   }
 }
