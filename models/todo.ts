@@ -1,4 +1,4 @@
-import { ITodoData, ITodo, ITodoParams } from '~/types/todo'
+import { ITodoData, ITodo } from '~/types/todo'
 
 export class Todo implements ITodo {
   id: string
@@ -15,7 +15,7 @@ export class Todo implements ITodo {
     priority = 0,
     done = false,
     doneAt = null
-  }: ITodoParams) {
+  }: Partial<ITodo>) {
     Object.assign(this, {id, uid, content, priority, done, doneAt})
   }
   

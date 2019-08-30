@@ -9,12 +9,3 @@ export interface ITodoData {
 export interface ITodo extends ITodoData {
   id: string
 }
-
-export interface ITodoParams {
-  id?: string
-  uid?: string
-  content?: string
-  priority?: number
-  done?: boolean
-  doneAt?: firebase.firestore.FieldValue | null
-}
