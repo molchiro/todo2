@@ -34,7 +34,7 @@ import { serverTimeStamp } from '@/plugins/firebase'
 export default class TodoItemShow extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
-  @Prop() todo: Todo
+  @Prop() readonly todo: Todo
 
   get done(): boolean {
     return this.todo.done

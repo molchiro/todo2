@@ -52,7 +52,7 @@ export default class TodoItemEdit extends Vue {
 
   isShowDeleteDialog: boolean = false
 
-  @Prop() todo: Todo
+  @Prop() readonly todo: Todo
 
   localTodo: Todo = new Todo({ ...this.todo })
 

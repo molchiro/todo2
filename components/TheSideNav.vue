@@ -20,7 +20,7 @@ import AuthModule from '@/store/modules/auth'
 export default class TheSideNav extends Vue {
   authModule = getModule(AuthModule, this.$store)
 
-  @Prop() value: boolean | null = null
+  @Prop() readonly value: boolean | null = null
 
   signOut(): void {
     this.authModule.signOut()
