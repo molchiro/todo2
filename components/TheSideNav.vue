@@ -2,7 +2,6 @@
   v-navigation-drawer(
     :value="value"
     @input="$emit('input', $event)"
-    fixed
     app
   )
     v-list
