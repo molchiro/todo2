@@ -1,11 +1,10 @@
 <template lang="pug">
-  v-toolbar(
+  v-app-bar(
     color="primary"
     dark
-    fixed
     app
   )
-    v-toolbar-side-icon(
+    v-app-bar-nav-icon(
       v-if="showSideIcon"
       @click.stop="toggleSideNav"
     )
