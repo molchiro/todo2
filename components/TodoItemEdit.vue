@@ -8,12 +8,12 @@
           v-spacer
           v-btn(
             @click="isShowDeleteDialog = false"
-            flat
+            text
           ) いいえ
           v-divider(vertical)
           v-btn(
             @click="deleteTodo"
-            flat
+            text
           ) はい
     v-flex.mr-1(
       offset-xs1
