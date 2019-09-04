@@ -1,12 +1,17 @@
 <template lang="pug">
   v-card
-    v-container.py-0
-      v-text-field(
-        v-model="todo.content"
-        @click:append="add"
-        @keypress.enter="add"
-        append-icon="create"
-      )
+    v-container.px-2.py-0
+      v-row(no-gutters)
+        v-col(offset=1)
+          v-text-field(
+            v-model="todo.content"
+            @keypress.enter="add"
+          )
+        v-col.text-center.align-self-center(cols=1)
+          v-icon(
+            @click="add"
+            :color="todo.isValid() ? 'primary' : 'grey'"
+          ) create
 </template>
 
 <script lang="ts">
