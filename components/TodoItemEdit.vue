@@ -15,28 +15,22 @@
             @click="deleteTodo"
             text
           ) はい
-    v-flex.mr-1(
-      offset-xs1
-    )
-      v-text-field.white(
-        v-model="localTodo.content"
-        outline
-        single-line
-        hide-details
-      )
-    v-flex(xs1)
-      v-layout(
-        wrap
-        column
-      )
-        v-flex
-          v-layout(justify-center)
+    v-row(no-gutters)
+      v-col(offset=1)
+        v-text-field.white(
+          v-model="localTodo.content"
+          outlined
+          hide-details
+        )
+      v-col(cols=1)
+        v-row(no-gutters)
+          v-col.text-center
             v-icon(
               :color="canUpdate ? 'primary' : 'grey lighten-1'"
               @click="updateContent"
             ) edit
-        v-flex.pt-2
-          v-layout(justify-center)
+        v-row(no-gutters)
+          v-col.text-center.pt-2
             v-icon(@click="showDeleteDialog") delete
 </template>
 

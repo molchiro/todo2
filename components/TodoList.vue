@@ -1,26 +1,25 @@
 <template lang="pug">
-  v-card
-    v-container
-      draggable(
-        :list="todos"
-        :delay="50"
-        @end="draggableEnd"
+  v-card.pa-2
+    draggable(
+      :list="todos"
+      :delay="50"
+      @end="draggableEnd"
+    )
+      div(
+        v-for="todo in todos"
+        :key="todo.id"
       )
-        v-flex(
-          v-for="todo in todos"
-          :key="todo.id"
+        todo-item-edit(
+          v-if="todo.id === selectedTodoId"
+          :todo="todo"
+          @endEdit="setSelectedTodoId('')"
         )
-          todo-item-edit(
-            v-if="todo.id === selectedTodoId"
-            :todo="todo"
-            @endEdit="setSelectedTodoId('')"
-          )
-          todo-item-show(
-            v-else
-            :todo="todo"
-            @click.native.capture="setSelectedTodoId('')"
-            @startEdit="setSelectedTodoId(todo.id)"
-          )
+        todo-item-show(
+          v-else
+          :todo="todo"
+          @click.native.capture="setSelectedTodoId('')"
+          @startEdit="setSelectedTodoId(todo.id)"
+        )
 </template>
 
 <script lang="ts">
