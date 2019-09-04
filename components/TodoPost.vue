@@ -2,7 +2,7 @@
   v-card
     v-container.px-2.py-0
       v-row(no-gutters)
-        v-col(offset=1)
+        v-col.pr-1(offset=1)
           v-text-field(
             v-model="todo.content"
             @keypress.enter="add"
