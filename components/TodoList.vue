@@ -10,15 +10,15 @@
         :key="todo.id"
       )
         todo-item-edit(
-          v-if="todo.id === selectedTodoId"
+          v-if="todo.id === edittingTodoId"
           :todo="todo"
-          @endEdit="setSelectedTodoId('')"
+          @endEdit="setEdittingTodoId('')"
         )
         todo-item-show(
           v-else
           :todo="todo"
-          @click.native.capture="setSelectedTodoId('')"
-          @startEdit="setSelectedTodoId(todo.id)"
+          @click.native.capture="setEdittingTodoId('')"
+          @startEdit="setEdittingTodoId(todo.id)"
         )
 </template>
 
@@ -44,7 +44,7 @@ export default class TodoList extends Vue {
 
   authModule = getModule(AuthModule, this.$store)
 
-  selectedTodoId: string = ''
+  edittingTodoId: string = ''
 
   get todos(): Todo[] {
     return this.todosModule.getTodos
@@ -62,8 +62,8 @@ export default class TodoList extends Vue {
     })
   }
 
-  setSelectedTodoId(id: string): void {
-    this.selectedTodoId = id
+  setEdittingTodoId(id: string): void {
+    this.edittingTodoId = id
   }
 }
 </script>
