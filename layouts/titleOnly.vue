@@ -1,6 +1,6 @@
 <template lang="pug">
   v-app
-    the-tool-bar(:showSideIcon="false")
+    the-app-bar(:showSideIcon="false")
     v-content
       v-container
         nuxt
@@ -8,11 +8,11 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import TheToolBar from '@/components/TheToolBar.vue'
+import TheAppBar from '@/components/TheAppBar.vue'
 
 @Component({
   components: {
-    TheToolBar
+    TheAppBar
   }
 })
 export default class titleOnlyLayout extends Vue {}

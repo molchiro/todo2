@@ -1,25 +1,14 @@
 <template lang="pug">
-  v-layout.my-2(row)
-    v-flex(xs1)
-      v-layout(
-        align-center
-        justify-center
-        fill-height
-      )
-        div
-          v-checkbox.mt-0.pt-0(
-            v-model="done"
-            hide-details
-          )
-    v-flex(xs10)
-      v-layout(justify-center)
+  v-container.pa-0.my-2
+    v-row(no-gutters)
+      v-col(cols=1)
+        v-checkbox.justify-center.mt-0.pt-0(
+          v-model="done"
+          hide-details
+        )
+      v-col(cols=10)
         div {{ todo.content }}
-    v-flex(xs1)
-      v-layout(
-        align-center
-        justify-center
-        fill-height
-      )
+      v-col.text-center(cols=1)
         v-icon(@click="startEdit") more_horiz
 </template>
 

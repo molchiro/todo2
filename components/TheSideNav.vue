@@ -2,13 +2,12 @@
   v-navigation-drawer(
     :value="value"
     @input="$emit('input', $event)"
-    fixed
     app
   )
     v-list
-      v-list-tile(@click="signOut")
-        v-list-tile-content
-          v-list-tile-title SIGNOUT
+      v-list-item(@click="signOut")
+        v-list-item-content
+          v-list-item-title SIGNOUT
 </template>
 
 <script lang="ts">
