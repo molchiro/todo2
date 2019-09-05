@@ -27,6 +27,7 @@
       v-col(offset=1)
         v-text-field.white(
           v-model="localTodo.content"
+          @keypress.enter="updateContent()"
           outlined
           hide-details
         )
