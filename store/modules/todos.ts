@@ -1,6 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db } from '@/plugins/firebase'
-import { ITodo, ITodoData } from '@/types/todo'
 import { Todo } from '@/models/todo'
 const todosRef = db.collection('todos')
 
@@ -10,7 +9,7 @@ const todosRef = db.collection('todos')
   stateFactory: true
 })
 export default class TodosModule extends VuexModule {
-  todos: ITodo[] = []
+  todos: Todo[] = []
 
   get getTodos(): Todo[] {
     return this.todos.map((todo) => {
@@ -36,19 +35,19 @@ export default class TodosModule extends VuexModule {
   }
 
   @Mutation
-  private PUSH_TODO(todo: ITodo): void {
+  private PUSH_TODO(todo: Todo): void {
     this.todos.push(todo)
   }
 
   @Mutation
-  private REMOVE_TODO(todo: ITodo): void {
+  private REMOVE_TODO(todo: Todo): void {
     this.todos = this.todos.filter((el) => {
       return el.id !== todo.id
     })
   }
 
   @Mutation
-  private REPLACE_TODO(todo: ITodo): void {
+  private REPLACE_TODO(todo: Todo): void {
     const updatedTodoIndex: number = this.todos.findIndex((el) => {
       return el.id === todo.id
     })
@@ -111,7 +110,7 @@ export default class TodosModule extends VuexModule {
 
   @Action
   bindTodos(uid: string): void {
-    const mapDoc2Todo = (doc: firebase.firestore.QueryDocumentSnapshot) => {
+    const mapDoc2Todo  = (doc: firebase.firestore.QueryDocumentSnapshot) => {
       return new Todo(
         {
           ...doc.data(),
