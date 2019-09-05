@@ -35,7 +35,7 @@
           v-col.text-center
             v-icon(
               :color="canUpdate ? 'primary' : 'grey lighten-1'"
-              @click="updateContent"
+              @click="updateContent()"
             ) edit
         v-row(no-gutters)
           v-col.text-center.pt-2

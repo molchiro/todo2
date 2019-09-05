@@ -5,11 +5,11 @@
         v-col.pr-1(offset=1)
           v-text-field(
             v-model="todo.content"
-            @keypress.enter="add"
+            @keypress.enter="add()"
           )
         v-col.text-center.align-self-center(cols=1)
           v-icon(
-            @click="add"
+            @click="add()"
             :color="todo.isValid() ? 'primary' : 'grey'"
           ) create
 </template>
