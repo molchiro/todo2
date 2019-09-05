@@ -14,7 +14,7 @@ export default class AuthModule extends VuexModule {
   }
 
   @Mutation
-  private setUser_(user: firebase.User | null): void {
+  private SET_USER(user: firebase.User | null): void {
     this.currentUser = user
   }
 
@@ -26,7 +26,7 @@ export default class AuthModule extends VuexModule {
   @Action
   signOut(): void {
     auth.signOut()
-    this.setUser_(null)
+    this.SET_USER(null)
   }
 
   @Action
@@ -38,7 +38,7 @@ export default class AuthModule extends VuexModule {
             resolve(user)
           })
         })
-        this.setUser_(currentUser)
+        this.SET_USER(currentUser)
       }
       resolve(!!this.currentUser)
     })

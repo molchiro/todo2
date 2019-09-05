@@ -13,12 +13,12 @@
           todo-item-edit(
             v-if="todo.id === selectedTodoId"
             :todo="todo"
-            @endEdit="clearSelectedTodoId"
+            @endEdit="setSelectedTodoId('')"
           )
           todo-item-show(
             v-else
             :todo="todo"
-            @click.native.capture="clearSelectedTodoId"
+            @click.native.capture="setSelectedTodoId('')"
             @startEdit="setSelectedTodoId(todo.id)"
           )
 </template>
@@ -28,7 +28,8 @@ import { Vue, Component } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import draggable from 'vuedraggable'
 import TodosModule from '@/store/modules/todos'
-import { todo } from '@/types/index'
+import AuthModule from '@/store/modules/auth'
+import { Todo } from '@/models/todo'
 import TodoItemEdit from '@/components/TodoItemEdit.vue'
 import TodoItemShow from '@/components/TodoItemShow.vue'
 
@@ -42,24 +43,21 @@ import TodoItemShow from '@/components/TodoItemShow.vue'
 export default class TodoList extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
+  authModule = getModule(AuthModule, this.$store)
+
   selectedTodoId: string = ''
 
-  get todos(): todo[] {
-    return this.todosModule.todos.map((todo) => {
-      return {
-        id: todo.id,
-        data: { ...todo.data }
-      }
-    })
+  get todos(): Todo[] {
+    return this.todosModule.getTodos
   }
 
   created(): void {
-    this.todosModule.bind()
+    this.todosModule.bindTodos(this.authModule.currentUserUid)
   }
 
   draggableEnd(e): void {
-    if (this.todos[e.oldIndex].data.done) return
-    this.todosModule.move({
+    if (this.todos[e.oldIndex].done) return
+    this.todosModule.moveTodo({
       oldIndex: e.oldIndex,
       newIndex: e.newIndex
     })
@@ -67,10 +65,6 @@ export default class TodoList extends Vue {
 
   setSelectedTodoId(id: string): void {
     this.selectedTodoId = id
-  }
-
-  clearSelectedTodoId(): void {
-    this.selectedTodoId = ''
   }
 }
 </script>

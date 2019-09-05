@@ -17,7 +17,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class ToolBar extends Vue {
-  @Prop({ default: true }) showSideIcon: boolean
+  @Prop({ default: true }) readonly showSideIcon: boolean
 
   toggleSideNav(): void {
     this.$emit('toggleSideNav')

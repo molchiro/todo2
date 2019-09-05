@@ -12,14 +12,14 @@
           ) いいえ
           v-divider(vertical)
           v-btn(
-            @click="deleteMe"
+            @click="deleteTodo"
             flat
           ) はい
     v-flex.mr-1(
       offset-xs1
     )
       v-text-field.white(
-        v-model="content"
+        v-model="localTodo.content"
         outline
         single-line
         hide-details
@@ -44,35 +44,26 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
-import { todo } from '@/types/index'
+import { Todo } from '@/models/todo'
 
 @Component
 export default class TodoItemEdit extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
-  content: string = ''
-
   isShowDeleteDialog: boolean = false
 
-  @Prop() todo: todo
+  @Prop() readonly todo: Todo
+
+  localTodo: Todo = new Todo({ ...this.todo })
 
   get canUpdate(): boolean {
-    return this.content !== this.todo.data.content && !!this.content
-  }
-
-  created(): void {
-    this.content = this.todo.data.content
+    const isChanged = this.localTodo.content !== this.todo.content
+    return isChanged && this.localTodo.isValid()
   }
 
   updateContent(): void {
     if (this.canUpdate) {
-      this.todosModule.update({
-        id: this.todo.id,
-        data: {
-          ...this.todo.data,
-          content: this.content
-        }
-      })
+      this.todosModule.updateTodo(this.localTodo)
       this.$emit('endEdit')
     }
   }
@@ -81,8 +72,8 @@ export default class TodoItemEdit extends Vue {
     this.isShowDeleteDialog = true
   }
 
-  deleteMe(): void {
-    this.todosModule.delete(this.todo.id)
+  deleteTodo(): void {
+    this.todosModule.deleteTodo(this.localTodo)
     this.isShowDeleteDialog = false
   }
 }
