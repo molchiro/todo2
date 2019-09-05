@@ -30,6 +30,6 @@ export class Todo implements ITodo {
   }
 
   isValid(): boolean {
-    return !!this.content
+    return !!this.content && !!this.uid
   }
 }
