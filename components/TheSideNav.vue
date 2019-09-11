@@ -14,12 +14,19 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import AuthModule from '@/store/modules/auth'
+import ProjectModule from '@/store/modules/projects'
 
 @Component
 export default class TheSideNav extends Vue {
   authModule = getModule(AuthModule, this.$store)
 
+  projectsModule = getModule(ProjectModule, this.$store)
+
   @Prop() readonly value: boolean | null = null
+
+  created(): void {
+    this.projectsModule.bindProjects(this.authModule.currentUserUid)
+  }
 
   signOut(): void {
     this.authModule.signOut()
