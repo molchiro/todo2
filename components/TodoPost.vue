@@ -27,7 +27,13 @@ export default class TodoPost extends Vue {
 
   authModule = getModule(AuthModule, this.$store)
 
-  todo = new Todo({ uid: this.authModule.currentUserUid })
+  // test
+  projectId: string = 'test12345'
+
+  todo = new Todo({
+    uid: this.authModule.currentUserUid,
+    projectId: this.projectId
+  })
 
   @Watch('todosModule.maxPriority')
   onMaxPriorityChanged(newVal: number) {
@@ -37,7 +43,10 @@ export default class TodoPost extends Vue {
   add(): void {
     if (this.todo.isValid()) {
       this.todosModule.addTodo(this.todo)
-      this.todo = new Todo({ uid: this.authModule.currentUserUid })
+      this.todo = new Todo({
+        uid: this.authModule.currentUserUid,
+        projectId: this.projectId
+      })
     }
   }
 }

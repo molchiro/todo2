@@ -3,6 +3,11 @@ import { db } from '@/plugins/firebase'
 import { Todo } from '@/models/todo'
 const todosRef = db.collection('todos')
 
+type bindTodosPayload = {
+  uid: string,
+  projectId: string
+}
+
 @Module({
   namespaced: true,
   name: 'todos',
@@ -109,7 +114,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  bindTodos(uid: string): void {
+  bindTodos({ uid, projectId }: bindTodosPayload): void {
     const mapDoc2Todo  = (doc: firebase.firestore.QueryDocumentSnapshot) => {
       return new Todo(
         {
@@ -120,6 +125,7 @@ export default class TodosModule extends VuexModule {
     }
     todosRef
       .where('uid', '==', uid)
+      .where('projectId', '==', projectId)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
