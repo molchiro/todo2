@@ -9,12 +9,12 @@
         v-for="todo in todos"
         :key="todo.id"
       )
-        todo-item-edit(
+        todo-list-item-edit(
           v-if="todo.id === edittingTodoId"
           :todo="todo"
           @endEdit="setEdittingTodoId('')"
         )
-        todo-item-show(
+        todo-list-item-show(
           v-else
           :todo="todo"
           @click.native.capture="setEdittingTodoId('')"
@@ -29,13 +29,13 @@ import draggable from 'vuedraggable'
 import TodosModule from '@/store/modules/todos'
 import AuthModule from '@/store/modules/auth'
 import { Todo } from '@/models/todo'
-import TodoItemEdit from '@/components/TodoItemEdit.vue'
-import TodoItemShow from '@/components/TodoItemShow.vue'
+import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
+import TodoListItemShow from '@/components/TodoListItemShow.vue'
 
 @Component({
   components: {
-    TodoItemEdit,
-    TodoItemShow,
+    TodoListItemEdit,
+    TodoListItemShow,
     draggable
   }
 })
@@ -46,12 +46,18 @@ export default class TodoList extends Vue {
 
   edittingTodoId: string = ''
 
+  // test
+  projectId: string = 'test12345'
+
   get todos(): Todo[] {
     return this.todosModule.getTodos
   }
 
   created(): void {
-    this.todosModule.bindTodos(this.authModule.currentUserUid)
+    this.todosModule.bindTodos({
+      uid: this.authModule.currentUserUid,
+      projectId: this.projectId
+    })
   }
 
   draggableEnd(e): void {
