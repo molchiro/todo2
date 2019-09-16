@@ -42,7 +42,7 @@ export default class ProjectList extends Vue {
   }
 
   moveToProjectPage(projectId: string): void {
-    this.$router.push(`projects/${projectId}`)
+    this.$router.push(`/projects/${projectId}`)
   }
 }
 </script>
