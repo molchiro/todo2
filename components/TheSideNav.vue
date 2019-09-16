@@ -5,6 +5,10 @@
     app
   )
     v-list
+      v-subheader PROJECTS
+      project-list
+      v-divider
+      v-subheader OTHERS
       v-list-item(@click="signOut")
         v-list-item-content
           v-list-item-title SIGNOUT
@@ -14,19 +18,17 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import AuthModule from '@/store/modules/auth'
-import ProjectModule from '@/store/modules/projects'
+import ProjectList from '@/components/ProjectList.vue'
 
-@Component
+@Component({
+  components: {
+    ProjectList
+  }
+})
 export default class TheSideNav extends Vue {
   authModule = getModule(AuthModule, this.$store)
 
-  projectsModule = getModule(ProjectModule, this.$store)
-
   @Prop() readonly value: boolean | null = null
-
-  created(): void {
-    this.projectsModule.bindProjects(this.authModule.currentUserUid)
-  }
 
   signOut(): void {
     this.authModule.signOut()
