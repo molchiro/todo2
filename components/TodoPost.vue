@@ -5,11 +5,11 @@
         v-col.pr-1(offset=1)
           v-text-field(
             v-model="todo.content"
-            @keypress.enter="add()"
+            @keypress.enter="addTodo()"
           )
         v-col.text-center.align-self-center(cols=1)
           v-icon(
-            @click="add()"
+            @click="addTodo()"
             :color="todo.isValid() ? 'primary' : 'grey'"
           ) create
 </template>
@@ -40,7 +40,7 @@ export default class TodoPost extends Vue {
     this.todo.priority = newVal + 1
   }
 
-  add(): void {
+  addTodo(): void {
     if (this.todo.isValid()) {
       this.todosModule.addTodo(this.todo)
       this.todo = new Todo({
