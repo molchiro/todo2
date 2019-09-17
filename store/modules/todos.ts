@@ -8,6 +8,8 @@ type bindTodosPayload = {
   projectId: string
 }
 
+let unsubscribe: Function | null = null
+
 @Module({
   namespaced: true,
   name: 'todos',
@@ -37,6 +39,11 @@ export default class TodosModule extends VuexModule {
         return x.done === false
       }).length - 1
     )
+  }
+
+  @Mutation
+  private INIT_TODO(): void {
+    this.todos.splice(0)
   }
 
   @Mutation
@@ -123,7 +130,11 @@ export default class TodosModule extends VuexModule {
         }
       )
     }
-    todosRef
+    this.INIT_TODO()
+    if (typeof(unsubscribe) === 'function') {
+      unsubscribe()
+    }
+    unsubscribe = todosRef
       .where('uid', '==', uid)
       .where('projectId', '==', projectId)
       .onSnapshot((snapshot) => {

@@ -46,18 +46,8 @@ export default class TodoList extends Vue {
 
   edittingTodoId: string = ''
 
-  // test
-  projectId: string = 'test12345'
-
   get todos(): Todo[] {
     return this.todosModule.getTodos
-  }
-
-  created(): void {
-    this.todosModule.bindTodos({
-      uid: this.authModule.currentUserUid,
-      projectId: this.projectId
-    })
   }
 
   draggableEnd(e): void {

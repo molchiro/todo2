@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
 import AuthModule from '@/store/modules/auth'
@@ -27,8 +27,7 @@ export default class TodoPost extends Vue {
 
   authModule = getModule(AuthModule, this.$store)
 
-  // test
-  projectId: string = 'test12345'
+  @Prop() readonly projectId: string
 
   todo = new Todo({
     uid: this.authModule.currentUserUid,

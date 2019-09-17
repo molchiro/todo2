@@ -26,7 +26,7 @@ export class Todo implements ITodo {
     id = '',
     uid = '',
     content = '',
-    priority = 0,
+    priority = 1,
     done = false,
     doneAt = null,
     projectId = ''
