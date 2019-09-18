@@ -14,6 +14,8 @@ import AuthModule from '@/store/modules/auth'
 import ProjectsModule from '@/store/modules/projects'
 import TodoPost from '@/components/TodoPost.vue'
 import TodoList from '@/components/TodoList.vue'
+import { db } from '@/plugins/firebase'
+const projectsRef = db.collection('projects')
 
 @Component({
   components: {
@@ -48,6 +50,10 @@ export default class projectPage extends Vue {
       uid: this.authModule.currentUserUid,
       projectId: this.projectId
     })
+  }
+
+  validate({ params }) {
+    return projectsRef.doc(params.id).get()
   }
 }
 </script>
