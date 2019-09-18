@@ -17,10 +17,10 @@
     "@nuxtjs/vuetify": "^1.6.1",
     "firebase": "^6.3.1",
     "nuxt": "^2.9.2",
+    "nuxt-property-decorator": "^2.4.0",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
     "ts-node": "^8.3.0",
-    "vue-property-decorator": "^8.2.1",
     "vuedraggable": "^2.23.0",
     "vuex-module-decorators": "^0.9.9"
   },

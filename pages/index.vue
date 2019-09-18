@@ -6,9 +6,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import TodoPost from '@/components/TodoPost.vue'
-import TodoList from '@/components/TodoList.vue'
+import { Vue, Component } from 'nuxt-property-decorator'
 
 @Component({
   components: {
