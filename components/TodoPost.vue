@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'nuxt-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
 import AuthModule from '@/store/modules/auth'
