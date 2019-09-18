@@ -1,12 +1,17 @@
 <template lang="pug">
   div
-    v-list-item(
-      v-for="project in projects"
-      :key="project.id"
-      @click="moveToProjectPage(project.id)"
+    draggable(
+      :list="projects"
+      :delay="50"
+      @end="draggableEnd"
     )
-      v-list-item-content
-        v-list-item-title {{ project.title }}
+      v-list-item(
+        v-for="project in projects"
+        :key="project.id"
+        @click="moveToProjectPage(project.id)"
+      )
+        v-list-item-content
+          v-list-item-title {{ project.title }}
     v-list-item(@click="addProject")
       v-list-item-icon
         v-icon add
@@ -17,11 +22,16 @@
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
 import { getModule } from 'vuex-module-decorators'
+import draggable from 'vuedraggable'
 import ProjectsModule from '@/store/modules/projects'
 import AuthModule from '@/store/modules/auth'
 import { Project } from '@/models/project'
 
-@Component
+@Component({
+  components: {
+    draggable
+  }
+})
 export default class ProjectList extends Vue {
   projectsModule = getModule(ProjectsModule, this.$store)
 
@@ -33,6 +43,13 @@ export default class ProjectList extends Vue {
 
   created(): void {
     this.projectsModule.bindProjects(this.authModule.currentUserUid)
+  }
+
+  draggableEnd(e): void {
+    this.projectsModule.moveProject({
+      oldIndex: e.oldIndex,
+      newIndex: e.newIndex
+    })
   }
 
   addProject(): void {

@@ -1,6 +1,7 @@
 export interface IProjectData {
   uid: string
   title: string
+  priority: number
 }
 
 export interface IProject extends IProjectData {
@@ -11,19 +12,23 @@ export class Project implements IProject {
   id: string
   uid: string
   title: string
+  priority: number
   
   constructor({
     id = '',
     uid = '',
-    title = '新しいプロジェクト'
+    title = '新しいプロジェクト',
+    priority = 1
+
   }: Partial<IProject>) {
-    Object.assign(this, {id, uid, title})
+    Object.assign(this, {id, uid, title, priority})
   }
   
   data(): IProjectData {
     return {
       uid: this.uid,
-      title: this.title
+      title: this.title,
+      priority: this.priority
     }
   }
 

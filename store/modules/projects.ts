@@ -17,6 +17,15 @@ export default class ProjectsModule extends VuexModule {
     })
   }
 
+  get maxPriority(): number {
+    return Math.max(
+      0,
+      ...this.projects.map((x) => {
+        return x.priority
+      })
+    )
+  }
+
   @Mutation
   private PUSH_PROJECTS(project: Project): void {
     this.projects.push(project)
@@ -37,6 +46,16 @@ export default class ProjectsModule extends VuexModule {
     this.projects.splice(updatedprojectIndex, 1, project)
   }
 
+  @Mutation
+  private SORT_PROJECTS(): void {
+    this.projects = [
+      ...this.projects
+        .sort((a, b) => {
+          return b.priority - a.priority
+        })
+    ]
+  }
+
   @Action
   addProject(project: Project): void {
     projectsRef.add(project.data())
@@ -50,6 +69,25 @@ export default class ProjectsModule extends VuexModule {
   @Action
   updateProject(project: Project): void {
     projectsRef.doc(project.id).update(project.data())
+  }
+
+  @Action
+  moveProject({ oldIndex, newIndex }): void {
+    let newPriority: number = 0
+    if (newIndex === 0) {
+      newPriority = this.maxPriority + 1
+    } else if (newIndex === this.projects.length - 1) {
+      newPriority = this.projects[this.projects.length - 1].priority * 0.9
+    } else {
+      const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
+      const prevPriority = this.projects[prevIndex - 1].priority
+      const nextPriority = this.projects[prevIndex].priority
+      newPriority = (prevPriority + nextPriority) / 2
+    }
+    this.updateProject(new Project({
+      ...this.projects[oldIndex],
+      priority: newPriority
+    }))
   }
 
   @Action
@@ -76,6 +114,7 @@ export default class ProjectsModule extends VuexModule {
             this.REMOVE_PROJECT(mapDoc2Project(change.doc))
           }
         })
+        this.SORT_PROJECTS()
       })
   }
 }
