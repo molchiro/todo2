@@ -1,5 +1,28 @@
 <template lang="pug">
   v-sheet
+    v-dialog(
+      v-model="isShowDeleteDialog"
+      max-width=300
+    )
+      v-card
+        v-card-title 削除しますか？
+        v-divider
+        v-card-actions
+          v-row(no-gutters)
+            v-col.pa-0
+              v-btn(
+                @click="isShowDeleteDialog = false"
+                text
+                block
+              ) キャンセル
+            v-divider(vertical)
+            v-col.pa-0
+              v-btn(
+                @click="deleteProject"
+                text
+                block
+                color="red"
+              ) 削除
     v-container.px-2
       v-row(no-gutters)
         v-col(cols=11)
@@ -9,7 +32,7 @@
               @keypress.enter="updateTitle($event)"
             )
         v-col.align-self-center(cols=1)
-          v-icon delete
+          v-icon(@click="isShowDeleteDialog = true") delete
     todo-post.mb-2(:projectId="this.projectId")
     todo-list
 </template>
@@ -38,6 +61,8 @@ export default class projectPage extends Vue {
   authModule = getModule(AuthModule, this.$store)
 
   projectsModule = getModule(ProjectsModule, this.$store)
+
+  isShowDeleteDialog: boolean = false
 
   get projectId(): string {
     return this.$route.params.id
@@ -79,6 +104,12 @@ export default class projectPage extends Vue {
       this.projectsModule.updateProject(this.localProject)
     }
     event.srcElement.blur()
+  }
+
+  deleteProject(): void {
+    this.projectsModule.deleteProject(this.localProject)
+    this.isShowDeleteDialog = false
+    this.$router.push('/')
   }
 }
 </script>

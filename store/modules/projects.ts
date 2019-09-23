@@ -63,7 +63,16 @@ export default class ProjectsModule extends VuexModule {
 
   @Action
   deleteProject(project: Project): void {
-    projectsRef.doc(project.id).delete()
+    projectsRef.doc(project.id).delete().then(() => {
+      db.collection('todos')
+        .where('uid', '==', project.uid)
+        .where('projectId', '==', project.id)
+        .get().then((snapshot) => {
+          snapshot.forEach((doc) => {
+            doc.ref.delete()
+          })
+        })
+    })
   }
 
   @Action
