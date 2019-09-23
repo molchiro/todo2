@@ -1,28 +1,9 @@
 <template lang="pug">
   v-sheet
-    v-dialog(
+    delete-dialog(
       v-model="isShowDeleteDialog"
-      max-width=300
-    )
-      v-card
-        v-card-title 削除しますか？
-        v-divider
-        v-card-actions
-          v-row(no-gutters)
-            v-col.pa-0
-              v-btn(
-                @click="isShowDeleteDialog = false"
-                text
-                block
-              ) キャンセル
-            v-divider(vertical)
-            v-col.pa-0
-              v-btn(
-                @click="deleteProject"
-                text
-                block
-                color="red"
-              ) 削除
+      @delete="deleteProject"
+    ) このプロジェクトに紐づくTODOも全て削除されます。<br/>この操作は取り消せません。
     v-container.px-2
       v-row(no-gutters)
         v-col(cols=11)
@@ -45,6 +26,7 @@ import AuthModule from '@/store/modules/auth'
 import ProjectsModule from '@/store/modules/projects'
 import TodoPost from '@/components/TodoPost.vue'
 import TodoList from '@/components/TodoList.vue'
+import DeleteDialog from '@/components/DeleteDialog.vue'
 import { db } from '@/plugins/firebase'
 import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
@@ -52,7 +34,8 @@ const projectsRef = db.collection('projects')
 @Component({
   components: {
     TodoPost,
-    TodoList
+    TodoList,
+    DeleteDialog
   }
 })
 export default class projectPage extends Vue {

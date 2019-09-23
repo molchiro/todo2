@@ -1,28 +1,9 @@
 <template lang="pug">
   v-layout.py-2.grey.lighten-3
-    v-dialog(
+    delete-dialog(
       v-model="isShowDeleteDialog"
-      max-width=300
-    )
-      v-card
-        v-card-title 削除しますか？
-        v-divider
-        v-card-actions
-          v-row(no-gutters)
-            v-col.pa-0
-              v-btn(
-                @click="isShowDeleteDialog = false"
-                text
-                block
-              ) キャンセル
-            v-divider(vertical)
-            v-col.pa-0
-              v-btn(
-                @click="deleteTodo"
-                text
-                block
-                color="red"
-              ) 削除
+      @delete="deleteTodo"
+    ) この操作は取り消せません
     v-row(no-gutters)
       v-col(offset=1)
         v-text-field.white(
@@ -47,9 +28,14 @@
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
+import DeleteDialog from '@/components/DeleteDialog.vue'
 import { Todo } from '@/models/todo'
 
-@Component
+@Component({
+  components: {
+    DeleteDialog
+  }
+})
 export default class TodoItemEdit extends Vue {
   todosModule = getModule(TodosModule, this.$store)
 
