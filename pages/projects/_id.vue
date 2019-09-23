@@ -1,9 +1,17 @@
 <template lang="pug">
-  v-layout
-    v-flex
-      div {{ projectTitle }}
-      todo-post.mb-2(:projectId="this.projectId")
-      todo-list
+  v-sheet
+    v-container.px-2
+      v-row(no-gutters)
+        v-col(cols=11)
+          h2
+            input(
+              v-model="localProject.title"
+              @keypress.enter="updateTitle($event)"
+            )
+        v-col.align-self-center(cols=1)
+          v-icon delete
+    todo-post.mb-2(:projectId="this.projectId")
+    todo-list
 </template>
 
 <script lang="ts">
@@ -15,6 +23,7 @@ import ProjectsModule from '@/store/modules/projects'
 import TodoPost from '@/components/TodoPost.vue'
 import TodoList from '@/components/TodoList.vue'
 import { db } from '@/plugins/firebase'
+import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
 
 @Component({
@@ -34,15 +43,24 @@ export default class projectPage extends Vue {
     return this.$route.params.id
   }
 
-  get projectTitle(): string {
-    const project = this.projectsModule.getProjects.find((x) => {
+  get project(): Project {
+    const p = this.projectsModule.getProjects.find((x) => {
       return x.id === this.projectId
     })
-    if (project) {
-      return project.title
+    if (p) {
+      return p
     } else {
-      return ''
+      return new Project({ title: '' })
     }
+  }
+
+  get localProject(): Project {
+    return new Project(this.project)
+  }
+
+  get canUpdate(): boolean {
+    const isChanged = this.localProject.title !== this.project.title
+    return isChanged && this.localProject.isValid()
   }
 
   created(): void {
@@ -52,8 +70,15 @@ export default class projectPage extends Vue {
     })
   }
 
-  validate({ params }) {
-    return projectsRef.doc(params.id).get()
+  validate({ params }): boolean {
+    return !!projectsRef.doc(params.id).get()
+  }
+
+  updateTitle(event): void {
+    if (this.canUpdate) {
+      this.projectsModule.updateProject(this.localProject)
+    }
+    event.srcElement.blur()
   }
 }
 </script>
