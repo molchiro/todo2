@@ -12,17 +12,11 @@ export default class ProjectsModule extends VuexModule {
   projects: Project[] = []
 
   get getProjects(): Project[] {
-    return this.projects.map((project) => {
-      return new Project({ ...project })
-    })
+    return this.projects.map((project) => { return new Project({ ...project }) })
   }
 
   get maxPriority(): number {
-    return Math.max(
-      0,
-      ...this.projects.map((x) => {
-        return x.priority
-      })
+    return Math.max(0, ...this.projects.map((x) => { return x.priority })
     )
   }
 
@@ -33,9 +27,7 @@ export default class ProjectsModule extends VuexModule {
 
   @Mutation
   private REMOVE_PROJECT(project: Project): void {
-    this.projects = this.projects.filter((el) => {
-      return el.id !== project.id
-    })
+    this.projects = this.projects.filter((el) => { el.id !== project.id })
   }
 
   @Mutation
@@ -49,10 +41,7 @@ export default class ProjectsModule extends VuexModule {
   @Mutation
   private SORT_PROJECTS(): void {
     this.projects = [
-      ...this.projects
-        .sort((a, b) => {
-          return b.priority - a.priority
-        })
+      ...this.projects.sort((a, b) => { return b.priority - a.priority })
     ]
   }
 

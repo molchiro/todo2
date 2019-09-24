@@ -19,25 +19,16 @@ export default class TodosModule extends VuexModule {
   todos: Todo[] = []
 
   get getTodos(): Todo[] {
-    return this.todos.map((todo) => {
-      return new Todo({ ...todo })
-    })
+    return this.todos.map((todo) => { return new Todo({ ...todo }) })
   }
 
   get maxPriority(): number {
-    return Math.max(
-      0,
-      ...this.todos.map((x) => {
-        return x.priority
-      })
-    )
+    return Math.max(0, ...this.todos.map((x) => { return x.priority }))
   }
 
   get lowestNotYetTodoIndex(): number {
     return (
-      this.todos.filter((x) => {
-        return x.done === false
-      }).length - 1
+      this.todos.filter((x) => { x.done === false }).length - 1
     )
   }
 
@@ -53,9 +44,7 @@ export default class TodosModule extends VuexModule {
 
   @Mutation
   private REMOVE_TODO(todo: Todo): void {
-    this.todos = this.todos.filter((el) => {
-      return el.id !== todo.id
-    })
+    this.todos = this.todos.filter((el) => { el.id !== todo.id })
   }
 
   @Mutation
