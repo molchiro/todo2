@@ -35,4 +35,8 @@ export class Project implements IProject {
   isValid(): boolean {
     return !!this.title && !!this.uid
   }
+
+  isDefaultTitle(): boolean {
+    return this.title === '新しいプロジェクト'
+  }
 }

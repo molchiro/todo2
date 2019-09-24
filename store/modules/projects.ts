@@ -57,8 +57,8 @@ export default class ProjectsModule extends VuexModule {
   }
 
   @Action
-  addProject(project: Project): void {
-    projectsRef.add(project.data())
+  addProject(project: Project): Promise<firebase.firestore.DocumentReference> {
+    return projectsRef.add(project.data())
   }
 
   @Action

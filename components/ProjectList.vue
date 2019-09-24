@@ -53,9 +53,11 @@ export default class ProjectList extends Vue {
   }
 
   addProject(): void {
-    this.projectsModule.addProject(
-      new Project({ uid: this.authModule.currentUserUid })
-    )
+    this.projectsModule
+      .addProject(new Project({ uid: this.authModule.currentUserUid }))
+      .then((ref) => {
+        this.moveToProjectPage(ref.id)
+      })
   }
 
   moveToProjectPage(projectId: string): void {

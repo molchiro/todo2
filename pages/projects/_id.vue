@@ -9,6 +9,7 @@
         v-col(cols=11)
           h2
             input(
+              ref="projectTitleField"
               v-model="localProject.title"
               @keypress.enter="updateTitle($event)"
             )
@@ -76,6 +77,13 @@ export default class projectPage extends Vue {
       uid: this.authModule.currentUserUid,
       projectId: this.projectId
     })
+  }
+
+  mounted(): void {
+    if (this.project.isDefaultTitle()) {
+      // @ts-ignore
+      this.$refs.projectTitleField.focus()
+    }
   }
 
   validate({ params }): boolean {
