@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  v-container.pa-0
     draggable(
       :list="projects"
       :delay="50"
@@ -10,13 +10,22 @@
         :key="project.id"
         @click="moveToProjectPage(project.id)"
       )
-        v-list-item-content
-          v-list-item-title {{ project.title }}
+        v-row(dense)
+          v-col(cols=1)
+          v-col.pl-3
+            v-list-item-content
+              v-list-item-title {{ project.title }}
     v-list-item(@click="addProject")
-      v-list-item-icon
-        v-icon add
-      v-list-item-content
-        v-list-item-title プロジェクトを追加
+      v-row(
+        dense
+        align="center"
+      )
+        v-col(cols=1)
+          v-list-item-icon
+            v-icon add
+        v-col.pl-3
+          v-list-item-content
+            v-list-item-title プロジェクトを追加
 </template>
 
 <script lang="ts">

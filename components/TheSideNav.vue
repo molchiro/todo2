@@ -9,9 +9,13 @@
       project-list
       v-divider
       v-subheader OTHERS
+
       v-list-item(@click="signOut")
-        v-list-item-content
-          v-list-item-title SIGNOUT
+        v-row(dense)
+          v-col(cols=1)
+          v-col.pl-3
+            v-list-item-content
+              v-list-item-title SIGNOUT
 </template>
 
 <script lang="ts">
