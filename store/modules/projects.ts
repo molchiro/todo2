@@ -27,7 +27,7 @@ export default class ProjectsModule extends VuexModule {
 
   @Mutation
   private REMOVE_PROJECT(project: Project): void {
-    this.projects = this.projects.filter((el) => { el.id !== project.id })
+    this.projects = this.projects.filter((el) => { return el.id !== project.id })
   }
 
   @Mutation

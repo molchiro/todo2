@@ -28,7 +28,7 @@ export default class TodosModule extends VuexModule {
 
   get lowestNotYetTodoIndex(): number {
     return (
-      this.todos.filter((x) => { x.done === false }).length - 1
+      this.todos.filter((x) => { return x.done === false }).length - 1
     )
   }
 
@@ -44,7 +44,7 @@ export default class TodosModule extends VuexModule {
 
   @Mutation
   private REMOVE_TODO(todo: Todo): void {
-    this.todos = this.todos.filter((el) => { el.id !== todo.id })
+    this.todos = this.todos.filter((el) => { return el.id !== todo.id })
   }
 
   @Mutation

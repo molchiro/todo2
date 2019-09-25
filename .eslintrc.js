@@ -24,7 +24,6 @@ module.exports = {
   // add your custom rules here
   rules: {
     '@typescript-eslint/no-unused-vars': 'error',
-    'no-console': 'off',
-    'array-callback-return': 'off'
+    'no-console': 'off'
   }
 }
