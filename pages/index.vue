@@ -1,6 +1,6 @@
 <template lang="pug">
   v-layout
-    div index
+    div メニューからプロジェクトを選択してください。
 </template>
 
 <script lang="ts">
