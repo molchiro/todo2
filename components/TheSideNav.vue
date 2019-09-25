@@ -10,7 +10,7 @@
       v-divider
       v-subheader OTHERS
 
-      v-list-item(@click="signOut")
+      v-list-item(@click="signOut()")
         v-row(dense)
           v-col(cols=1)
           v-col.pl-3

@@ -2,7 +2,7 @@
   v-sheet
     delete-dialog(
       v-model="isShowDeleteDialog"
-      @delete="deleteProject"
+      @delete="deleteProject()"
     ) このプロジェクトに紐づくTODOも全て削除されます。<br/>この操作は取り消せません。
     v-container.px-2
       v-row(no-gutters)

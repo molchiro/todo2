@@ -2,7 +2,7 @@
   v-layout.py-2.grey.lighten-3
     delete-dialog(
       v-model="isShowDeleteDialog"
-      @delete="deleteTodo"
+      @delete="deleteTodo()"
     ) この操作は取り消せません
     v-row(no-gutters)
       v-col(offset=1)
@@ -21,7 +21,7 @@
             ) edit
         v-row(no-gutters)
           v-col.text-center.pt-2
-            v-icon(@click="showDeleteDialog") delete
+            v-icon(@click="showDeleteDialog()") delete
 </template>
 
 <script lang="ts">

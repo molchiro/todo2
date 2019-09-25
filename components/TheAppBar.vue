@@ -6,7 +6,7 @@
   )
     v-app-bar-nav-icon(
       v-if="showSideIcon"
-      @click.stop="toggleSideNav"
+      @click.stop="toggleSideNav()"
     )
     v-toolbar-title Todo List
 </template>

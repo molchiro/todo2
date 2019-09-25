@@ -15,7 +15,7 @@
           v-col.pl-3
             v-list-item-content
               v-list-item-title {{ project.title }}
-    v-list-item(@click="addProject")
+    v-list-item(@click="addProject()")
       v-row(
         dense
         align="center"

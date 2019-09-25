@@ -9,7 +9,7 @@
       v-col(cols=10)
         div {{ todo.content }}
       v-col.text-center(cols=1)
-        v-icon(@click="startEdit") more_horiz
+        v-icon(@click="startEdit()") more_horiz
 </template>
 
 <script lang="ts">

@@ -4,7 +4,7 @@
     align-center
   )
     v-flex
-      v-btn(@click="signIn") SIGNIN
+      v-btn(@click="signIn()") SIGNIN
 </template>
 
 <script lang="ts">

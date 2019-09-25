@@ -3,7 +3,7 @@
     draggable(
       :list="todos"
       :delay="50"
-      @end="draggableEnd"
+      @end="draggableEnd()"
     )
       div(
         v-for="todo in todos"

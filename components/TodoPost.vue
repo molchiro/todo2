@@ -20,6 +20,7 @@ import { getModule } from 'vuex-module-decorators'
 import TodosModule from '@/store/modules/todos'
 import AuthModule from '@/store/modules/auth'
 import { Todo } from '@/models/todo'
+
 @Component
 export default class TodoPost extends Vue {
   todosModule = getModule(TodosModule, this.$store)
