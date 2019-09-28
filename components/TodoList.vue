@@ -3,7 +3,7 @@
     draggable(
       :list="todos"
       :delay="50"
-      @end="draggableEnd()"
+      @end="draggableEnd($event)"
     )
       div(
         v-for="todo in todos"
@@ -50,11 +50,11 @@ export default class TodoList extends Vue {
     return this.todosModule.getTodos
   }
 
-  draggableEnd(e): void {
-    if (this.todos[e.oldIndex].done) return
+  draggableEnd(event): void {
+    if (this.todos[event.oldIndex].done) return
     this.todosModule.moveTodo({
-      oldIndex: e.oldIndex,
-      newIndex: e.newIndex
+      oldIndex: event.oldIndex,
+      newIndex: event.newIndex
     })
   }
 

@@ -3,7 +3,7 @@
     draggable(
       :list="projects"
       :delay="50"
-      @end="draggableEnd"
+      @end="draggableEnd($event)"
     )
       v-list-item(
         v-for="project in projects"
@@ -54,10 +54,10 @@ export default class ProjectList extends Vue {
     this.projectsModule.bindProjects(this.authModule.currentUserUid)
   }
 
-  draggableEnd(e): void {
+  draggableEnd(event): void {
     this.projectsModule.moveProject({
-      oldIndex: e.oldIndex,
-      newIndex: e.newIndex
+      oldIndex: event.oldIndex,
+      newIndex: event.newIndex
     })
   }
 
