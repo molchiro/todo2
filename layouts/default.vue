@@ -3,8 +3,7 @@
     the-app-bar(@toggleSideNav="toggleSideNav")
     the-side-nav(v-model="isShowSideNav")
     v-content
-      v-container
-        nuxt
+      nuxt
 </template>
 
 <script lang="ts">

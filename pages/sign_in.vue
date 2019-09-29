@@ -1,10 +1,6 @@
 <template lang="pug">
-  v-layout(
-    column
-    align-center
-  )
-    v-flex
-      v-btn(@click="signIn()") SIGNIN
+  v-container.fill-height.justify-center
+    v-btn(@click="signIn()") SIGNIN
 </template>
 
 <script lang="ts">

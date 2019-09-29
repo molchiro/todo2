@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-layout
+  v-container.fill-height.justify-center
     div メニューからプロジェクトを選択してください。
 </template>
 

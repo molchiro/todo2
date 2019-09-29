@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-layout.py-2.grey.lighten-3
+  v-container.px-0.grey.lighten-3
     delete-dialog(
       v-model="isShowDeleteDialog"
       @delete="deleteTodo()"

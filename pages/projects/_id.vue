@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-sheet
+  v-container
     delete-dialog(
       v-model="isShowDeleteDialog"
       @delete="deleteProject()"
@@ -8,12 +8,12 @@
       v-row(no-gutters)
         v-col(cols=11)
           h2
-            input(
+            input.fill-width(
               ref="projectTitleField"
               v-model="localProject.title"
               @keypress.enter="updateTitle($event)"
             )
-        v-col.align-self-center(cols=1)
+        v-col.align-self-center.text-center(cols=1)
           v-icon(@click="isShowDeleteDialog = true") delete
     todo-post.mb-2(:projectId="this.projectId")
     todo-list
@@ -104,3 +104,8 @@ export default class projectPage extends Vue {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.fill-width
+  width: 100%
+</style>
