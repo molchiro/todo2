@@ -54,11 +54,8 @@ export default class ProjectList extends Vue {
     this.projectsModule.bindProjects(this.authModule.currentUserUid)
   }
 
-  draggableEnd(event): void {
-    this.projectsModule.moveProject({
-      oldIndex: event.oldIndex,
-      newIndex: event.newIndex
-    })
+  draggableEnd({ oldIndex, newIndex }): void {
+    this.projectsModule.moveProject({ oldIndex, newIndex })
   }
 
   addProject(): void {

@@ -50,12 +50,10 @@ export default class TodoList extends Vue {
     return this.todosModule.getTodos
   }
 
-  draggableEnd(event): void {
-    if (this.todos[event.oldIndex].done) return
-    this.todosModule.moveTodo({
-      oldIndex: event.oldIndex,
-      newIndex: event.newIndex
-    })
+  draggableEnd({ oldIndex, newIndex }): void {
+    if (!this.todos[oldIndex].done) {
+      this.todosModule.moveTodo({ oldIndex, newIndex })
+    }
   }
 
   setEdittingTodoId(id: string): void {
