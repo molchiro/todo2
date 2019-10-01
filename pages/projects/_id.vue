@@ -86,8 +86,14 @@ export default class projectPage extends Vue {
     }
   }
 
-  validate({ params }): boolean {
-    return !!projectsRef.doc(params.id).get()
+  async validate({ params }): Promise<boolean> {
+    const isProjectExists = await projectsRef
+      .doc(params.id)
+      .get()
+      .then((snapshot) => {
+        return snapshot.exists
+      })
+    return isProjectExists
   }
 
   updateTitle(event): void {
