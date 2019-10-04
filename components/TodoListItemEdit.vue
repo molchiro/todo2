@@ -26,8 +26,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
-import TodosModule from '@/store/modules/todos'
+import { todosStore } from '@/store'
 import DeleteDialog from '@/components/DeleteDialog.vue'
 import { Todo } from '@/models/todo'
 
@@ -37,8 +36,6 @@ import { Todo } from '@/models/todo'
   }
 })
 export default class TodoItemEdit extends Vue {
-  todosModule = getModule(TodosModule, this.$store)
-
   isShowDeleteDialog: boolean = false
 
   @Prop() readonly todo: Todo
@@ -52,7 +49,7 @@ export default class TodoItemEdit extends Vue {
 
   updateContent(): void {
     if (this.canUpdate) {
-      this.todosModule.updateTodo(this.localTodo)
+      todosStore.updateTodo(this.localTodo)
       this.$emit('endEdit')
     }
   }
@@ -62,7 +59,7 @@ export default class TodoItemEdit extends Vue {
   }
 
   deleteTodo(): void {
-    this.todosModule.deleteTodo(this.localTodo)
+    todosStore.deleteTodo(this.localTodo)
     this.isShowDeleteDialog = false
   }
 }

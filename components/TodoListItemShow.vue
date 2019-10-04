@@ -14,15 +14,12 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
-import TodosModule from '@/store/modules/todos'
+import { todosStore } from '@/store'
 import { Todo } from '@/models/todo'
 import { serverTimeStamp } from '@/plugins/firebase'
 
 @Component
 export default class TodoItemShow extends Vue {
-  todosModule = getModule(TodosModule, this.$store)
-
   @Prop() readonly todo: Todo
 
   get done(): boolean {
@@ -30,7 +27,7 @@ export default class TodoItemShow extends Vue {
   }
 
   set done(val) {
-    this.todosModule.updateTodo(
+    todosStore.updateTodo(
       new Todo({
         ...this.todo,
         done: val,

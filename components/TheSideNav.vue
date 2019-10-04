@@ -20,8 +20,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
-import AuthModule from '@/store/modules/auth'
+import { authStore } from '@/store'
 import ProjectList from '@/components/ProjectList.vue'
 
 @Component({
@@ -30,12 +29,10 @@ import ProjectList from '@/components/ProjectList.vue'
   }
 })
 export default class TheSideNav extends Vue {
-  authModule = getModule(AuthModule, this.$store)
-
   @Prop() readonly value: boolean | null = null
 
   signOut(): void {
-    this.authModule.signOut()
+    authStore.signOut()
     this.$router.push('sign_in')
   }
 }

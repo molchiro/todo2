@@ -21,10 +21,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
-import TodosModule from '@/store/modules/todos'
-import AuthModule from '@/store/modules/auth'
-import ProjectsModule from '@/store/modules/projects'
+import { authStore, projectsStore, todosStore } from '@/store'
 import TodoPost from '@/components/TodoPost.vue'
 import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
@@ -40,12 +37,6 @@ const projectsRef = db.collection('projects')
   }
 })
 export default class projectPage extends Vue {
-  todosModule = getModule(TodosModule, this.$store)
-
-  authModule = getModule(AuthModule, this.$store)
-
-  projectsModule = getModule(ProjectsModule, this.$store)
-
   isShowDeleteDialog: boolean = false
 
   get projectId(): string {
@@ -53,7 +44,7 @@ export default class projectPage extends Vue {
   }
 
   get project(): Project {
-    const p = this.projectsModule.getProjects.find((x) => {
+    const p = projectsStore.getProjects.find((x) => {
       return x.id === this.projectId
     })
     if (p) {
@@ -73,8 +64,8 @@ export default class projectPage extends Vue {
   }
 
   created(): void {
-    this.todosModule.bindTodos({
-      uid: this.authModule.currentUserUid,
+    todosStore.bindTodos({
+      uid: authStore.currentUserUid,
       projectId: this.projectId
     })
   }
@@ -98,13 +89,13 @@ export default class projectPage extends Vue {
 
   updateTitle(event): void {
     if (this.canUpdate) {
-      this.projectsModule.updateProject(this.localProject)
+      projectsStore.updateProject(this.localProject)
     }
     event.srcElement.blur()
   }
 
   deleteProject(): void {
-    this.projectsModule.deleteProject(this.localProject)
+    projectsStore.deleteProject(this.localProject)
     this.isShowDeleteDialog = false
     this.$router.push('/')
   }

@@ -16,21 +16,15 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
-import TodosModule from '@/store/modules/todos'
-import AuthModule from '@/store/modules/auth'
+import { authStore, todosStore } from '@/store'
 import { Todo } from '@/models/todo'
 
 @Component
 export default class TodoPost extends Vue {
-  todosModule = getModule(TodosModule, this.$store)
-
-  authModule = getModule(AuthModule, this.$store)
-
   @Prop() readonly projectId: string
 
   todo = new Todo({
-    uid: this.authModule.currentUserUid,
+    uid: authStore.currentUserUid,
     projectId: this.projectId
   })
 
@@ -41,9 +35,9 @@ export default class TodoPost extends Vue {
 
   addTodo(): void {
     if (this.todo.isValid()) {
-      this.todosModule.addTodo(this.todo)
+      todosStore.addTodo(this.todo)
       this.todo = new Todo({
-        uid: this.authModule.currentUserUid,
+        uid: authStore.currentUserUid,
         projectId: this.projectId
       })
     }

@@ -30,10 +30,8 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
 import draggable from 'vuedraggable'
-import ProjectsModule from '@/store/modules/projects'
-import AuthModule from '@/store/modules/auth'
+import { authStore, projectsStore } from '@/store'
 import { Project } from '@/models/project'
 
 @Component({
@@ -42,25 +40,21 @@ import { Project } from '@/models/project'
   }
 })
 export default class ProjectList extends Vue {
-  projectsModule = getModule(ProjectsModule, this.$store)
-
-  authModule = getModule(AuthModule, this.$store)
-
   get projects(): Project[] {
-    return this.projectsModule.getProjects
+    return projectsStore.getProjects
   }
 
   created(): void {
-    this.projectsModule.bindProjects(this.authModule.currentUserUid)
+    projectsStore.bindProjects(authStore.currentUserUid)
   }
 
   draggableEnd({ oldIndex, newIndex }): void {
-    this.projectsModule.moveProject({ oldIndex, newIndex })
+    projectsStore.moveProject({ oldIndex, newIndex })
   }
 
   addProject(): void {
-    this.projectsModule
-      .addProject(new Project({ uid: this.authModule.currentUserUid }))
+    projectsStore
+      .addProject(new Project({ uid: authStore.currentUserUid }))
       .then((ref) => {
         this.moveToProjectPage(ref.id)
       })

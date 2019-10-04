@@ -24,10 +24,8 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
 import draggable from 'vuedraggable'
-import TodosModule from '@/store/modules/todos'
-import AuthModule from '@/store/modules/auth'
+import { todosStore } from '@/store'
 import { Todo } from '@/models/todo'
 import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
 import TodoListItemShow from '@/components/TodoListItemShow.vue'
@@ -40,19 +38,15 @@ import TodoListItemShow from '@/components/TodoListItemShow.vue'
   }
 })
 export default class TodoList extends Vue {
-  todosModule = getModule(TodosModule, this.$store)
-
-  authModule = getModule(AuthModule, this.$store)
-
   edittingTodoId: string = ''
 
   get todos(): Todo[] {
-    return this.todosModule.getTodos
+    return todosStore.getTodos
   }
 
   draggableEnd({ oldIndex, newIndex }): void {
     if (!this.todos[oldIndex].done) {
-      this.todosModule.moveTodo({ oldIndex, newIndex })
+      todosStore.moveTodo({ oldIndex, newIndex })
     }
   }
 
