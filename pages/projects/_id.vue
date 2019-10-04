@@ -16,7 +16,16 @@
         v-col.align-self-center.text-center(cols=1)
           v-icon(@click="isShowDeleteDialog = true") delete
     todo-post.mb-2(:projectId="this.projectId")
-    todo-list
+    div.text-center(
+      v-if="isTodosLoading"
+    )
+      v-progress-circular(
+        indeterminate
+        color="primary"
+      )
+    div(v-else)
+      div.text-center(v-if="isTodosEmpty") todoを追加してください
+      todo-list(v-else)
 </template>
 
 <script lang="ts">
@@ -52,6 +61,14 @@ export default class projectPage extends Vue {
     } else {
       return new Project({ title: '' })
     }
+  }
+
+  get isTodosLoading(): boolean {
+    return todosStore.isLoading
+  }
+
+  get isTodosEmpty(): boolean {
+    return todosStore.isEmpty
   }
 
   get localProject(): Project {

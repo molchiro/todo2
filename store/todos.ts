@@ -18,6 +18,10 @@ let unsubscribe: Function | null = null
 export default class TodosModule extends VuexModule {
   todos: Todo[] = []
 
+  isLoading: boolean = true
+
+  isEmpty: boolean = true
+
   get getTodos(): Todo[] {
     return this.todos.map((todo) => { return new Todo({ ...todo }) })
   }
@@ -73,6 +77,16 @@ export default class TodosModule extends VuexModule {
     ]
   }
 
+  @Mutation
+  private SET_ISLOADING(value): void {
+    this.isLoading = value
+  }
+
+  @Mutation
+  private SET_ISEMPTY(value): void {
+    this.isEmpty = value
+  }
+
   @Action
   addTodo(todo: Todo): void {
     todosRef.add(todo.data())
@@ -118,6 +132,8 @@ export default class TodosModule extends VuexModule {
       )
     }
     this.INIT_TODO()
+    this.SET_ISLOADING(true)
+    this.SET_ISEMPTY(true)
     if (typeof(unsubscribe) === 'function') {
       unsubscribe()
     }
@@ -136,6 +152,8 @@ export default class TodosModule extends VuexModule {
             this.REMOVE_TODO(mapDoc2Todo(change.doc))
           }
         })
+        this.SET_ISLOADING(false)
+        this.SET_ISEMPTY(snapshot.empty)
         this.SORT_TODOS()
       })
   }
