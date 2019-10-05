@@ -5,38 +5,28 @@
       :delay="50"
       @end="draggableEnd($event)"
     )
-      v-list-item(
+      ProjectListItem(
         v-for="project in projects"
         :key="project.id"
-        @click="moveToProjectPage(project.id)"
+        @click.native="moveToProjectPage(project.id)"
       )
-        v-row(dense)
-          v-col(cols=1)
-          v-col.pl-3
-            v-list-item-content
-              v-list-item-title {{ project.title }}
-    v-list-item(@click="addProject()")
-      v-row(
-        dense
-        align="center"
-      )
-        v-col(cols=1)
-          v-list-item-icon
-            v-icon add
-        v-col.pl-3
-          v-list-item-content
-            v-list-item-title プロジェクトを追加
+        template(v-slot:title) {{ project.title }}
+    ProjectListItem(@click.native="addProject()")
+      template(v-slot:icon) add
+      template(v-slot:title) プロジェクトを追加
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
+import ProjectListItem from '@/components/ProjectListItem.vue'
 import { authStore, projectsStore } from '@/store'
 import { Project } from '@/models/project'
 
 @Component({
   components: {
-    draggable
+    draggable,
+    ProjectListItem
   }
 })
 export default class ProjectList extends Vue {
