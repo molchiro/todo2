@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'nuxt-property-decorator'
+import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import { authStore, todosStore } from '@/store'
 import { Todo } from '@/models/todo'
 
@@ -28,17 +28,13 @@ export default class TodoPost extends Vue {
     projectId: this.projectId
   })
 
-  @Watch('todosModule.maxPriority')
-  onMaxPriorityChanged(newVal: number) {
-    this.todo.priority = newVal + 1
-  }
-
   addTodo(): void {
     if (this.todo.isValid()) {
       todosStore.addTodo(this.todo)
       this.todo = new Todo({
         uid: authStore.currentUserUid,
-        projectId: this.projectId
+        projectId: this.projectId,
+        priority: todosStore.maxPriority + 1
       })
     }
   }
