@@ -1,35 +1,40 @@
 <template lang="pug">
   v-container.pa-0
+    project-post-dialog(v-model="isShowPostDialog")
     draggable(
       :list="projects"
       :delay="50"
       @end="draggableEnd($event)"
     )
-      ProjectListItem(
+      project-list-item(
         v-for="project in projects"
         :key="project.id"
-        @click.native="moveToProjectPage(project.id)"
+        @click.native="$router.push(`/projects/${project.id}`)"
       )
         template(v-slot:title) {{ project.title }}
-    ProjectListItem(@click.native="addProject()")
+    ProjectListItem(@click.native="onClickAddProject()")
       template(v-slot:icon) add
-      template(v-slot:title) プロジェクトを追加
+      template(v-slot:title) プロジェクトを作成
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
 import ProjectListItem from '@/components/ProjectListItem.vue'
+import ProjectPostDialog from '@/components/ProjectPostDialog.vue'
 import { authStore, projectsStore } from '@/store'
 import { Project } from '@/models/project'
 
 @Component({
   components: {
     draggable,
-    ProjectListItem
+    ProjectListItem,
+    ProjectPostDialog
   }
 })
 export default class ProjectList extends Vue {
+  isShowPostDialog: boolean = false
+
   get projects(): Project[] {
     return projectsStore.getProjects
   }
@@ -42,16 +47,8 @@ export default class ProjectList extends Vue {
     projectsStore.moveProject({ oldIndex, newIndex })
   }
 
-  addProject(): void {
-    projectsStore
-      .addProject(new Project({ uid: authStore.currentUserUid }))
-      .then((ref) => {
-        this.moveToProjectPage(ref.id)
-      })
-  }
-
-  moveToProjectPage(projectId: string): void {
-    this.$router.push(`/projects/${projectId}`)
+  onClickAddProject(): void {
+    this.isShowPostDialog = true
   }
 }
 </script>

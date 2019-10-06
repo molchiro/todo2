@@ -17,7 +17,7 @@ export class Project implements IProject {
   constructor({
     id = '',
     uid = '',
-    title = '新しいプロジェクト',
+    title = '',
     priority = 1
 
   }: Partial<IProject>) {
