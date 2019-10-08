@@ -14,7 +14,7 @@
             @click.native="$router.push(`/projects/${project.id}`)"
           )
             template(v-slot:title) {{ project.title }}
-        ProjectListItem(@click.native="onClickAddProject()")
+        project-list-item(@click.native="onClickAddProject()")
           template(v-slot:icon) add
           template(v-slot:title) プロジェクトを作成
 </template>
