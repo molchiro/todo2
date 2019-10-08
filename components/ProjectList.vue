@@ -1,20 +1,22 @@
 <template lang="pug">
   v-container.pa-0
     project-post-dialog(v-model="isShowPostDialog")
-    draggable(
-      :list="projects"
-      :delay="50"
-      @end="draggableEnd($event)"
-    )
-      project-list-item(
-        v-for="project in projects"
-        :key="project.id"
-        @click.native="$router.push(`/projects/${project.id}`)"
-      )
-        template(v-slot:title) {{ project.title }}
-    ProjectListItem(@click.native="onClickAddProject()")
-      template(v-slot:icon) add
-      template(v-slot:title) プロジェクトを作成
+    v-list
+      v-list-item-group
+        draggable(
+          :list="projects"
+          :delay="50"
+          @end="draggableEnd($event)"
+        )
+          project-list-item(
+            v-for="project in projects"
+            :key="project.id"
+            @click.native="$router.push(`/projects/${project.id}`)"
+          )
+            template(v-slot:title) {{ project.title }}
+        ProjectListItem(@click.native="onClickAddProject()")
+          template(v-slot:icon) add
+          template(v-slot:title) プロジェクトを作成
 </template>
 
 <script lang="ts">
