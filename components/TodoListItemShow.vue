@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container.pa-0.my-2
+  v-container.pa-0.my-2.cursor-move
     v-row(no-gutters)
       v-col(cols=1)
         v-checkbox.justify-center.mt-0.pt-0(
