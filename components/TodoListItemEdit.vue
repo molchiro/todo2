@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container.px-0.grey.lighten-3
+  v-container.px-0
     v-row(no-gutters)
       v-col(cols=1)
       v-col

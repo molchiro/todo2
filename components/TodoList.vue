@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-card.pa-2
+  v-card.px-3.py-1
     todo-list-item-new(
       :isEditting="edittingTodoId === 'new'"
       :projectId="projectId"
@@ -15,6 +15,7 @@
         v-for="todo in todos"
         :key="todo.id"
       )
+        v-divider
         todo-list-item-show(
           :todo="todo"
           :isEditting="todo.id === edittingTodoId"
