@@ -1,5 +1,8 @@
 <template lang="pug">
-  v-container.pa-0.my-2
+  v-container.pa-0.my-2(
+    @mouseover="isMouseOvered=true"
+    @mouseleave="isMouseOvered=false"
+  )
     delete-dialog(
       v-model="isShowDeleteDialog"
       @delete="deleteTodo()"
@@ -20,7 +23,10 @@
         v-col(cols=10)
           div(@click="$emit('startEdit')") {{ todo.content }}
         v-col.text-center(cols=1)
-          v-icon(@click="showDeleteDialog()") delete
+          v-icon(
+            v-show="isMouseOvered"
+            @click="showDeleteDialog()"
+          ) delete
 </template>
 
 <script lang="ts">
@@ -43,6 +49,8 @@ export default class TodoListItemShow extends Vue {
   @Prop({ default: false }) readonly isEditting: ConstrainBoolean
 
   isShowDeleteDialog: boolean = false
+
+  isMouseOvered: boolean = false
 
   localTodo: Todo = new Todo({ ...this.todo })
 
