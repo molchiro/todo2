@@ -9,6 +9,7 @@
             @keypress.enter="submit()"
             outlined
             hide-details
+            autofocus
           )
         v-row
           v-btn.mt-2(
