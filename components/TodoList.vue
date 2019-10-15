@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-card.pa-2
+  div
     draggable(
       :list="todos"
       :delay="50"
@@ -9,35 +9,38 @@
         v-for="todo in todos"
         :key="todo.id"
       )
-        todo-list-item-edit(
-          v-if="todo.id === edittingTodoId"
+        todo-list-item-show(
           :todo="todo"
+          :isEditting="todo.id === edittingTodoId"
+          @click.native.capture="setEdittingTodoId(todo.id)"
           @endEdit="setEdittingTodoId('')"
         )
-        todo-list-item-show(
-          v-else
-          :todo="todo"
-          @click.native.capture="setEdittingTodoId('')"
-          @startEdit="setEdittingTodoId(todo.id)"
-        )
+    todo-list-item-new(
+      :isEditting="edittingTodoId === 'new'"
+      :projectId="projectId"
+      @click.native.capture="setEdittingTodoId('new')"
+      @endEdit="setEdittingTodoId('')"
+    )
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'nuxt-property-decorator'
+import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
 import { todosStore } from '@/store'
 import { Todo } from '@/models/todo'
-import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
 import TodoListItemShow from '@/components/TodoListItemShow.vue'
+import TodoListItemNew from '@/components/TodoListItemNew.vue'
 
 @Component({
   components: {
-    TodoListItemEdit,
     TodoListItemShow,
+    TodoListItemNew,
     draggable
   }
 })
 export default class TodoList extends Vue {
+  @Prop() readonly projectId: string
+
   edittingTodoId: string = ''
 
   get todos(): Todo[] {

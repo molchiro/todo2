@@ -15,23 +15,18 @@
             )
         v-col.align-self-center.text-center(cols=1)
           v-icon(@click="isShowDeleteDialog = true") delete
-    todo-post.mb-2(:projectId="this.projectId")
-    div.text-center(
-      v-if="isTodosLoading"
-    )
+    div.text-center(v-if="isTodosLoading")
       v-progress-circular(
         indeterminate
         color="primary"
       )
-    div(v-else)
-      div.text-center(v-if="isTodosEmpty") todoを追加してください
-      todo-list(v-else)
+    v-card.pa-2(v-else)
+      todo-list(:projectId="projectId")
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
 import { authStore, projectsStore, todosStore } from '@/store'
-import TodoPost from '@/components/TodoPost.vue'
 import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
 import { db } from '@/plugins/firebase'
@@ -40,7 +35,6 @@ const projectsRef = db.collection('projects')
 
 @Component({
   components: {
-    TodoPost,
     TodoList,
     DeleteDialog
   }
