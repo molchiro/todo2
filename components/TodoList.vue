@@ -1,5 +1,11 @@
 <template lang="pug">
   v-card.pa-2
+    todo-list-item-new(
+      :isEditting="edittingTodoId === 'new'"
+      :projectId="projectId"
+      @click.native.capture="setEdittingTodoId('new')"
+      @endEdit="setEdittingTodoId('')"
+    )
     draggable(
       :list="todos"
       :delay="50"
@@ -15,12 +21,6 @@
           @startEdit="setEdittingTodoId(todo.id)"
           @endEdit="setEdittingTodoId('')"
         )
-    todo-list-item-new(
-      :isEditting="edittingTodoId === 'new'"
-      :projectId="projectId"
-      @click.native.capture="setEdittingTodoId('new')"
-      @endEdit="setEdittingTodoId('')"
-    )
 </template>
 
 <script lang="ts">
