@@ -3,10 +3,6 @@
     @mouseover="isMouseOvered=true"
     @mouseleave="isMouseOvered=false"
   )
-    delete-dialog(
-      v-model="isShowDeleteDialog"
-      @delete="deleteTodo()"
-    ) この操作は取り消せません
     div(v-if="isEditting")
       todo-list-item-edit(
         :todo="localTodo"
@@ -25,7 +21,7 @@
         v-col.text-center(cols=1)
           v-icon(
             v-show="isMouseOvered"
-            @click="showDeleteDialog()"
+            @click="$emit('showDeleteDialog')"
           ) delete
 </template>
 
@@ -34,12 +30,10 @@ import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import { todosStore } from '@/store'
 import { Todo } from '@/models/todo'
 import { serverTimeStamp } from '@/plugins/firebase'
-import DeleteDialog from '@/components/DeleteDialog.vue'
 import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
 
 @Component({
   components: {
-    DeleteDialog,
     TodoListItemEdit
   }
 })
@@ -47,8 +41,6 @@ export default class TodoListItemShow extends Vue {
   @Prop() readonly todo: Todo
 
   @Prop({ default: false }) readonly isEditting: ConstrainBoolean
-
-  isShowDeleteDialog: boolean = false
 
   isMouseOvered: boolean = false
 
@@ -66,15 +58,6 @@ export default class TodoListItemShow extends Vue {
         doneAt: val ? serverTimeStamp : null
       })
     )
-  }
-
-  showDeleteDialog(): void {
-    this.isShowDeleteDialog = true
-  }
-
-  deleteTodo(): void {
-    todosStore.deleteTodo(this.localTodo)
-    this.isShowDeleteDialog = false
   }
 
   updateContent(todo): void {
