@@ -18,7 +18,7 @@
             hide-details
           )
         v-col(cols=10)
-          div {{ todo.content }}
+          div(@click="$emit('startEdit')") {{ todo.content }}
         v-col.text-center(cols=1)
           v-icon(@click="showDeleteDialog()") delete
 </template>

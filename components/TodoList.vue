@@ -12,7 +12,7 @@
         todo-list-item-show(
           :todo="todo"
           :isEditting="todo.id === edittingTodoId"
-          @click.native.capture="setEdittingTodoId(todo.id)"
+          @startEdit="setEdittingTodoId(todo.id)"
           @endEdit="setEdittingTodoId('')"
         )
     todo-list-item-new(
