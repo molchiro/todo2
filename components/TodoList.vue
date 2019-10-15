@@ -19,7 +19,6 @@
         v-for="todo in todos"
         :key="todo.id"
       )
-        v-divider
         todo-list-item-show(
           :todo="todo"
           :isEditting="todo.id === edittingTodoId"

@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container.pa-0.my-2(
+  v-container.pa-0.my-3(
     @mouseover="isMouseOvered=true"
     @mouseleave="isMouseOvered=false"
   )
