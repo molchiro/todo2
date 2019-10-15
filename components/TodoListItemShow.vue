@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container.pa-0.my-2.cursor-move
+  v-container.pa-0.my-2
     delete-dialog(
       v-model="isShowDeleteDialog"
       @delete="deleteTodo()"

@@ -20,8 +20,10 @@
         indeterminate
         color="primary"
       )
-    v-card.pa-2(v-else)
-      todo-list(:projectId="projectId")
+    todo-list(
+      v-else
+      :projectId="projectId"
+    )
 </template>
 
 <script lang="ts">

@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  v-card.pa-2
     draggable(
       :list="todos"
       :delay="50"
