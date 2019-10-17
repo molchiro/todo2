@@ -11,14 +11,16 @@
       )
     div(v-else)
       v-row(no-gutters)
+        div.mouseovered-icon
+          v-icon.cursor-move(v-show="isMouseOvered") drag_handle
         v-col(cols=1)
           v-checkbox.justify-center.mt-0.pt-0(
             v-model="done"
             hide-details
           )
-        v-col(cols=10)
+        v-col(grow)
           div(@click="$emit('startEdit')") {{ todo.content }}
-        v-col.text-center(cols=1)
+        div.mouseovered-icon
           v-icon(
             v-show="isMouseOvered"
             @click="$emit('showDeleteDialog')"
@@ -69,3 +71,9 @@ export default class TodoListItemShow extends Vue {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.mouseovered-icon
+  width: 24px
+  height: 24px
+</style>

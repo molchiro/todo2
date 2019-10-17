@@ -8,16 +8,12 @@
       )
     div(v-else)
       v-row(no-gutters)
-        v-col(cols=1)
-          v-btn(
-            text
-            icon
-            x-small
-          )
-            v-icon add
-        v-col(cols=10)
+        div.mouseovered-icon
+        v-col.text-center(cols=1)
+          v-icon add
+        v-col(grow)
           div.grey--text 新しいTODOを追加
-        v-col(cols=1)
+        div.mouseovered-icon
 </template>
 
 <script lang="ts">
@@ -51,3 +47,9 @@ export default class TodoListItemNew extends Vue {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.mouseovered-icon
+  width: 24px
+  height: 24px
+</style>
