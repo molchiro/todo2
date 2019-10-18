@@ -1,5 +1,8 @@
 <template lang="pug">
-  v-container.pa-0.my-2
+  v-container.pa-0.my-2(
+    @mouseover="isMouseOvered=true"
+    @mouseleave="isMouseOvered=false"
+  )
     div(v-if="isEditting")
       todo-list-item-edit(
         :todo="newTodo"
@@ -10,9 +13,9 @@
       v-row(no-gutters)
         div.mouseovered-icon
         v-col.text-center(cols=1)
-          v-icon add
+          v-icon(:class="isMouseOvered ? 'blue--text' : 'grey--text'") add
         v-col(grow)
-          div.grey--text 新しいTODOを追加
+          div(:class="isMouseOvered ? 'blue--text' : 'grey--text'") 新しいTODOを追加
         div.mouseovered-icon
 </template>
 
@@ -31,6 +34,8 @@ export default class TodoListItemNew extends Vue {
   @Prop() readonly projectId: string
 
   @Prop({ default: false }) readonly isEditting: ConstrainBoolean
+
+  isMouseOvered: boolean = false
 
   newTodo = new Todo({
     uid: authStore.currentUserUid,
