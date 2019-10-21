@@ -1,27 +1,30 @@
 <template lang="pug">
-  v-container.px-0
-    v-row(no-gutters)
-      v-col(cols=1)
-      v-col
-        v-row
-          v-text-field.white(
-            v-model="localTodo.content"
-            @keypress.enter="submit()"
-            outlined
-            hide-details
-            autofocus
-          )
-        v-row
-          v-btn.mt-2(
-            @click="submit()"
-            :disabled="!canUpdate"
-            color="primary"
-          ) 保存
-          v-btn.mt-2.ml-2(
-            @click="$emit('endEdit')"
-            text
-          ) キャンセル
-      v-col(cols=1)
+  v-container.pa-0
+    v-row.pl-8
+      v-icon.ml-n6.cursor-move(v-show="!isNew") drag_handle
+      v-text-field.px-2.white(
+        v-model="localTodo.content"
+        @keypress.enter="submit()"
+        outlined
+        hide-details
+        autofocus
+      )
+    v-row.pl-8
+      v-btn.mt-2.ml-2(
+        @click="submit()"
+        :disabled="!canUpdate"
+        color="primary"
+      ) 保存
+      v-btn.mt-2.ml-2(
+        @click="$emit('endEdit')"
+        text
+      ) キャンセル
+      v-spacer
+      v-btn.mt-2(
+        v-show="!isNew"
+        @click="$emit('showDeleteDialog')"
+        text
+      ) 削除
 </template>
 
 <script lang="ts">
@@ -39,6 +42,10 @@ export default class TodoListItemEdit extends Vue {
   get canUpdate(): boolean {
     const isChanged = this.localTodo.content !== this.todo.content
     return isChanged && this.localTodo.isValid()
+  }
+
+  get isNew(): boolean {
+    return this.todo.id === ''
   }
 
   submit(): void {

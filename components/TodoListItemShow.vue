@@ -1,30 +1,21 @@
 <template lang="pug">
-  v-container.pa-0.my-3(
-    @mouseover="isMouseOvered=true"
-    @mouseleave="isMouseOvered=false"
-  )
-    div(v-if="isEditting")
-      todo-list-item-edit(
-        :todo="localTodo"
-        :submitFn="updateContent"
-        @endEdit="$emit('endEdit')"
-      )
-    div(v-else)
-      v-row(no-gutters)
-        div.mouseovered-icon
-          v-icon.cursor-move(v-show="isMouseOvered") drag_handle
-        v-col(cols=1)
-          v-checkbox.justify-center.mt-0.pt-0(
-            v-model="done"
-            hide-details
-          )
-        v-col(grow)
-          div(@click="$emit('startEdit')") {{ todo.content }}
-        div.mouseovered-icon
-          v-icon(
-            v-show="isMouseOvered"
-            @click="$emit('showDeleteDialog')"
-          ) delete
+  v-container.pa-0.my-3
+    todo-list-item-edit(
+      v-if="isEditting"
+      :todo="localTodo"
+      :submitFn="updateContent"
+      @endEdit="$emit('endEdit')"
+      @showDeleteDialog="$emit('showDeleteDialog')"
+    )
+    v-row.pl-8(
+      v-else
+    )
+      v-checkbox.justify-center.ma-0.ml-n6.pa-0(
+          v-model="done"
+          hide-details
+        )
+      v-col.py-0.pl-1
+        div(@click="$emit('startEdit')") {{ todo.content }}
 </template>
 
 <script lang="ts">
@@ -43,8 +34,6 @@ export default class TodoListItemShow extends Vue {
   @Prop() readonly todo: Todo
 
   @Prop({ default: false }) readonly isEditting: ConstrainBoolean
-
-  isMouseOvered: boolean = false
 
   localTodo: Todo = new Todo({ ...this.todo })
 

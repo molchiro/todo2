@@ -7,16 +7,13 @@
       todo-list-item-edit(
         :todo="newTodo"
         :submitFn="updateContent"
-        @endEdit="$emit('endEdit')"
+        @endEdit="onEndEdit"
       )
     div(v-else)
-      v-row(no-gutters)
-        div.mouseovered-icon
-        v-col.text-center(cols=1)
-          v-icon(:class="isMouseOvered ? 'blue--text' : 'grey--text'") add
-        v-col(grow)
+      v-row.pl-8
+        v-icon.ml-n6(:class="isMouseOvered ? 'blue--text' : 'grey--text'") add
+        v-col.py-0
           div(:class="isMouseOvered ? 'blue--text' : 'grey--text'") 新しいTODOを追加
-        div.mouseovered-icon
 </template>
 
 <script lang="ts">
@@ -49,6 +46,11 @@ export default class TodoListItemNew extends Vue {
       uid: authStore.currentUserUid,
       projectId: this.projectId
     })
+  }
+
+  onEndEdit(): void {
+    this.$emit('endEdit')
+    this.isMouseOvered = false
   }
 }
 </script>
