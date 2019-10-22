@@ -9,7 +9,6 @@
       project-list
       v-divider
       v-subheader OTHERS
-
       v-list-item(@click="signOut()")
         v-row(dense)
           v-col(cols=1)
