@@ -1,7 +1,7 @@
 <template lang="pug">
   v-container.pa-0
     v-row.pl-8
-      v-icon.ml-n6.cursor-move(v-show="!isNew") drag_handle
+      v-icon.ml-n6.cursor-move(v-show="!isNew && !todo.done") drag_handle
       v-text-field.px-2.white(
         v-model="localTodo.content"
         @keypress.enter="submit()"
