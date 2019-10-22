@@ -45,18 +45,13 @@ export default class projectPage extends Vue {
   isShowDeleteDialog: boolean = false
 
   get projectId(): string {
-    return this.$route.params.id
+    const id: string = this.$route.params.id
+    projectsStore.setSelectedProjectId(id)
+    return id
   }
 
   get project(): Project {
-    const p = projectsStore.getProjects.find((x) => {
-      return x.id === this.projectId
-    })
-    if (p) {
-      return p
-    } else {
-      return new Project({ title: '' })
-    }
+    return projectsStore.selectedProject
   }
 
   get isTodosLoading(): boolean {

@@ -11,8 +11,21 @@ const projectsRef = db.collection('projects')
 export default class ProjectsModule extends VuexModule {
   projects: Project[] = []
 
+  selectedProjectId: string = ''
+
   get getProjects(): Project[] {
     return this.projects.map((project) => { return new Project({ ...project }) })
+  }
+
+  get selectedProject(): Project {
+    const p = this.projects.find((x) => {
+      return x.id === this.selectedProjectId
+    })
+    if (p) {
+      return p
+    } else {
+      return new Project({ title: '' })
+    }
   }
 
   get maxPriority(): number {
@@ -20,6 +33,11 @@ export default class ProjectsModule extends VuexModule {
     )
   }
 
+  @Mutation
+  private SET_SELECTED_PROJECT_ID(id: string): void {
+    this.selectedProjectId = id
+  }
+  
   @Mutation
   private PUSH_PROJECTS(project: Project): void {
     this.projects.push(project)
@@ -43,6 +61,11 @@ export default class ProjectsModule extends VuexModule {
     this.projects = [
       ...this.projects.sort((a, b) => { return b.priority - a.priority })
     ]
+  }
+
+  @Action
+  setSelectedProjectId(id: string) {
+    this.SET_SELECTED_PROJECT_ID(id)
   }
 
   @Action
