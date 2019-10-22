@@ -28,6 +28,12 @@ export default class ProjectsModule extends VuexModule {
     }
   }
 
+  get selectedProjectIndex(): Number {
+    return this.projects.findIndex((x) => {
+      return x.id === this.selectedProjectId
+    })
+  }
+
   get maxPriority(): number {
     return Math.max(0, ...this.projects.map((x) => { return x.priority })
     )

@@ -1,7 +1,7 @@
 <template lang="pug">
   v-container.pa-0
     project-post-dialog(v-model="isShowPostDialog")
-    v-list-item-group
+    v-list-item-group(:value="selectedProjectIndex")
       draggable(
         :list="projects"
         :delay="50"
@@ -13,9 +13,9 @@
           @click.native="$router.push(`/projects/${project.id}`)"
         )
           template(v-slot:title) {{ project.title }}
-      project-list-item(@click.native="onClickAddProject()")
-        template(v-slot:icon) add
-        template(v-slot:title) プロジェクトを作成
+    project-list-item(@click.native="onClickAddProject()")
+      template(v-slot:icon) add
+      template(v-slot:title) プロジェクトを作成
 </template>
 
 <script lang="ts">
@@ -38,6 +38,10 @@ export default class ProjectList extends Vue {
 
   get projects(): Project[] {
     return projectsStore.getProjects
+  }
+
+  get selectedProjectIndex(): Number {
+    return projectsStore.selectedProjectIndex
   }
 
   created(): void {
