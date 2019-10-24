@@ -13,7 +13,10 @@
           @click.native="$router.push(`/projects/${project.id}`)"
         )
           template(v-slot:title) {{ project.title }}
-    project-list-item(@click.native="isShowPostDialog = true")
+    project-list-item(
+      @click.native="isShowPostDialog = true"
+      v-ripple
+    )
       template(v-slot:icon) add
       template(v-slot:title) プロジェクトを作成
 </template>
