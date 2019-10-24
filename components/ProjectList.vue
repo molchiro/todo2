@@ -13,7 +13,7 @@
           @click.native="$router.push(`/projects/${project.id}`)"
         )
           template(v-slot:title) {{ project.title }}
-    project-list-item(@click.native="onClickAddProject()")
+    project-list-item(@click.native="isShowPostDialog = true")
       template(v-slot:icon) add
       template(v-slot:title) プロジェクトを作成
 </template>
@@ -50,10 +50,6 @@ export default class ProjectList extends Vue {
 
   draggableEnd({ oldIndex, newIndex }): void {
     projectsStore.moveProject({ oldIndex, newIndex })
-  }
-
-  onClickAddProject(): void {
-    this.isShowPostDialog = true
   }
 }
 </script>
