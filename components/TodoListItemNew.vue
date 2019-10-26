@@ -8,9 +8,9 @@
       )
     div(v-else)
       v-row.pl-8.cursor-copy
-        v-icon.ml-n6 add
+        v-icon.grey--text.ml-n6 add
         v-col.py-0
-          div 新しいTODOを追加
+          div.grey--text 新しいTODOを追加
 </template>
 
 <script lang="ts">
