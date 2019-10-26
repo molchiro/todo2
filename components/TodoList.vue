@@ -15,17 +15,15 @@
       :delay="50"
       @end="draggableEnd($event)"
     )
-      div(
+      todo-list-item-show(
         v-for="todo in todos"
         :key="todo.id"
+        :todo="todo"
+        :isEditting="todo.id === edittingTodoId"
+        @startEdit="setEdittingTodoId(todo.id)"
+        @endEdit="setEdittingTodoId('')"
+        @showDeleteDialog="showDeleteDialog(todo)"
       )
-        todo-list-item-show(
-          :todo="todo"
-          :isEditting="todo.id === edittingTodoId"
-          @startEdit="setEdittingTodoId(todo.id)"
-          @endEdit="setEdittingTodoId('')"
-          @showDeleteDialog="showDeleteDialog(todo)"
-        )
 </template>
 
 <script lang="ts">
