@@ -7,9 +7,7 @@
       @endEdit="$emit('endEdit')"
       @showDeleteDialog="$emit('showDeleteDialog')"
     )
-    v-row.pl-8(
-      v-else
-    )
+    v-row.pl-8(v-else)
       v-checkbox.justify-center.ma-0.ml-n6.pa-0(
           v-model="done"
           hide-details

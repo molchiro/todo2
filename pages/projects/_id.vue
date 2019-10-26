@@ -3,7 +3,8 @@
     delete-dialog(
       v-model="isShowDeleteDialog"
       @delete="deleteProject()"
-    ) このプロジェクトに紐づくTODOも全て削除されます。<br/>この操作は取り消せません。
+    ) このプロジェクトに紐づくTODOも全て削除されます。
+      | この操作は取り消せません。
     v-container.px-2
       v-row(no-gutters)
         v-col(cols=11)

@@ -41,7 +41,7 @@ import { Project } from '@/models/project'
 import { VForm } from '@/types/index'
 
 @Component
-export default class PostProjectDialog extends Vue {
+export default class ProjectPostDialog extends Vue {
   @Prop() readonly value: boolean = false
 
   valid: boolean = true
