@@ -13,7 +13,7 @@
           @click.native="$router.push(`/projects/${project.id}`)"
         )
           template(v-slot:title) {{ project.title }}
-    project-list-item(
+    project-list-item.cursor-copy(
       @click.native="isShowPostDialog = true"
       v-ripple
     )

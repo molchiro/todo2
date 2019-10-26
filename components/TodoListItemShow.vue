@@ -14,7 +14,7 @@
           v-model="done"
           hide-details
         )
-      v-col.py-0.pl-1
+      v-col.py-0.pl-1.cursor-text
         div(@click="$emit('startEdit')") {{ todo.content }}
 </template>
 
@@ -60,9 +60,3 @@ export default class TodoListItemShow extends Vue {
   }
 }
 </script>
-
-<style lang="sass" scoped>
-.mouseovered-icon
-  width: 24px
-  height: 24px
-</style>
