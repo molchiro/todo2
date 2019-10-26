@@ -1,16 +1,15 @@
 <template lang="pug">
   v-container.pa-0.my-2
-    div(v-if="isEditting")
-      todo-list-item-edit(
-        :todo="newTodo"
-        :submitFn="updateContent"
-        @endEdit="onEndEdit"
-      )
-    div(v-else)
-      v-row.pl-8.cursor-copy
-        v-icon.grey--text.ml-n6 add
-        v-col.py-0
-          div.grey--text 新しいTODOを追加
+    todo-list-item-edit(
+      v-if="isEditting"
+      :todo="newTodo"
+      :submitFn="updateContent"
+      @endEdit="onEndEdit"
+    )
+    v-row.pl-8.cursor-copy(v-else)
+      v-icon.grey--text.ml-n6 add
+      v-col.py-0
+        div.grey--text 新しいTODOを追加
 </template>
 
 <script lang="ts">
