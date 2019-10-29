@@ -2,12 +2,15 @@
   v-container.pa-0
     v-row.pl-8
       v-icon.ml-n6.cursor-move(v-show="!isNew && !todo.done") drag_handle
-      v-text-field.px-2.white(
+      v-textarea.px-2.white(
         v-model="localTodo.content"
         @keypress.enter="submit()"
         outlined
         hide-details
         autofocus
+        auto-grow
+        row-height="20"
+        rows="2"
       )
     v-row.pl-8
       v-btn.mt-2.ml-2(
