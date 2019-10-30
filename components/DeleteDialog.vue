@@ -17,7 +17,7 @@
               text
               block
             ) キャンセル
-          v-divider(vertical)
+          v-divider.mx-2(vertical)
           v-col.pa-0
             v-btn(
               @click="$emit('delete')"
