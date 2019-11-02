@@ -7,7 +7,7 @@
     todo-list-item-new(
       :isEditting="edittingTodoId === 'new'"
       :projectId="projectId"
-      @click.native="setEdittingTodoId('new')"
+      @startEdit="setEdittingTodoId('new')"
       @endEdit="setEdittingTodoId('')"
     )
     draggable(

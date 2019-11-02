@@ -6,7 +6,10 @@
       :submitFn="updateContent"
       @endEdit="onEndEdit"
     )
-    v-row.pl-8.cursor-copy(v-else)
+    v-row.pl-8.cursor-copy(
+      v-else
+      @click="$emit('startEdit')"
+    )
       v-icon.grey--text.ml-n6 add
       v-col.py-0
         div.grey--text 新しいTODOを追加
