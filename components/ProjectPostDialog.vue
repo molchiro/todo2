@@ -52,6 +52,7 @@ export default class ProjectPostDialog extends Vue {
     const form = this.$refs.form as VForm
     if (form.validate()) {
       this.$emit('input', false)
+      this.project.priority = projectsStore.maxPriority + 1
       projectsStore.addProject(this.project).then((ref) => {
         this.$router.push(`/projects/${ref.id}`)
         this.project = new Project({ uid: authStore.currentUserUid })

@@ -1,18 +1,19 @@
 <template lang="pug">
   v-container.pa-0
     project-post-dialog(v-model="isShowPostDialog")
-    v-list-item-group(:value="selectedProjectIndex")
-      draggable(
-        :list="projects"
-        :delay="50"
-        @end="draggableEnd($event)"
+    draggable(
+      :list="projects"
+      :delay="50"
+      @end="draggableEnd($event)"
+    )
+      project-list-item.cursor-pointer(
+        v-for="project in projects"
+        :key="project.id"
+        @click.native="$router.push(`/projects/${project.id}`)"
+        :class="project.id === selectedProjectId ? 'grey lighten-1' : ''"
+        v-ripple
       )
-        project-list-item(
-          v-for="project in projects"
-          :key="project.id"
-          @click.native="$router.push(`/projects/${project.id}`)"
-        )
-          template(v-slot:title) {{ project.title }}
+        template(v-slot:title) {{ project.title }}
     project-list-item.cursor-copy(
       @click.native="isShowPostDialog = true"
       v-ripple
@@ -43,8 +44,8 @@ export default class ProjectList extends Vue {
     return projectsStore.getProjects
   }
 
-  get selectedProjectIndex(): Number {
-    return projectsStore.selectedProjectIndex
+  get selectedProjectId(): String {
+    return projectsStore.selectedProjectId
   }
 
   created(): void {
