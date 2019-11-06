@@ -15,11 +15,7 @@ export default class AuthModule extends VuexModule {
 
   @Mutation
   private SET_USER(user: firebase.User | null): void {
-    if (user) {
-      this.currentUser = { uid: user.uid }
-    } else {
-      this.currentUser = null
-    }
+    this.currentUser =  user ? { uid: user.uid } : null
   }
 
   @Action

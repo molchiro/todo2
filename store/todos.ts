@@ -23,15 +23,15 @@ export default class TodosModule extends VuexModule {
   isEmpty: boolean = true
 
   get getTodos(): Todo[] {
-    return this.todos.map((todo) => { return new Todo({ ...todo }) })
+    return this.todos.map(todo => new Todo({ ...todo }))
   }
 
   get maxPriority(): number {
-    return Math.max(0, ...this.todos.map((x) => { return x.priority }))
+    return Math.max(0, ...this.todos.map(x => x.priority))
   }
 
   get lowestNotYetTodoIndex(): number {
-    return this.todos.filter((x) => { return x.done === false }).length - 1
+    return this.todos.filter(x => x.done === false).length - 1
   }
 
   @Mutation
@@ -46,14 +46,12 @@ export default class TodosModule extends VuexModule {
 
   @Mutation
   private REMOVE_TODO(todo: Todo): void {
-    this.todos = this.todos.filter((el) => { return el.id !== todo.id })
+    this.todos = this.todos.filter(el => el.id !== todo.id)
   }
 
   @Mutation
   private REPLACE_TODO(todo: Todo): void {
-    const updatedTodoIndex: number = this.todos.findIndex((el) => {
-      return el.id === todo.id
-    })
+    const updatedTodoIndex: number = this.todos.findIndex(el => el.id === todo.id)
     this.todos.splice(updatedTodoIndex, 1, todo)
   }
 
@@ -61,12 +59,8 @@ export default class TodosModule extends VuexModule {
   private SORT_TODOS(): void {
     this.todos = [
       ...this.todos
-        .sort((a, b) => {
-          return b.priority - a.priority
-        })
-        .sort((a, b) => {
-          return Number(a.done) - Number(b.done)
-        })
+        .sort((a, b) => b.priority - a.priority)
+        .sort((a, b) => Number(a.done) - Number(b.done))
         .sort((a, b) => {
           // @ts-ignore
           const doneAta = a.doneAt ? a.doneAt.seconds : Infinity

@@ -14,29 +14,20 @@ export default class ProjectsModule extends VuexModule {
   selectedProjectId: string = ''
 
   get getProjects(): Project[] {
-    return this.projects.map((project) => { return new Project({ ...project }) })
+    return this.projects.map(project => new Project({ ...project }))
   }
 
   get selectedProject(): Project {
-    const p = this.projects.find((x) => {
-      return x.id === this.selectedProjectId
-    })
-    if (p) {
-      return p
-    } else {
-      return new Project({ title: '' })
-    }
+    const selectedProject = this.projects.find(x => x.id === this.selectedProjectId)
+    return selectedProject ? selectedProject : new Project({ title: '' })
   }
 
   get selectedProjectIndex(): Number {
-    return this.projects.findIndex((x) => {
-      return x.id === this.selectedProjectId
-    })
+    return this.projects.findIndex(x => x.id === this.selectedProjectId)
   }
 
   get maxPriority(): number {
-    return Math.max(0, ...this.projects.map((x) => { return x.priority })
-    )
+    return Math.max(0, ...this.projects.map(x => x.priority))
   }
 
   @Mutation
@@ -51,21 +42,19 @@ export default class ProjectsModule extends VuexModule {
 
   @Mutation
   private REMOVE_PROJECT(project: Project): void {
-    this.projects = this.projects.filter((el) => { return el.id !== project.id })
+    this.projects = this.projects.filter(el => el.id !== project.id)
   }
 
   @Mutation
   private REPLACE_PROJECT(project: Project): void {
-    const updatedprojectIndex: number = this.projects.findIndex((el) => {
-      return el.id === project.id
-    })
+    const updatedprojectIndex: number = this.projects.findIndex(el => el.id === project.id)
     this.projects.splice(updatedprojectIndex, 1, project)
   }
 
   @Mutation
   private SORT_PROJECTS(): void {
     this.projects = [
-      ...this.projects.sort((a, b) => { return b.priority - a.priority })
+      ...this.projects.sort((a, b) => b.priority - a.priority)
     ]
   }
 
