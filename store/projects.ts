@@ -59,7 +59,7 @@ export default class ProjectsModule extends VuexModule {
   }
 
   @Action
-  setSelectedProjectId(id: string) {
+  setSelectedProjectId(id: string): void {
     this.SET_SELECTED_PROJECT_ID(id)
   }
 
@@ -88,7 +88,7 @@ export default class ProjectsModule extends VuexModule {
   }
 
   @Action
-  moveProject({ oldIndex, newIndex }): void {
+  moveProject({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }): void {
     let newPriority: number = 0
     if (newIndex === 0) {
       newPriority = this.maxPriority + 1
@@ -108,7 +108,7 @@ export default class ProjectsModule extends VuexModule {
 
   @Action
   bindProjects(uid: string): void {
-    const mapDoc2Project  = (doc: firebase.firestore.QueryDocumentSnapshot) => {
+    const mapDoc2Project = (doc: firebase.firestore.QueryDocumentSnapshot) => {
       return new Project(
         {
           ...doc.data(),

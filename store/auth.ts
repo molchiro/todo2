@@ -30,7 +30,7 @@ export default class AuthModule extends VuexModule {
   }
 
   @Action
-  authenticate() {
+  authenticate(): Promise<boolean> {
     return new Promise(async (resolve) => {
       if (!this.currentUser) {
         const currentUser: firebase.User | null = await new Promise((resolve) => {

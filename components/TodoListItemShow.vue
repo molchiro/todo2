@@ -39,7 +39,7 @@ export default class TodoListItemShow extends Vue {
     return this.todo.done
   }
 
-  set done(val) {
+  set done(val: boolean) {
     todosStore.updateTodo(
       new Todo({
         ...this.todo,
@@ -49,7 +49,7 @@ export default class TodoListItemShow extends Vue {
     )
   }
 
-  updateContent(todo): void {
+  updateContent(todo: Todo): void {
     todosStore.updateTodo(todo)
   }
 

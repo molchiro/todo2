@@ -31,7 +31,7 @@ export default class TodoListItemNew extends Vue {
 
   @Prop({ default: false }) readonly isEditting: ConstrainBoolean
 
-  newTodo = new Todo({
+  newTodo: Todo = new Todo({
     uid: authStore.currentUserUid,
     projectId: this.projectId
   })
