@@ -72,9 +72,7 @@ export default class TodoList extends Vue {
   }
 
   deleteTodo(): void {
-    if (this.todoToDelete) {
-      todosStore.deleteTodo(this.todoToDelete)
-    }
+    todosStore.deleteTodo(this.todoToDelete!)
     this.isShowDeleteDialog = false
   }
 }

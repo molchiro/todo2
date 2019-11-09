@@ -122,11 +122,9 @@ export default class ProjectsModule extends VuexModule {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
             this.PUSH_PROJECTS(mapDoc2Project(change.doc))
-          }
-          if (change.type === 'modified') {
+          } else if (change.type === 'modified') {
             this.REPLACE_PROJECT(mapDoc2Project(change.doc))
-          }
-          if (change.type === 'removed') {
+          } else if (change.type === 'removed') {
             this.REMOVE_PROJECT(mapDoc2Project(change.doc))
           }
         })

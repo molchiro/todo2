@@ -138,11 +138,9 @@ export default class TodosModule extends VuexModule {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
             this.PUSH_TODO(mapDoc2Todo(change.doc))
-          }
-          if (change.type === 'modified') {
+          } else if (change.type === 'modified') {
             this.REPLACE_TODO(mapDoc2Todo(change.doc))
-          }
-          if (change.type === 'removed') {
+          } else if (change.type === 'removed') {
             this.REMOVE_TODO(mapDoc2Todo(change.doc))
           }
         })
