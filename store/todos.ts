@@ -35,7 +35,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Mutation
-  private INIT_TODO(): void {
+  private INIT_TODOS(): void {
     this.todos.splice(0)
   }
 
@@ -125,7 +125,7 @@ export default class TodosModule extends VuexModule {
         }
       )
     }
-    this.INIT_TODO()
+    this.INIT_TODOS()
     this.SET_ISLOADING(true)
     this.SET_ISEMPTY(true)
     if (typeof(unsubscribe) === 'function') {
