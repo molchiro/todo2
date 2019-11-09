@@ -79,13 +79,6 @@ export default class projectPage extends Vue {
     })
   }
 
-  mounted(): void {
-    if (this.project.isDefaultTitle()) {
-      // @ts-ignore
-      this.$refs.projectTitleField.focus()
-    }
-  }
-
   async validate({ params }): Promise<boolean> {
     const isProjectExists = await projectsRef
       .doc(params.id)
