@@ -4,7 +4,7 @@
       v-icon.ml-n6.cursor-move(v-show="!isNew && !todo.done") drag_handle
       v-textarea.px-2.white(
         v-model="localTodo.content"
-        @keypress.enter="submit()"
+        @keypress.enter="save()"
         outlined
         hide-details
         autofocus
@@ -14,7 +14,7 @@
       )
     v-row.pl-8
       v-btn.mt-2.ml-2(
-        @click="submit()"
+        @click="save()"
         :disabled="!canUpdate"
         color="primary"
       ) 保存
@@ -33,12 +33,15 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import { Todo } from '@/models/todo'
+import { todosStore } from '@/store'
 
 @Component
 export default class TodoListItemEdit extends Vue {
   @Prop() readonly todo: Todo
 
-  @Prop() readonly submitFn: (todo) => void
+  @Prop({ default: false }) readonly isNew: boolean
+
+  @Prop({ default: () => {} }) readonly onAddTodo: () => void
 
   localTodo: Todo = new Todo({ ...this.todo })
 
@@ -47,13 +50,15 @@ export default class TodoListItemEdit extends Vue {
     return isChanged && this.localTodo.isValid()
   }
 
-  get isNew(): boolean {
-    return this.todo.id === ''
-  }
-
-  submit(): void {
+  save(): void {
     if (this.canUpdate) {
-      this.submitFn(this.localTodo)
+      if (this.isNew) {
+        this.localTodo.priority = todosStore.maxPriority + 1
+        todosStore.addTodo(this.localTodo)
+        this.onAddTodo()
+      } else {
+        todosStore.updateTodo(this.localTodo)
+      }
       this.$emit('endEdit')
     }
   }

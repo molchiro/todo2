@@ -1,12 +1,12 @@
 <template lang="pug">
   v-container.pa-0.my-3
-    todo-list-item-edit(
-      v-if="isEditting"
-      :todo="localTodo"
-      :submitFn="updateContent"
-      @endEdit="$emit('endEdit')"
-      @showDeleteDialog="$emit('showDeleteDialog')"
+    v-row.pl-8.cursor-copy(
+      v-if="isNew"
+      @click="$emit('startEdit')"
     )
+      v-icon.grey--text.ml-n6 add
+      v-col.py-0
+        div.grey--text 新しいTODOを追加
     v-row.pl-8(v-else)
       v-checkbox.justify-center.ma-0.ml-n6.pa-0(
           v-model="done"
@@ -31,7 +31,7 @@ import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
 export default class TodoListItemShow extends Vue {
   @Prop() readonly todo: Todo
 
-  @Prop({ default: false }) readonly isEditting: ConstrainBoolean
+  @Prop({ default: false }) readonly isNew: boolean
 
   localTodo: Todo = new Todo({ ...this.todo })
 
@@ -47,10 +47,6 @@ export default class TodoListItemShow extends Vue {
         doneAt: val ? serverTimeStamp : null
       })
     )
-  }
-
-  updateContent(todo: Todo): void {
-    todosStore.updateTodo(todo)
   }
 
   startEdit(): void {
