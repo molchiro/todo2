@@ -1,8 +1,9 @@
 <template lang="pug">
   v-container
     delete-dialog(
-      v-model="isShowDeleteDialog"
-      @delete="deleteProject()"
+      v-model="isOpenedDeleteDialog"
+      :onClickDelete="deleteProject"
+      :onClickCancel="closeDeleteDialog"
     ) このプロジェクトに紐づくTODOも全て削除されます。
       | この操作は取り消せません。
     v-container.px-2
@@ -15,7 +16,7 @@
               @keypress.enter="updateTitle($event)"
             )
         v-col.align-self-center.text-center(cols=1)
-          v-icon(@click="isShowDeleteDialog = true") delete
+          v-icon(@click="openDeleteDialog()") delete
     div.text-center(v-if="isTodosLoading")
       v-progress-circular(
         indeterminate
@@ -43,7 +44,7 @@ const projectsRef = db.collection('projects')
   }
 })
 export default class projectPage extends Vue {
-  isShowDeleteDialog: boolean = false
+  isOpenedDeleteDialog: boolean = false
 
   get projectId(): string {
     const id: string = this.$route.params.id
@@ -98,8 +99,16 @@ export default class projectPage extends Vue {
 
   deleteProject(): void {
     projectsStore.deleteProject(this.localProject)
-    this.isShowDeleteDialog = false
+    this.closeDeleteDialog()
     this.$router.push('/')
+  }
+
+  openDeleteDialog(): void {
+    this.isOpenedDeleteDialog = true
+  }
+
+  closeDeleteDialog(): void {
+    this.isOpenedDeleteDialog = false
   }
 }
 </script>

@@ -1,8 +1,9 @@
 <template lang="pug">
   v-card.px-3.py-1
     delete-dialog(
-      v-model="isShowDeleteDialog"
-      @delete="deleteTodo()"
+      v-model="isOpenedDeleteDialog"
+      :onClickDelete="deleteTodo"
+      :onClickCancel="closeDeleteDialog"
     ) この操作は取り消せません
     component(
         :is="newTodo.id === edittingTodoId ? 'todo-list-item-edit' : 'todo-list-item-show'"
@@ -24,7 +25,7 @@
         :todo="todo"
         @startEdit="setEdittingTodoId(todo.id)"
         @endEdit="setEdittingTodoId(null)"
-        @showDeleteDialog="showDeleteDialog(todo)"
+        @openDeleteDialog="openDeleteDialog(todo)"
       )
 </template>
 
@@ -48,7 +49,7 @@ import DeleteDialog from '@/components/DeleteDialog.vue'
 export default class TodoList extends Vue {
   @Prop() readonly projectId: string
 
-  isShowDeleteDialog: boolean = false
+  isOpenedDeleteDialog: boolean = false
 
   todoToDelete: Todo | null = null
 
@@ -77,14 +78,19 @@ export default class TodoList extends Vue {
     this.edittingTodoId = id
   }
 
-  showDeleteDialog(todo: Todo): void {
+  openDeleteDialog(todo: Todo): void {
     this.todoToDelete = todo
-    this.isShowDeleteDialog = true
+    this.isOpenedDeleteDialog = true
+  }
+
+  closeDeleteDialog(): void {
+    this.todoToDelete = null
+    this.isOpenedDeleteDialog = false
   }
 
   deleteTodo(): void {
     todosStore.deleteTodo(this.todoToDelete!)
-    this.isShowDeleteDialog = false
+    this.closeDeleteDialog()
   }
 
   onAddTodo(): void {

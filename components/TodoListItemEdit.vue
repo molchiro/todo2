@@ -25,7 +25,7 @@
       v-spacer
       v-btn.mt-2(
         v-show="!isNew"
-        @click="$emit('showDeleteDialog')"
+        @click="$emit('openDeleteDialog')"
         text
       ) 削除
 </template>

@@ -1,8 +1,7 @@
 <template lang="pug">
   v-dialog(
-    :value="value"
-    @input="$emit('input', $event)"
-    max-width=300
+      v-model="isOpened"
+      max-width=300
   )
     v-card
       v-card-title 削除しますか？
@@ -13,14 +12,14 @@
         v-row(no-gutters)
           v-col.pa-0
             v-btn(
-              @click="$emit('input', false)"
+              @click="onClickCancel"
               text
               block
             ) キャンセル
           v-divider.mx-2(vertical)
           v-col.pa-0
             v-btn(
-              @click="$emit('delete')"
+              @click="onClickDelete"
               text
               block
               color="red"
@@ -32,6 +31,18 @@ import { Vue, Component, Prop } from 'nuxt-property-decorator'
 
 @Component
 export default class DeleteDialog extends Vue {
-  @Prop() readonly value: boolean = false
+  @Prop() readonly onClickDelete: Function
+
+  @Prop() readonly onClickCancel: Function
+
+  @Prop({ default: false }) readonly value: boolean
+
+  get isOpened() {
+    return this.value
+  }
+
+  set isOpened(val) {
+    this.$emit('input', val)
+  }
 }
 </script>
