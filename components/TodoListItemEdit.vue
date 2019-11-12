@@ -19,13 +19,13 @@
         color="primary"
       ) 保存
       v-btn.mt-2.ml-2(
-        @click="$emit('endEdit')"
+        @click="setEdittingTodoId(null)"
         text
       ) キャンセル
       v-spacer
       v-btn.mt-2(
         v-show="!isNew"
-        @click="$emit('openDeleteDialog')"
+        @click="onClickDelete(localTodo)"
         text
       ) 削除
 </template>
@@ -41,7 +41,11 @@ export default class TodoListItemEdit extends Vue {
 
   @Prop({ default: false }) readonly isNew: boolean
 
-  @Prop({ default: () => {} }) readonly onAddTodo: () => void
+  @Prop({ default: () => {} }) readonly onAddTodo: Function
+
+  @Prop({ default: () => {} }) readonly setEdittingTodoId: Function
+
+  @Prop({ default: () => {} }) readonly onClickDelete: Function
 
   localTodo: Todo = new Todo({ ...this.todo })
 
@@ -59,7 +63,7 @@ export default class TodoListItemEdit extends Vue {
       } else {
         todosStore.updateTodo(this.localTodo)
       }
-      this.$emit('endEdit')
+      this.setEdittingTodoId(null)
     }
   }
 }

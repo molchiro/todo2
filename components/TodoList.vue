@@ -3,15 +3,14 @@
     delete-dialog(
       v-model="isOpenedDeleteDialog"
       :onClickDelete="deleteTodo"
-      :onClickCancel="closeDeleteDialog"
+      :onClickCancel="releaseDeleteDialog"
     ) この操作は取り消せません
     component(
+        :isNew="true"
         :is="newTodo.id === edittingTodoId ? 'todo-list-item-edit' : 'todo-list-item-show'"
         :todo="newTodo"
-        :isNew="true"
+        :setEdittingTodoId="setEdittingTodoId"
         :onAddTodo="onAddTodo"
-        @startEdit="setEdittingTodoId(newTodo.id)"
-        @endEdit="setEdittingTodoId(null)"
       )
     draggable(
       :list="todos"
@@ -23,9 +22,8 @@
         :key="todo.id"
         :is="todo.id === edittingTodoId ? 'todo-list-item-edit' : 'todo-list-item-show'"
         :todo="todo"
-        @startEdit="setEdittingTodoId(todo.id)"
-        @endEdit="setEdittingTodoId(null)"
-        @openDeleteDialog="openDeleteDialog(todo)"
+        :setEdittingTodoId="setEdittingTodoId"
+        :onClickDelete="setDeleteTodoDialog"
       )
 </template>
 
@@ -74,23 +72,23 @@ export default class TodoList extends Vue {
     }
   }
 
-  setEdittingTodoId(id: string): void {
+  setEdittingTodoId(id: string | null): void {
     this.edittingTodoId = id
   }
 
-  openDeleteDialog(todo: Todo): void {
+  setDeleteTodoDialog(todo: Todo): void {
     this.todoToDelete = todo
     this.isOpenedDeleteDialog = true
   }
 
-  closeDeleteDialog(): void {
+  releaseDeleteDialog(): void {
     this.todoToDelete = null
     this.isOpenedDeleteDialog = false
   }
 
   deleteTodo(): void {
     todosStore.deleteTodo(this.todoToDelete!)
-    this.closeDeleteDialog()
+    this.releaseDeleteDialog()
   }
 
   onAddTodo(): void {

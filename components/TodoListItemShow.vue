@@ -2,8 +2,8 @@
   v-container.pa-0.my-3
     v-row.pl-8
       template(v-if="isNew")
-        v-icon.grey--text.ml-n6(@click="$emit('startEdit')") add
-        v-col.py-0.cursor-pointer(@click="$emit('startEdit')")
+        v-icon.grey--text.ml-n6(@click="startEdit()") add
+        v-col.py-0.cursor-pointer(@click="startEdit()")
           div.grey--text 新しいTODOを追加
       template(v-else)
         v-checkbox.justify-center.ma-0.ml-n6.pa-0(
@@ -11,7 +11,7 @@
             hide-details
           )
         v-col.py-0.pl-1.cursor-text
-          div(@click="$emit('startEdit')") {{ todo.content }}
+          div(@click="startEdit()") {{ todo.content }}
 </template>
 
 <script lang="ts">
@@ -31,6 +31,8 @@ export default class TodoListItemShow extends Vue {
 
   @Prop({ default: false }) readonly isNew: boolean
 
+  @Prop({ default: () => {} }) readonly setEdittingTodoId: Function
+
   localTodo: Todo = new Todo({ ...this.todo })
 
   get done(): boolean {
@@ -48,7 +50,7 @@ export default class TodoListItemShow extends Vue {
   }
 
   startEdit(): void {
-    this.$emit('startEdit')
+    this.setEdittingTodoId(this.localTodo.id)
   }
 }
 </script>
