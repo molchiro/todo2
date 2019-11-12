@@ -19,9 +19,9 @@
       @end="draggableEnd($event)"
     )
       component(
-        :is="todo.id === edittingTodoId ? 'todo-list-item-edit' : 'todo-list-item-show'"
         v-for="todo in todos"
         :key="todo.id"
+        :is="todo.id === edittingTodoId ? 'todo-list-item-edit' : 'todo-list-item-show'"
         :todo="todo"
         @startEdit="setEdittingTodoId(todo.id)"
         @endEdit="setEdittingTodoId(null)"
