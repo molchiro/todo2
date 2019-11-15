@@ -9,7 +9,7 @@
       v-list-item.cursor-pointer(
         v-for="project in projects"
         :key="project.id"
-        @click.native="$router.push(`/projects/${project.id}`)"
+        @click="$router.push(`/projects/${project.id}`)"
         :class="project.id === selectedProjectId ? 'grey lighten-1' : ''"
         v-ripple
       )
@@ -17,7 +17,7 @@
         v-list-item-content
           v-list-item-title {{ project.title }}
     v-list-item.cursor-pointer(
-      @click.native="isShowPostDialog = true"
+      @click="isShowPostDialog = true"
       v-ripple
     )
       v-list-item-icon.mr-1
