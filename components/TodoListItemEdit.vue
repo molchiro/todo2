@@ -57,7 +57,6 @@ export default class TodoListItemEdit extends Vue {
   save(): void {
     if (this.canUpdate) {
       if (this.isNew) {
-        this.localTodo.priority = todosStore.maxPriority + 1
         todosStore.addTodo(this.localTodo)
         this.onAddTodo()
       } else {

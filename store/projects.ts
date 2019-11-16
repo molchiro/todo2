@@ -62,6 +62,7 @@ export default class ProjectsModule extends VuexModule {
 
   @Action
   addProject(project: Project): Promise<firebase.firestore.DocumentReference> {
+    project.priority = this.maxPriority + 1
     return projectsRef.add(project.data())
   }
 

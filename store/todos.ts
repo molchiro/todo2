@@ -79,6 +79,7 @@ export default class TodosModule extends VuexModule {
 
   @Action
   addTodo(todo: Todo): void {
+    todo.priority = this.maxPriority + 1
     todosRef.add(todo.data())
   }
 
