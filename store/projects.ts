@@ -1,5 +1,6 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db } from '@/plugins/firebase'
+import { authStore } from '@/store'
 import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
 
@@ -103,7 +104,7 @@ export default class ProjectsModule extends VuexModule {
   }
 
   @Action
-  bindProjects(uid: string): void {
+  bindProjects(): void {
     const mapDoc2Project = (doc: firebase.firestore.QueryDocumentSnapshot) => {
       return new Project(
         {
@@ -113,7 +114,7 @@ export default class ProjectsModule extends VuexModule {
       )
     }
     projectsRef
-      .where('uid', '==', uid)
+      .where('uid', '==', authStore.currentUserUid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {

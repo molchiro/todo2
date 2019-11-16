@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { authStore, projectsStore, todosStore } from '@/store'
+import { projectsStore, todosStore } from '@/store'
 import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
 import { db } from '@/plugins/firebase'
@@ -74,10 +74,7 @@ export default class projectPage extends Vue {
   }
 
   created(): void {
-    todosStore.bindTodos({
-      uid: authStore.currentUserUid,
-      projectId: this.projectId
-    })
+    todosStore.bindTodos(this.projectId)
   }
 
   async validate({ params }): Promise<boolean> {

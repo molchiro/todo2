@@ -1,12 +1,8 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db } from '@/plugins/firebase'
+import { authStore } from '@/store'
 import { Todo } from '@/models/todo'
 const todosRef = db.collection('todos')
-
-type bindTodosPayload = {
-  uid: string,
-  projectId: string
-}
 
 let unsubscribe: Function | null = null
 
@@ -116,7 +112,7 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  bindTodos({ uid, projectId }: bindTodosPayload): void {
+  bindTodos(projectId): void {
     const mapDoc2Todo  = (doc: firebase.firestore.QueryDocumentSnapshot) => {
       return new Todo(
         {
@@ -132,7 +128,7 @@ export default class TodosModule extends VuexModule {
       unsubscribe()
     }
     unsubscribe = todosRef
-      .where('uid', '==', uid)
+      .where('uid', '==', authStore.currentUserUid)
       .where('projectId', '==', projectId)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {

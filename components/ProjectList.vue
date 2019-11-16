@@ -29,7 +29,7 @@
 import { Vue, Component } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
 import ProjectPostDialog from '@/components/ProjectPostDialog.vue'
-import { authStore, projectsStore } from '@/store'
+import { projectsStore } from '@/store'
 import { Project } from '@/models/project'
 
 @Component({
@@ -50,7 +50,7 @@ export default class ProjectList extends Vue {
   }
 
   created(): void {
-    projectsStore.bindProjects(authStore.currentUserUid)
+    projectsStore.bindProjects()
   }
 
   draggableEnd({ oldIndex, newIndex }): void {
