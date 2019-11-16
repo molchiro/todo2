@@ -59,7 +59,7 @@ export default class TodoList extends Vue {
   })
 
   get todos(): Todo[] {
-    return todosStore.getTodos
+    return todosStore.todos
   }
 
   get selectedProjectId(): string {

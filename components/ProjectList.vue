@@ -42,7 +42,7 @@ export default class ProjectList extends Vue {
   isShowPostDialog: boolean = false
 
   get projects(): Project[] {
-    return projectsStore.getProjects
+    return projectsStore.projects
   }
 
   get selectedProjectId(): String {

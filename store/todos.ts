@@ -16,49 +16,49 @@ let unsubscribe: Function | null = null
   stateFactory: true
 })
 export default class TodosModule extends VuexModule {
-  todos: Todo[] = []
+  innerTodos: Todo[] = []
 
   isLoading: boolean = true
 
   isEmpty: boolean = true
 
-  get getTodos(): Todo[] {
-    return this.todos.map(todo => new Todo({ ...todo }))
+  get todos(): Todo[] {
+    return this.innerTodos.map(todo => new Todo({ ...todo }))
   }
 
   get maxPriority(): number {
-    return Math.max(0, ...this.todos.map(x => x.priority))
+    return Math.max(0, ...this.innerTodos.map(x => x.priority))
   }
 
   get lowestNotYetTodoIndex(): number {
-    return this.todos.filter(x => x.done === false).length - 1
+    return this.innerTodos.filter(x => x.done === false).length - 1
   }
 
   @Mutation
   private INIT_TODOS(): void {
-    this.todos.splice(0)
+    this.innerTodos.splice(0)
   }
 
   @Mutation
   private PUSH_TODO(todo: Todo): void {
-    this.todos.push(todo)
+    this.innerTodos.push(todo)
   }
 
   @Mutation
   private REMOVE_TODO(todo: Todo): void {
-    this.todos = this.todos.filter(el => el.id !== todo.id)
+    this.innerTodos = this.innerTodos.filter(el => el.id !== todo.id)
   }
 
   @Mutation
   private REPLACE_TODO(todo: Todo): void {
-    const updatedTodoIndex: number = this.todos.findIndex(el => el.id === todo.id)
-    this.todos.splice(updatedTodoIndex, 1, todo)
+    const updatedTodoIndex: number = this.innerTodos.findIndex(el => el.id === todo.id)
+    this.innerTodos.splice(updatedTodoIndex, 1, todo)
   }
 
   @Mutation
   private SORT_TODOS(): void {
-    this.todos = [
-      ...this.todos
+    this.innerTodos = [
+      ...this.innerTodos
         .sort((a, b) => b.priority - a.priority)
         .sort((a, b) => Number(a.done) - Number(b.done))
         .sort((a, b) => {
@@ -72,13 +72,13 @@ export default class TodosModule extends VuexModule {
   }
 
   @Mutation
-  private SET_ISLOADING(value): void {
-    this.isLoading = value
+  private SET_ISLOADING(isLoading: boolean): void {
+    this.isLoading = isLoading
   }
 
   @Mutation
-  private SET_ISEMPTY(value): void {
-    this.isEmpty = value
+  private SET_ISEMPTY(isEmpty: boolean): void {
+    this.isEmpty = isEmpty
   }
 
   @Action
@@ -102,15 +102,15 @@ export default class TodosModule extends VuexModule {
     if (newIndex === 0) {
       newPriority = this.maxPriority + 1
     } else if (newIndex >= this.lowestNotYetTodoIndex) {
-      newPriority = this.todos[this.lowestNotYetTodoIndex].priority * 0.9
+      newPriority = this.innerTodos[this.lowestNotYetTodoIndex].priority * 0.9
     } else {
       const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
-      const prevPriority = this.todos[prevIndex - 1].priority
-      const nextPriority = this.todos[prevIndex].priority
+      const prevPriority = this.innerTodos[prevIndex - 1].priority
+      const nextPriority = this.innerTodos[prevIndex].priority
       newPriority = (prevPriority + nextPriority) / 2
     }
     this.updateTodo(new Todo({
-      ...this.todos[oldIndex],
+      ...this.innerTodos[oldIndex],
       priority: newPriority
     }))
   }

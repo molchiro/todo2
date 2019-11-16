@@ -9,21 +9,21 @@ const projectsRef = db.collection('projects')
   stateFactory: true
 })
 export default class ProjectsModule extends VuexModule {
-  projects: Project[] = []
+  innerProjects: Project[] = []
 
   selectedProjectId: string = ''
 
-  get getProjects(): Project[] {
-    return this.projects.map(project => new Project({ ...project }))
+  get projects(): Project[] {
+    return this.innerProjects.map(project => new Project({ ...project }))
   }
 
   get selectedProject(): Project {
-    const selectedProject = this.projects.find(x => x.id === this.selectedProjectId)
+    const selectedProject = this.innerProjects.find(x => x.id === this.selectedProjectId)
     return selectedProject ? selectedProject : new Project({ title: '' })
   }
 
   get maxPriority(): number {
-    return Math.max(0, ...this.projects.map(x => x.priority))
+    return Math.max(0, ...this.innerProjects.map(x => x.priority))
   }
 
   @Mutation
@@ -33,24 +33,24 @@ export default class ProjectsModule extends VuexModule {
   
   @Mutation
   private PUSH_PROJECTS(project: Project): void {
-    this.projects.push(project)
+    this.innerProjects.push(project)
   }
 
   @Mutation
   private REMOVE_PROJECT(project: Project): void {
-    this.projects = this.projects.filter(el => el.id !== project.id)
+    this.innerProjects = this.innerProjects.filter(el => el.id !== project.id)
   }
 
   @Mutation
   private REPLACE_PROJECT(project: Project): void {
-    const updatedprojectIndex: number = this.projects.findIndex(el => el.id === project.id)
-    this.projects.splice(updatedprojectIndex, 1, project)
+    const updatedprojectIndex: number = this.innerProjects.findIndex(el => el.id === project.id)
+    this.innerProjects.splice(updatedprojectIndex, 1, project)
   }
 
   @Mutation
   private SORT_PROJECTS(): void {
-    this.projects = [
-      ...this.projects.sort((a, b) => b.priority - a.priority)
+    this.innerProjects = [
+      ...this.innerProjects.sort((a, b) => b.priority - a.priority)
     ]
   }
 
@@ -88,16 +88,16 @@ export default class ProjectsModule extends VuexModule {
     let newPriority: number = 0
     if (newIndex === 0) {
       newPriority = this.maxPriority + 1
-    } else if (newIndex === this.projects.length - 1) {
-      newPriority = this.projects[this.projects.length - 1].priority * 0.9
+    } else if (newIndex === this.innerProjects.length - 1) {
+      newPriority = this.innerProjects[this.innerProjects.length - 1].priority * 0.9
     } else {
       const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
-      const prevPriority = this.projects[prevIndex - 1].priority
-      const nextPriority = this.projects[prevIndex].priority
+      const prevPriority = this.innerProjects[prevIndex - 1].priority
+      const nextPriority = this.innerProjects[prevIndex].priority
       newPriority = (prevPriority + nextPriority) / 2
     }
     this.updateProject(new Project({
-      ...this.projects[oldIndex],
+      ...this.innerProjects[oldIndex],
       priority: newPriority
     }))
   }
