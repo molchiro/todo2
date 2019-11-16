@@ -45,7 +45,7 @@ export default class ProjectList extends Vue {
     return projectsStore.projects
   }
 
-  get selectedProjectId(): String {
+  get selectedProjectId(): string {
     return projectsStore.selectedProjectId
   }
 
