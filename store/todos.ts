@@ -128,7 +128,7 @@ export default class TodosModule extends VuexModule {
       unsubscribe()
     }
     unsubscribe = todosRef
-      .where('uid', '==', authStore.currentUserUid)
+      .where('uid', '==', authStore.currentUser!.uid)
       .where('projectId', '==', projectId)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {

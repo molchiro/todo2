@@ -54,7 +54,7 @@ export default class TodoList extends Vue {
   edittingTodoId: string | null = null
 
   newTodo: Todo = new Todo({
-    uid: authStore.currentUserUid,
+    uid: authStore.currentUser!.uid,
     projectId: this.selectedProjectId
   })
 
@@ -93,7 +93,7 @@ export default class TodoList extends Vue {
 
   onAddTodo(): void {
     this.newTodo = new Todo({
-      uid: authStore.currentUserUid,
+      uid: authStore.currentUser!.uid,
       projectId: this.selectedProjectId
     })
   }

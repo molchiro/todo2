@@ -46,7 +46,7 @@ export default class ProjectPostDialog extends Vue {
 
   valid: boolean = true
 
-  project: Project = new Project({ uid: authStore.currentUserUid })
+  project: Project = new Project({ uid: authStore.currentUser!.uid })
 
   addProject(): void {
     const form = this.$refs.form as VForm
@@ -55,7 +55,7 @@ export default class ProjectPostDialog extends Vue {
       this.project.priority = projectsStore.maxPriority + 1
       projectsStore.addProject(this.project).then((ref) => {
         this.$router.push(`/projects/${ref.id}`)
-        this.project = new Project({ uid: authStore.currentUserUid })
+        this.project = new Project({ uid: authStore.currentUser!.uid })
         form.resetValidation()
       })
     }

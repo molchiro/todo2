@@ -114,7 +114,7 @@ export default class ProjectsModule extends VuexModule {
       )
     }
     projectsRef
-      .where('uid', '==', authStore.currentUserUid)
+      .where('uid', '==', authStore.currentUser!.uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
