@@ -19,7 +19,6 @@ export class Project implements IProject {
     uid = '',
     title = '',
     priority = 1
-
   }: Partial<IProject>) {
     Object.assign(this, {id, uid, title, priority})
   }
