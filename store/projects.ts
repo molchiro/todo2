@@ -20,7 +20,7 @@ export default class ProjectsModule extends VuexModule {
 
   get selectedProject(): Project {
     const selectedProject = this.innerProjects.find(x => x.id === this.selectedProjectId)
-    return selectedProject ? selectedProject : new Project({ title: '' })
+    return selectedProject ? selectedProject : new Project({})
   }
 
   get maxPriority(): number {
