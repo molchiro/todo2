@@ -1,7 +1,7 @@
 <template lang="pug">
   v-container
     delete-dialog(
-      v-model="isOpenedDeleteDialog"
+      v-model="isOpenDeleteDialog"
       :onClickDelete="deleteProject"
       :onClickCancel="closeDeleteDialog"
     ) このプロジェクトに紐づくTODOも全て削除されます。
@@ -44,7 +44,7 @@ const projectsRef = db.collection('projects')
   }
 })
 export default class projectPage extends Vue {
-  isOpenedDeleteDialog: boolean = false
+  isOpenDeleteDialog: boolean = false
 
   get projectId(): string {
     const id: string = this.$route.params.id
@@ -101,11 +101,11 @@ export default class projectPage extends Vue {
   }
 
   openDeleteDialog(): void {
-    this.isOpenedDeleteDialog = true
+    this.isOpenDeleteDialog = true
   }
 
   closeDeleteDialog(): void {
-    this.isOpenedDeleteDialog = false
+    this.isOpenDeleteDialog = false
   }
 }
 </script>

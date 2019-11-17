@@ -1,7 +1,7 @@
 <template lang="pug">
   v-dialog(
-      v-model="isOpened"
-      max-width=300
+    v-model="isOpened"
+    max-width=300
   )
     v-card
       v-card-title 削除しますか？

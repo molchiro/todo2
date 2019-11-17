@@ -1,7 +1,6 @@
 <template lang="pug">
   v-navigation-drawer(
-    :value="value"
-    @input="$emit('input', $event)"
+    v-model="isOpened"
     app
   )
     v-list
@@ -28,7 +27,15 @@ import ProjectList from '@/components/ProjectList.vue'
   }
 })
 export default class TheSideNav extends Vue {
-  @Prop() readonly value: boolean | null = null
+  @Prop({ default: false }) readonly value: boolean
+
+  get isOpened() {
+    return this.value
+  }
+
+  set isOpened(val) {
+    this.$emit('input', val)
+  }
 
   signOut(): void {
     authStore.signOut()
