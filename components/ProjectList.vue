@@ -10,7 +10,7 @@
         v-for="project in projects"
         :key="project.id"
         @click="$router.push(`/projects/${project.id}`)"
-        :class="project.id === selectedProjectId ? 'grey lighten-1' : ''"
+        :class="project.id === selectedProjectId ? 'grey lighten-3' : ''"
         v-ripple
       )
         v-list-item-icon.mr-1
