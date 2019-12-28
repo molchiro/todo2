@@ -1,7 +1,10 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db } from '@/plugins/firebase'
+import { authStore } from '@/store'
 import { Todo } from '@/models/todo'
 const todosRef = db.collection('todos')
+
+let unsubscribe: Function | null = null
 
 @Module({
   namespaced: true,
@@ -9,48 +12,51 @@ const todosRef = db.collection('todos')
   stateFactory: true
 })
 export default class TodosModule extends VuexModule {
-  todos: Todo[] = []
+  innerTodos: Todo[] = []
 
-  get getTodos(): Todo[] {
-    return this.todos.map((todo) => { return new Todo({ ...todo }) })
+  isLoading: boolean = true
+
+  isEmpty: boolean = true
+
+  get todos(): Todo[] {
+    return this.innerTodos.map(todo => new Todo({ ...todo }))
   }
 
   get maxPriority(): number {
-    return Math.max(0, ...this.todos.map((x) => { return x.priority }))
+    return Math.max(0, ...this.innerTodos.map(x => x.priority))
   }
 
   get lowestNotYetTodoIndex(): number {
-    return this.todos.filter((x) => { return x.done === false }).length - 1
+    return this.innerTodos.filter(x => x.done === false).length - 1
+  }
+
+  @Mutation
+  private INIT_TODOS(): void {
+    this.innerTodos.splice(0)
   }
 
   @Mutation
   private PUSH_TODO(todo: Todo): void {
-    this.todos.push(todo)
+    this.innerTodos.push(todo)
   }
 
   @Mutation
   private REMOVE_TODO(todo: Todo): void {
-    this.todos = this.todos.filter((el) => { return el.id !== todo.id })
+    this.innerTodos = this.innerTodos.filter(el => el.id !== todo.id)
   }
 
   @Mutation
   private REPLACE_TODO(todo: Todo): void {
-    const updatedTodoIndex: number = this.todos.findIndex((el) => {
-      return el.id === todo.id
-    })
-    this.todos.splice(updatedTodoIndex, 1, todo)
+    const updatedTodoIndex: number = this.innerTodos.findIndex(el => el.id === todo.id)
+    this.innerTodos.splice(updatedTodoIndex, 1, todo)
   }
 
   @Mutation
   private SORT_TODOS(): void {
-    this.todos = [
-      ...this.todos
-        .sort((a, b) => {
-          return b.priority - a.priority
-        })
-        .sort((a, b) => {
-          return Number(a.done) - Number(b.done)
-        })
+    this.innerTodos = [
+      ...this.innerTodos
+        .sort((a, b) => b.priority - a.priority)
+        .sort((a, b) => Number(a.done) - Number(b.done))
         .sort((a, b) => {
           // @ts-ignore
           const doneAta = a.doneAt ? a.doneAt.seconds : Infinity
@@ -61,8 +67,19 @@ export default class TodosModule extends VuexModule {
     ]
   }
 
+  @Mutation
+  private SET_ISLOADING(isLoading: boolean): void {
+    this.isLoading = isLoading
+  }
+
+  @Mutation
+  private SET_ISEMPTY(isEmpty: boolean): void {
+    this.isEmpty = isEmpty
+  }
+
   @Action
   addTodo(todo: Todo): void {
+    todo.priority = this.maxPriority + 1
     todosRef.add(todo.data())
   }
 
@@ -77,26 +94,26 @@ export default class TodosModule extends VuexModule {
   }
 
   @Action
-  moveTodo({ oldIndex, newIndex }): void {
+  moveTodo({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }): void {
     let newPriority: number = 0
     if (newIndex === 0) {
       newPriority = this.maxPriority + 1
     } else if (newIndex >= this.lowestNotYetTodoIndex) {
-      newPriority = this.todos[this.lowestNotYetTodoIndex].priority * 0.9
+      newPriority = this.innerTodos[this.lowestNotYetTodoIndex].priority * 0.9
     } else {
       const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
-      const prevPriority = this.todos[prevIndex - 1].priority
-      const nextPriority = this.todos[prevIndex].priority
+      const prevPriority = this.innerTodos[prevIndex - 1].priority
+      const nextPriority = this.innerTodos[prevIndex].priority
       newPriority = (prevPriority + nextPriority) / 2
     }
     this.updateTodo(new Todo({
-      ...this.todos[oldIndex],
+      ...this.innerTodos[oldIndex],
       priority: newPriority
     }))
   }
 
   @Action
-  bindTodos(uid: string): void {
+  bindTodos(projectId): void {
     const mapDoc2Todo  = (doc: firebase.firestore.QueryDocumentSnapshot) => {
       return new Todo(
         {
@@ -105,20 +122,27 @@ export default class TodosModule extends VuexModule {
         }
       )
     }
-    todosRef
-      .where('uid', '==', uid)
+    this.INIT_TODOS()
+    this.SET_ISLOADING(true)
+    this.SET_ISEMPTY(true)
+    if (typeof(unsubscribe) === 'function') {
+      unsubscribe()
+    }
+    unsubscribe = todosRef
+      .where('uid', '==', authStore.currentUser!.uid)
+      .where('projectId', '==', projectId)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
             this.PUSH_TODO(mapDoc2Todo(change.doc))
-          }
-          if (change.type === 'modified') {
+          } else if (change.type === 'modified') {
             this.REPLACE_TODO(mapDoc2Todo(change.doc))
-          }
-          if (change.type === 'removed') {
+          } else if (change.type === 'removed') {
             this.REMOVE_TODO(mapDoc2Todo(change.doc))
           }
         })
+        this.SET_ISLOADING(false)
+        this.SET_ISEMPTY(snapshot.empty)
         this.SORT_TODOS()
       })
   }

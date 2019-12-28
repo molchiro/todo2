@@ -6,7 +6,7 @@
   )
     v-app-bar-nav-icon(
       v-if="showSideIcon"
-      @click.stop="toggleSideNav"
+      @click.stop="toggleSideNav()"
     )
     v-toolbar-title Todo List
 </template>
@@ -15,7 +15,7 @@
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
 
 @Component
-export default class ToolBar extends Vue {
+export default class TheAppBar extends Vue {
   @Prop({ default: true }) readonly showSideIcon: boolean
 
   toggleSideNav(): void {

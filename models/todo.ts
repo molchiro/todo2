@@ -1,9 +1,12 @@
+import { Project } from "./project";
+
 export interface ITodoData {
   uid: string
   content: string
   priority: number
   done: boolean
   doneAt: firebase.firestore.FieldValue | null
+  projectId: string
 }
 
 export interface ITodo extends ITodoData {
@@ -17,16 +20,18 @@ export class Todo implements ITodo {
   priority: number
   done: boolean
   doneAt: firebase.firestore.FieldValue | null
+  projectId: string
   
   constructor({
     id = '',
     uid = '',
     content = '',
-    priority = 0,
+    priority = 1,
     done = false,
-    doneAt = null
+    doneAt = null,
+    projectId = ''
   }: Partial<ITodo>) {
-    Object.assign(this, {id, uid, content, priority, done, doneAt})
+    Object.assign(this, {id, uid, content, priority, done, doneAt, projectId})
   }
   
   data(): ITodoData {
@@ -35,7 +40,8 @@ export class Todo implements ITodo {
       content: this.content,
       priority: this.priority,
       done: this.done,
-      doneAt: this.doneAt
+      doneAt: this.doneAt,
+      projectId: this.projectId
     }
   }
 

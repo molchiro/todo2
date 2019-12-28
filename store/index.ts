@@ -1,14 +1,5 @@
-import Vuex from 'vuex'
-import AuthModule from '@/store/modules/auth'
-import TodosModule from '@/store/modules/todos'
-
-const createStore = () => {
-  return new Vuex.Store({
-    modules: {
-      auth: AuthModule,
-      todos: TodosModule
-    }
-  })
-}
-
-export default createStore
+import { Store } from 'vuex'
+import { initialiseStores } from '@/utils/store-accessor'
+const initializer = (store: Store<any>) => initialiseStores(store)
+export const plugins = [initializer]
+export * from '@/utils/store-accessor'

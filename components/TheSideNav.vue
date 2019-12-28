@@ -1,28 +1,44 @@
 <template lang="pug">
   v-navigation-drawer(
-    :value="value"
-    @input="$emit('input', $event)"
+    v-model="isOpened"
     app
   )
     v-list
-      v-list-item(@click="signOut")
-        v-list-item-content
-          v-list-item-title SIGNOUT
+      v-subheader PROJECTS
+      project-list
+      v-divider
+      v-subheader OTHERS
+      v-list-item(@click="signOut()")
+        v-row(dense)
+          v-col(cols=1)
+          v-col.pl-3
+            v-list-item-content
+              v-list-item-title SIGNOUT
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
-import AuthModule from '@/store/modules/auth'
+import { authStore } from '@/store'
+import ProjectList from '@/components/ProjectList.vue'
 
-@Component
+@Component({
+  components: {
+    ProjectList
+  }
+})
 export default class TheSideNav extends Vue {
-  authModule = getModule(AuthModule, this.$store)
+  @Prop({ default: false }) readonly value: boolean
 
-  @Prop() readonly value: boolean | null = null
+  get isOpened() {
+    return this.value
+  }
+
+  set isOpened(val) {
+    this.$emit('input', val)
+  }
 
   signOut(): void {
-    this.authModule.signOut()
+    authStore.signOut()
     this.$router.push('sign_in')
   }
 }

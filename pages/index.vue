@@ -1,20 +1,11 @@
 <template lang="pug">
-  v-layout
-    v-flex
-      todo-post.mb-2
-      todo-list
+  v-container.fill-height.justify-center
+    div メニューからプロジェクトを選択してください。
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import TodoPost from '@/components/TodoPost.vue'
-import TodoList from '@/components/TodoList.vue'
 
-@Component({
-  components: {
-    TodoPost,
-    TodoList
-  }
-})
+@Component
 export default class indexPage extends Vue {}
 </script>

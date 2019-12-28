@@ -1,69 +1,101 @@
 <template lang="pug">
-  v-card.pa-2
+  v-card.px-3.py-1
+    delete-dialog(
+      v-model="isOpenedDeleteDialog"
+      :onClickDelete="deleteTodo"
+      :onClickCancel="releaseDeleteDialog"
+    ) この操作は取り消せません
+    component(
+        :isNew="true"
+        :is="newTodo.id === edittingTodoId ? 'todo-list-item-edit' : 'todo-list-item-show'"
+        :todo="newTodo"
+        :setEdittingTodoId="setEdittingTodoId"
+        :onAddTodo="onAddTodo"
+      )
     draggable(
       :list="todos"
       :delay="50"
-      @end="draggableEnd"
+      @end="draggableEnd($event)"
     )
-      div(
+      component(
         v-for="todo in todos"
         :key="todo.id"
+        :is="todo.id === edittingTodoId ? 'todo-list-item-edit' : 'todo-list-item-show'"
+        :todo="todo"
+        :setEdittingTodoId="setEdittingTodoId"
+        :onClickDelete="setDeleteTodoDialog"
       )
-        todo-item-edit(
-          v-if="todo.id === edittingTodoId"
-          :todo="todo"
-          @endEdit="setEdittingTodoId('')"
-        )
-        todo-item-show(
-          v-else
-          :todo="todo"
-          @click.native.capture="setEdittingTodoId('')"
-          @startEdit="setEdittingTodoId(todo.id)"
-        )
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
+import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
-import TodosModule from '@/store/modules/todos'
-import AuthModule from '@/store/modules/auth'
+import { todosStore, authStore, projectsStore } from '@/store'
 import { Todo } from '@/models/todo'
-import TodoItemEdit from '@/components/TodoItemEdit.vue'
-import TodoItemShow from '@/components/TodoItemShow.vue'
+import TodoListItemShow from '@/components/TodoListItemShow.vue'
+import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
+import DeleteDialog from '@/components/DeleteDialog.vue'
 
 @Component({
   components: {
-    TodoItemEdit,
-    TodoItemShow,
-    draggable
+    TodoListItemShow,
+    TodoListItemEdit,
+    draggable,
+    DeleteDialog
   }
 })
 export default class TodoList extends Vue {
-  todosModule = getModule(TodosModule, this.$store)
+  @Prop() readonly projectId: string
 
-  authModule = getModule(AuthModule, this.$store)
+  isOpenedDeleteDialog: boolean = false
 
-  edittingTodoId: string = ''
+  todoToDelete: Todo | null = null
+
+  edittingTodoId: string | null = null
+
+  newTodo: Todo = new Todo({
+    uid: authStore.currentUser!.uid,
+    projectId: this.selectedProjectId
+  })
 
   get todos(): Todo[] {
-    return this.todosModule.getTodos
+    return todosStore.todos
   }
 
-  created(): void {
-    this.todosModule.bindTodos(this.authModule.currentUserUid)
+  get selectedProjectId(): string {
+    return projectsStore.selectedProjectId
   }
 
-  draggableEnd(e): void {
-    if (this.todos[e.oldIndex].done) return
-    this.todosModule.moveTodo({
-      oldIndex: e.oldIndex,
-      newIndex: e.newIndex
-    })
+  draggableEnd({ oldIndex, newIndex }): void {
+    if (!this.todos[oldIndex].done) {
+      todosStore.moveTodo({ oldIndex, newIndex })
+    }
   }
 
-  setEdittingTodoId(id: string): void {
+  setEdittingTodoId(id: string | null): void {
     this.edittingTodoId = id
+  }
+
+  setDeleteTodoDialog(todo: Todo): void {
+    this.todoToDelete = todo
+    this.isOpenedDeleteDialog = true
+  }
+
+  releaseDeleteDialog(): void {
+    this.todoToDelete = null
+    this.isOpenedDeleteDialog = false
+  }
+
+  deleteTodo(): void {
+    todosStore.deleteTodo(this.todoToDelete!)
+    this.releaseDeleteDialog()
+  }
+
+  onAddTodo(): void {
+    this.newTodo = new Todo({
+      uid: authStore.currentUser!.uid,
+      projectId: this.selectedProjectId
+    })
   }
 }
 </script>

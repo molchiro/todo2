@@ -1,25 +1,18 @@
 <template lang="pug">
-  v-layout(
-    column
-    align-center
-  )
-    v-flex
-      v-btn(@click="signIn") SIGNIN
+  v-container.fill-height.justify-center
+    v-btn(@click="signIn()") SIGNIN
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { getModule } from 'vuex-module-decorators'
-import AuthModule from '@/store/modules/auth'
+import { authStore } from '@/store'
 
 @Component({
   layout: 'titleOnly'
 })
 export default class signInPage extends Vue {
-  authModule = getModule(AuthModule, this.$store)
-
   signIn(): void {
-    this.authModule.signIn()
+    authStore.signIn()
   }
 }
 </script>

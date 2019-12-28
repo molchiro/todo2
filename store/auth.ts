@@ -7,15 +7,11 @@ import { auth, provider } from '@/plugins/firebase'
   stateFactory: true
 })
 export default class AuthModule extends VuexModule {
-  currentUser: firebase.User | null = null
-
-  get currentUserUid(): string {
-    return this.currentUser ? this.currentUser.uid : ''
-  }
+  currentUser: { uid: string } | null = null
 
   @Mutation
   private SET_USER(user: firebase.User | null): void {
-    this.currentUser = user
+    this.currentUser =  user ? { uid: user.uid } : null
   }
 
   @Action
@@ -30,7 +26,7 @@ export default class AuthModule extends VuexModule {
   }
 
   @Action
-  authenticate() {
+  authenticate(): Promise<boolean> {
     return new Promise(async (resolve) => {
       if (!this.currentUser) {
         const currentUser: firebase.User | null = await new Promise((resolve) => {

@@ -2,8 +2,7 @@
   v-app
     the-app-bar(:showSideIcon="false")
     v-content
-      v-container
-        nuxt
+      nuxt
 </template>
 
 <script lang="ts">
