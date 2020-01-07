@@ -68,40 +68,40 @@ export default class ProjectsModule extends VuexModule {
 
   @Action
   deleteProject(project: Project): void {
-    projectsRef.doc(project.id).delete().then(() => {
-      db.collection('todos')
-        .where('uid', '==', project.uid)
-        .where('projectId', '==', project.id)
-        .get().then((snapshot) => {
-          snapshot.forEach((doc) => {
-            doc.ref.delete()
-          })
-        })
-    })
+    // projectsRef.doc(project.id).delete().then(() => {
+    //   db.collection('todos')
+    //     .where('uid', '==', project.uid)
+    //     .where('projectId', '==', project.id)
+    //     .get().then((snapshot) => {
+    //       snapshot.forEach((doc) => {
+    //         doc.ref.delete()
+    //       })
+    //     })
+    // })
   }
 
   @Action
   updateProject(project: Project): void {
-    projectsRef.doc(project.id).update(project.data())
+    // projectsRef.doc(project.id).update(project.data())
   }
 
   @Action
   moveProject({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }): void {
-    let newPriority: number = 0
-    if (newIndex === 0) {
-      newPriority = this.maxPriority + 1
-    } else if (newIndex === this.innerProjects.length - 1) {
-      newPriority = this.innerProjects[this.innerProjects.length - 1].priority * 0.9
-    } else {
-      const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
-      const prevPriority = this.innerProjects[prevIndex - 1].priority
-      const nextPriority = this.innerProjects[prevIndex].priority
-      newPriority = (prevPriority + nextPriority) / 2
-    }
-    this.updateProject(new Project({
-      ...this.innerProjects[oldIndex],
-      priority: newPriority
-    }))
+    // let newPriority: number = 0
+    // if (newIndex === 0) {
+    //   newPriority = this.maxPriority + 1
+    // } else if (newIndex === this.innerProjects.length - 1) {
+    //   newPriority = this.innerProjects[this.innerProjects.length - 1].priority * 0.9
+    // } else {
+    //   const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
+    //   const prevPriority = this.innerProjects[prevIndex - 1].priority
+    //   const nextPriority = this.innerProjects[prevIndex].priority
+    //   newPriority = (prevPriority + nextPriority) / 2
+    // }
+    // this.updateProject(new Project({
+    //   ...this.innerProjects[oldIndex],
+    //   priority: newPriority
+    // }))
   }
 
   @Action
@@ -114,8 +114,9 @@ export default class ProjectsModule extends VuexModule {
         }
       )
     }
-    projectsRef
-      .where('uid', '==', authStore.currentUser!.uid)
+    db.collection('users')
+      .doc(authStore.currentUser!.uid)
+      .collection('projects')
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
