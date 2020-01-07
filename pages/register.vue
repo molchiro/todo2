@@ -21,7 +21,11 @@ export default class registerPage extends Vue {
   userName: string = ''
 
   register(): void {
-    currentUserStore.register(new User({ displayName: this.userName }))
+    currentUserStore
+      .register(new User({ displayName: this.userName }))
+      .then(() => {
+        this.$router.push('/')
+      })
   }
 }
 </script>

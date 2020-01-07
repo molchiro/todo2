@@ -61,9 +61,9 @@ export default class currentUserModule extends VuexModule {
   }
 
   @Action
-  register(user: User): void {
+  register(user: User): Promise<void> {
     user.id = authStore.currentUser!.uid
     user.createdAt = serverTimeStamp
-    usersRef.doc(user.id).set(user.data())
+    return usersRef.doc(user.id).set(user.data())
   }
 }
