@@ -2,6 +2,7 @@ import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db } from '@/plugins/firebase'
 import { authStore } from '@/store'
 import { Project } from '@/models/project'
+import { ProjectListItem } from '@/models/ProjectListItem'
 const projectsRef = db.collection('projects')
 
 @Module({
@@ -10,22 +11,22 @@ const projectsRef = db.collection('projects')
   stateFactory: true
 })
 export default class ProjectsModule extends VuexModule {
-  innerProjects: Project[] = []
+  innerProjects: ProjectListItem[] = []
 
   selectedProjectId: string = ''
 
-  get projects(): Project[] {
-    return this.innerProjects.map(project => new Project({ ...project }))
+  get projects(): ProjectListItem[] {
+    return this.innerProjects.map(project => new ProjectListItem({ ...project }))
   }
 
-  get selectedProject(): Project {
+  get selectedProject(): ProjectListItem {
     const selectedProject = this.innerProjects.find(x => x.id === this.selectedProjectId)
-    return selectedProject ? selectedProject : new Project({})
+    return selectedProject ? selectedProject : new ProjectListItem({})
   }
 
-  get maxPriority(): number {
-    return Math.max(0, ...this.innerProjects.map(x => x.priority))
-  }
+  // get maxPriority(): number {
+  //   return Math.max(0, ...this.innerProjects.map(x => x.priority))
+  // }
 
   @Mutation
   private SET_SELECTED_PROJECT_ID(id: string): void {
@@ -33,37 +34,31 @@ export default class ProjectsModule extends VuexModule {
   }
   
   @Mutation
-  private PUSH_PROJECTS(project: Project): void {
+  private PUSH_PROJECTS(project: ProjectListItem): void {
     this.innerProjects.push(project)
   }
 
   @Mutation
-  private REMOVE_PROJECT(project: Project): void {
+  private REMOVE_PROJECT(project: ProjectListItem): void {
     this.innerProjects = this.innerProjects.filter(el => el.id !== project.id)
   }
 
   @Mutation
-  private REPLACE_PROJECT(project: Project): void {
+  private REPLACE_PROJECT(project: ProjectListItem): void {
     const updatedprojectIndex: number = this.innerProjects.findIndex(el => el.id === project.id)
     this.innerProjects.splice(updatedprojectIndex, 1, project)
   }
 
-  @Mutation
-  private SORT_PROJECTS(): void {
-    this.innerProjects = [
-      ...this.innerProjects.sort((a, b) => b.priority - a.priority)
-    ]
-  }
+  // @Mutation
+  // private SORT_PROJECTS(): void {
+  //   this.innerProjects = [
+  //     ...this.innerProjects.sort((a, b) => b.priority - a.priority)
+  //   ]
+  // }
 
   @Action
   setSelectedProjectId(id: string): void {
     this.SET_SELECTED_PROJECT_ID(id)
-  }
-
-  @Action
-  addProject(project: Project): Promise<firebase.firestore.DocumentReference> {
-    project.priority = this.maxPriority + 1
-    return projectsRef.add(project.data())
   }
 
   @Action
@@ -107,7 +102,7 @@ export default class ProjectsModule extends VuexModule {
   @Action
   bindProjects(): void {
     const mapDoc2Project = (doc: firebase.firestore.QueryDocumentSnapshot) => {
-      return new Project(
+      return new ProjectListItem(
         {
           ...doc.data(),
           id: doc.id,
@@ -127,7 +122,7 @@ export default class ProjectsModule extends VuexModule {
             this.REMOVE_PROJECT(mapDoc2Project(change.doc))
           }
         })
-        this.SORT_PROJECTS()
+        // this.SORT_PROJECTS()
       })
   }
 }

@@ -35,7 +35,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
-import { authStore, projectsStore } from '@/store'
+import { functions } from '@/plugins/firebase'
+import { authStore } from '@/store'
 import { Project } from '@/models/project'
 import { VForm } from '@/types/index'
 
@@ -53,17 +54,26 @@ export default class ProjectPostDialog extends Vue {
 
   valid: boolean = true
 
-  project: Project = new Project({ uid: authStore.currentUser!.uid })
+  project: Project = new Project({
+    createdByUid: authStore.currentUser!.uid,
+    members: [authStore.currentUser!.uid]
+  })
 
   addProject(): void {
     const form = this.$refs.form as VForm
     if (form.validate()) {
       this.isOpened = false
-      projectsStore.addProject(this.project).then((ref) => {
-        this.$router.push(`/projects/${ref.id}`)
-        this.project = new Project({ uid: authStore.currentUser!.uid })
-        form.resetValidation()
-      })
+      const addProject = functions.httpsCallable('addProject')
+      addProject(JSON.parse(JSON.stringify(this.project.data()))).then(
+        (result) => {
+          this.$router.push(`/projects/${result.data.id}`)
+          this.project = new Project({
+            createdByUid: authStore.currentUser!.uid,
+            members: [authStore.currentUser!.uid]
+          })
+          form.resetValidation()
+        }
+      )
     }
   }
 }

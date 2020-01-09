@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/functions'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBRm6GGQpfIN9GL0YosrIgWOoz5pV5e1gA',
@@ -18,3 +19,4 @@ export const provider = new firebase.auth.GoogleAuthProvider()
 export const auth = firebase.auth()
 export const db = firebase.firestore()
 export const serverTimeStamp = firebase.firestore.FieldValue.serverTimestamp()
+export const functions = firebase.functions()

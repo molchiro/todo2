@@ -1,7 +1,7 @@
 export interface IProjectData {
-  uid: string
+  createdByUid: string
   title: string
-  priority: number
+  members: string[]
 }
 
 export interface IProject extends IProjectData {
@@ -10,28 +10,29 @@ export interface IProject extends IProjectData {
 
 export class Project implements IProject {
   id: string
-  uid: string
+  createdByUid: string
   title: string
-  priority: number
+  members: string[]
+
   
   constructor({
     id = '',
-    uid = '',
+    createdByUid = '',
     title = '',
-    priority = 1
+    members = []
   }: Partial<IProject>) {
-    Object.assign(this, {id, uid, title, priority})
+    Object.assign(this, { id, createdByUid, title, members })
   }
   
   data(): IProjectData {
     return {
-      uid: this.uid,
+      createdByUid: this.createdByUid,
       title: this.title,
-      priority: this.priority
+      members: this.members.slice()
     }
   }
 
   isValid(): boolean {
-    return !!this.title && !!this.uid
+    return !!this.title && !!this.createdByUid && this.members != []
   }
 }
