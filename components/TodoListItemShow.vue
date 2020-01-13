@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
-import { todosStore } from '@/store'
+import { todosStore, authStore } from '@/store'
 import { Todo } from '@/models/todo'
 import { serverTimeStamp } from '@/plugins/firebase'
 import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
@@ -44,7 +44,8 @@ export default class TodoListItemShow extends Vue {
       new Todo({
         ...this.todo,
         done: val,
-        doneAt: val ? serverTimeStamp : null
+        doneAt: val ? serverTimeStamp : null,
+        doneByUid: val ? authStore.currentUser!.uid : ''
       })
     )
   }

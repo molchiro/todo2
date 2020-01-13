@@ -1,6 +1,6 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { db } from '@/plugins/firebase'
-import { authStore, projectsStore } from '@/store'
+import { db, serverTimeStamp } from '@/plugins/firebase'
+import { authStore } from '@/store'
 import { Todo } from '@/models/todo'
 
 let unsubscribe: Function | null = null
@@ -80,6 +80,10 @@ export default class TodosModule extends VuexModule {
   @Action
   addTodo(todo: Todo): void {
     todo.priority = this.maxPriority + 1
+    todo.createdAt = serverTimeStamp
+    todo.createdByUid = authStore.currentUser!.uid
+    todo.updatedAt = serverTimeStamp
+    todo.updatedByUid = authStore.currentUser!.uid
     todoRef!.add(todo.data())
   }
 
@@ -90,6 +94,8 @@ export default class TodosModule extends VuexModule {
 
   @Action
   updateTodo(todo: Todo): void {
+    todo.updatedAt = serverTimeStamp
+    todo.updatedByUid = authStore.currentUser!.uid
     todoRef!.doc(todo.id).update(todo.data())
   }
 

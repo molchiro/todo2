@@ -1,9 +1,13 @@
 export interface ITodoData {
-  uid: string
+  createdAt: firebase.firestore.FieldValue | null
+  createdByUid: string
   content: string
   priority: number
   done: boolean
   doneAt: firebase.firestore.FieldValue | null
+  doneByUid: string
+  updatedAt: firebase.firestore.FieldValue | null
+  updatedByUid: string
 }
 
 export interface ITodo extends ITodoData {
@@ -12,34 +16,57 @@ export interface ITodo extends ITodoData {
 
 export class Todo implements ITodo {
   id: string
-  uid: string
+  createdAt: firebase.firestore.FieldValue | null
+  createdByUid: string
   content: string
   priority: number
   done: boolean
   doneAt: firebase.firestore.FieldValue | null
+  doneByUid: string
+  updatedAt: firebase.firestore.FieldValue | null
+  updatedByUid: string
   
   constructor({
     id = '',
-    uid = '',
+    createdAt = null,
+    createdByUid = '',
     content = '',
     priority = 1,
     done = false,
     doneAt = null,
+    doneByUid = '',
+    updatedAt = null,
+    updatedByUid = ''
   }: Partial<ITodo>) {
-    Object.assign(this, { id, uid, content, priority, done, doneAt })
+    Object.assign(this, {
+      id,
+      createdAt,
+      createdByUid,
+      content,
+      priority,
+      done,
+      doneAt,
+      doneByUid,
+      updatedAt,
+      updatedByUid
+    })
   }
   
   data(): ITodoData {
     return {
-      uid: this.uid,
+      createdAt: this.createdAt,
+      createdByUid: this.createdByUid,
       content: this.content,
       priority: this.priority,
       done: this.done,
       doneAt: this.doneAt,
+      doneByUid: this.doneByUid,
+      updatedAt: this.updatedAt,
+      updatedByUid: this.updatedByUid,
     }
   }
 
   isValid(): boolean {
-    return !!this.content && !!this.uid
+    return !!this.content
   }
 }
