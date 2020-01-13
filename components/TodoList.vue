@@ -55,7 +55,6 @@ export default class TodoList extends Vue {
 
   newTodo: Todo = new Todo({
     uid: authStore.currentUser!.uid,
-    projectId: this.selectedProjectId
   })
 
   get todos(): Todo[] {
@@ -94,7 +93,6 @@ export default class TodoList extends Vue {
   onAddTodo(): void {
     this.newTodo = new Todo({
       uid: authStore.currentUser!.uid,
-      projectId: this.selectedProjectId
     })
   }
 }

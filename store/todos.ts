@@ -1,10 +1,10 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db } from '@/plugins/firebase'
-import { authStore } from '@/store'
+import { authStore, projectsStore } from '@/store'
 import { Todo } from '@/models/todo'
-const todosRef = db.collection('todos')
 
 let unsubscribe: Function | null = null
+let todoRef: firebase.firestore.CollectionReference | null = null
 
 @Module({
   namespaced: true,
@@ -80,17 +80,17 @@ export default class TodosModule extends VuexModule {
   @Action
   addTodo(todo: Todo): void {
     todo.priority = this.maxPriority + 1
-    todosRef.add(todo.data())
+    todoRef!.add(todo.data())
   }
 
   @Action
   deleteTodo(todo: Todo): void {
-    todosRef.doc(todo.id).delete()
+    todoRef!.doc(todo.id).delete()
   }
 
   @Action
   updateTodo(todo: Todo): void {
-    todosRef.doc(todo.id).update(todo.data())
+    todoRef!.doc(todo.id).update(todo.data())
   }
 
   @Action
@@ -128,9 +128,8 @@ export default class TodosModule extends VuexModule {
     if (typeof(unsubscribe) === 'function') {
       unsubscribe()
     }
-    unsubscribe = todosRef
-      .where('uid', '==', authStore.currentUser!.uid)
-      .where('projectId', '==', projectId)
+    todoRef = db.collection('projects').doc(projectId).collection('todos')
+    unsubscribe = todoRef
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
