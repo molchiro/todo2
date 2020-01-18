@@ -33,7 +33,7 @@ import { Vue, Component } from 'nuxt-property-decorator'
 import { usersProjectsStore, todosStore } from '@/store'
 import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
-import { db } from '@/plugins/firebase'
+import { db, functions } from '@/plugins/firebase'
 import { UsersProject } from '@/models/UsersProject'
 import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
@@ -90,17 +90,20 @@ export default class projectPage extends Vue {
 
   updateTitle(event): void {
     if (this.canUpdate) {
-      // cloud functionsで実装
-      // usersProjectsStore.updateProject(this.localProject)
+      const updateProjectTitle = functions.httpsCallable('updateProjectTitle')
+      updateProjectTitle({
+        id: this.localProject.id,
+        title: this.localProject.title
+      })
     }
     event.srcElement.blur()
   }
 
-  deleteProject(): void {
-    // cloud functionsで実装
-    // usersProjectsStore.deleteProject(this.localProject)
-    // this.closeDeleteDialog()
-    // this.$router.push('/')
+  async deleteProject(): Promise<void> {
+    const deleteProject = functions.httpsCallable('deleteProject')
+    await deleteProject(this.localProject.id)
+    this.closeDeleteDialog()
+    this.$router.push('/')
   }
 
   openDeleteDialog(): void {
