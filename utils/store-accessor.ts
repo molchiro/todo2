@@ -1,18 +1,18 @@
 import { Store } from 'vuex'
 import { getModule } from 'vuex-module-decorators'
 import auth from '~/store/auth'
-import projects from '~/store/projects'
+import usersProjects from '~/store/usersProjects'
 import todos from '~/store/todos'
 import currentUser from '~/store/currentUser'
 
 let authStore: auth
-let projectsStore: projects
+let usersProjectsStore: usersProjects
 let todosStore: todos
 let currentUserStore: currentUser
 
 function initialiseStores(store: Store<any>): void {
   authStore = getModule(auth, store)
-  projectsStore = getModule(projects, store)
+  usersProjectsStore = getModule(usersProjects, store)
   todosStore = getModule(todos, store)
   currentUserStore = getModule(currentUser, store)
 }
@@ -20,7 +20,7 @@ function initialiseStores(store: Store<any>): void {
 export {
   initialiseStores,
   authStore,
-  projectsStore,
+  usersProjectsStore,
   todosStore,
   currentUserStore
 }

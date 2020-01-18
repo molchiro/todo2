@@ -30,10 +30,11 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { projectsStore, todosStore } from '@/store'
+import { usersProjectsStore, todosStore } from '@/store'
 import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
 import { db } from '@/plugins/firebase'
+import { UsersProject } from '@/models/UsersProject'
 import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
 
@@ -48,12 +49,12 @@ export default class projectPage extends Vue {
 
   get projectId(): string {
     const id: string = this.$route.params.id
-    projectsStore.setSelectedProjectId(id)
+    usersProjectsStore.setSelectedProjectId(id)
     return id
   }
 
-  get project(): Project {
-    return projectsStore.selectedProject
+  get project(): UsersProject {
+    return usersProjectsStore.selectedProject
   }
 
   get isTodosLoading(): boolean {
@@ -89,15 +90,17 @@ export default class projectPage extends Vue {
 
   updateTitle(event): void {
     if (this.canUpdate) {
-      projectsStore.updateProject(this.localProject)
+      // cloud functionsで実装
+      // usersProjectsStore.updateProject(this.localProject)
     }
     event.srcElement.blur()
   }
 
   deleteProject(): void {
-    projectsStore.deleteProject(this.localProject)
-    this.closeDeleteDialog()
-    this.$router.push('/')
+    // cloud functionsで実装
+    // usersProjectsStore.deleteProject(this.localProject)
+    // this.closeDeleteDialog()
+    // this.$router.push('/')
   }
 
   openDeleteDialog(): void {

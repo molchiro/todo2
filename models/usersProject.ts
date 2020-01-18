@@ -1,13 +1,13 @@
-export interface IProjectListItemData {
+export interface IUsersProjectData {
   title: string
   priority: number
 }
 
-export interface IProjectListItem extends IProjectListItemData {
+export interface IUsersProject extends IUsersProjectData {
   id: string
 }
 
-export class ProjectListItem implements IProjectListItem {
+export class UsersProject implements IUsersProject {
   id: string
   title: string
   priority: number
@@ -16,11 +16,11 @@ export class ProjectListItem implements IProjectListItem {
     id = '',
     title = '',
     priority = 1
-  }: Partial<IProjectListItem>) {
+  }: Partial<IUsersProject>) {
     Object.assign(this, {id, title, priority})
   }
   
-  data(): IProjectListItemData {
+  data(): IUsersProjectData {
     return {
       title: this.title,
       priority: this.priority
