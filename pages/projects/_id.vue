@@ -16,7 +16,7 @@
               @keypress.enter="updateTitle($event)"
             )
         v-col.align-self-center.text-center(cols=1)
-          v-icon(@click="openDeleteDialog()") delete
+              v-icon(@click="openDeleteDialog()") delete
     div.text-center(v-if="isTodosLoading")
       v-progress-circular(
         indeterminate
@@ -30,11 +30,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { usersProjectsStore, todosStore } from '@/store'
+import { usersProjectsStore, selectedProjectStore, todosStore } from '@/store'
 import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
 import { db, functions } from '@/plugins/firebase'
-import { UsersProject } from '@/models/UsersProject'
 import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
 
@@ -53,8 +52,8 @@ export default class projectPage extends Vue {
     return id
   }
 
-  get project(): UsersProject {
-    return usersProjectsStore.selectedProject
+  get project(): Project {
+    return selectedProjectStore.project
   }
 
   get isTodosLoading(): boolean {
@@ -76,6 +75,7 @@ export default class projectPage extends Vue {
 
   created(): void {
     todosStore.bindTodos(this.projectId)
+    selectedProjectStore.bindProject(this.projectId)
   }
 
   async validate({ params }): Promise<boolean> {

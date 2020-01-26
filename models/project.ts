@@ -5,6 +5,8 @@ export interface IProjectData {
   updatedByUid: string
   title: string
   members: string[]
+  canInvite: boolean
+  invitationCode: string
 }
 
 export interface IProject extends IProjectData {
@@ -19,6 +21,8 @@ export class Project implements IProject {
   updatedByUid: string
   title: string
   members: string[]
+  canInvite: boolean
+  invitationCode: string
 
   constructor({
     id = '',
@@ -27,7 +31,9 @@ export class Project implements IProject {
     updatedAt = null,
     updatedByUid = '',
     title = '',
-    members = []
+    members = [],
+    canInvite = false,
+    invitationCode = ''
   }: Partial<IProject>) {
     Object.assign(this,{
       id,
@@ -36,7 +42,9 @@ export class Project implements IProject {
       updatedAt,
       updatedByUid,
       title,
-      members
+      members,
+      canInvite,
+      invitationCode
     })
   }
   
@@ -47,7 +55,9 @@ export class Project implements IProject {
       updatedAt: this.updatedAt,
       updatedByUid: this.updatedByUid,
       title: this.title,
-      members: this.members.slice()
+      members: this.members.slice(),
+      canInvite: this.canInvite,
+      invitationCode: this.invitationCode
     }
   }
 
