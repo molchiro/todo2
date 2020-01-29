@@ -16,7 +16,7 @@
               @keypress.enter="updateTitle($event)"
             )
         v-col.align-self-center.text-center(cols=1)
-          v-icon(@click="openDeleteDialog()") delete
+              v-icon(@click="openDeleteDialog()") delete
     div.text-center(v-if="isTodosLoading")
       v-progress-circular(
         indeterminate
@@ -30,10 +30,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { projectsStore, todosStore } from '@/store'
+import { usersProjectsStore, selectedProjectStore, todosStore } from '@/store'
 import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
-import { db } from '@/plugins/firebase'
+import { db, functions } from '@/plugins/firebase'
 import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
 
@@ -48,12 +48,12 @@ export default class projectPage extends Vue {
 
   get projectId(): string {
     const id: string = this.$route.params.id
-    projectsStore.setSelectedProjectId(id)
+    usersProjectsStore.setSelectedProjectId(id)
     return id
   }
 
   get project(): Project {
-    return projectsStore.selectedProject
+    return selectedProjectStore.project
   }
 
   get isTodosLoading(): boolean {
@@ -75,6 +75,7 @@ export default class projectPage extends Vue {
 
   created(): void {
     todosStore.bindTodos(this.projectId)
+    selectedProjectStore.bindProject(this.projectId)
   }
 
   async validate({ params }): Promise<boolean> {
@@ -89,13 +90,18 @@ export default class projectPage extends Vue {
 
   updateTitle(event): void {
     if (this.canUpdate) {
-      projectsStore.updateProject(this.localProject)
+      const updateProjectTitle = functions.httpsCallable('updateProjectTitle')
+      updateProjectTitle({
+        id: this.localProject.id,
+        title: this.localProject.title
+      })
     }
     event.srcElement.blur()
   }
 
-  deleteProject(): void {
-    projectsStore.deleteProject(this.localProject)
+  async deleteProject(): Promise<void> {
+    const deleteProject = functions.httpsCallable('deleteProject')
+    await deleteProject(this.localProject.id)
     this.closeDeleteDialog()
     this.$router.push('/')
   }

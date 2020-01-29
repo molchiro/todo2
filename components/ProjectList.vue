@@ -29,8 +29,8 @@
 import { Vue, Component } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
 import ProjectPostDialog from '@/components/ProjectPostDialog.vue'
-import { projectsStore } from '@/store'
-import { Project } from '@/models/project'
+import { usersProjectsStore } from '@/store'
+import { UsersProject } from '@/models/usersProject'
 
 @Component({
   components: {
@@ -41,20 +41,20 @@ import { Project } from '@/models/project'
 export default class ProjectList extends Vue {
   isShowPostDialog: boolean = false
 
-  get projects(): Project[] {
-    return projectsStore.projects
+  get projects(): UsersProject[] {
+    return usersProjectsStore.projects
   }
 
   get selectedProjectId(): string {
-    return projectsStore.selectedProjectId
+    return usersProjectsStore.selectedProjectId
   }
 
   created(): void {
-    projectsStore.bindProjects()
+    usersProjectsStore.bindProjects()
   }
 
   draggableEnd({ oldIndex, newIndex }): void {
-    projectsStore.moveProject({ oldIndex, newIndex })
+    usersProjectsStore.moveProject({ oldIndex, newIndex })
   }
 }
 </script>

@@ -41,7 +41,7 @@ export default {
    */
   plugins: [],
   router: {
-    middleware: 'authRouter'
+    middleware: 'router'
   },
   /*
    ** Nuxt.js modules

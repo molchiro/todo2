@@ -1,26 +1,27 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { db } from '@/plugins/firebase'
 import { authStore } from '@/store'
-import { Project } from '@/models/project'
-const projectsRef = db.collection('projects')
+import { UsersProject } from '~/models/usersProject'
+
+let usersProjectsRef: firebase.firestore.CollectionReference | null = null
 
 @Module({
   namespaced: true,
-  name: 'projects',
+  name: 'usersProjects',
   stateFactory: true
 })
-export default class ProjectsModule extends VuexModule {
-  innerProjects: Project[] = []
+export default class UsersProjectsModule extends VuexModule {
+  innerProjects: UsersProject[] = []
 
   selectedProjectId: string = ''
 
-  get projects(): Project[] {
-    return this.innerProjects.map(project => new Project({ ...project }))
+  get projects(): UsersProject[] {
+    return this.innerProjects.map(project => new UsersProject({ ...project }))
   }
 
-  get selectedProject(): Project {
+  get selectedProject(): UsersProject {
     const selectedProject = this.innerProjects.find(x => x.id === this.selectedProjectId)
-    return selectedProject ? selectedProject : new Project({})
+    return selectedProject ? selectedProject : new UsersProject({})
   }
 
   get maxPriority(): number {
@@ -33,17 +34,17 @@ export default class ProjectsModule extends VuexModule {
   }
   
   @Mutation
-  private PUSH_PROJECTS(project: Project): void {
+  private PUSH_PROJECTS(project: UsersProject): void {
     this.innerProjects.push(project)
   }
 
   @Mutation
-  private REMOVE_PROJECT(project: Project): void {
+  private REMOVE_PROJECT(project: UsersProject): void {
     this.innerProjects = this.innerProjects.filter(el => el.id !== project.id)
   }
 
   @Mutation
-  private REPLACE_PROJECT(project: Project): void {
+  private REPLACE_PROJECT(project: UsersProject): void {
     const updatedprojectIndex: number = this.innerProjects.findIndex(el => el.id === project.id)
     this.innerProjects.splice(updatedprojectIndex, 1, project)
   }
@@ -61,28 +62,8 @@ export default class ProjectsModule extends VuexModule {
   }
 
   @Action
-  addProject(project: Project): Promise<firebase.firestore.DocumentReference> {
-    project.priority = this.maxPriority + 1
-    return projectsRef.add(project.data())
-  }
-
-  @Action
-  deleteProject(project: Project): void {
-    projectsRef.doc(project.id).delete().then(() => {
-      db.collection('todos')
-        .where('uid', '==', project.uid)
-        .where('projectId', '==', project.id)
-        .get().then((snapshot) => {
-          snapshot.forEach((doc) => {
-            doc.ref.delete()
-          })
-        })
-    })
-  }
-
-  @Action
-  updateProject(project: Project): void {
-    projectsRef.doc(project.id).update(project.data())
+  updateProject(project: UsersProject): void {
+    usersProjectsRef!.doc(project.id).update(project.data())
   }
 
   @Action
@@ -98,7 +79,7 @@ export default class ProjectsModule extends VuexModule {
       const nextPriority = this.innerProjects[prevIndex].priority
       newPriority = (prevPriority + nextPriority) / 2
     }
-    this.updateProject(new Project({
+    this.updateProject(new UsersProject({
       ...this.innerProjects[oldIndex],
       priority: newPriority
     }))
@@ -107,26 +88,25 @@ export default class ProjectsModule extends VuexModule {
   @Action
   bindProjects(): void {
     const mapDoc2Project = (doc: firebase.firestore.QueryDocumentSnapshot) => {
-      return new Project(
+      return new UsersProject(
         {
           ...doc.data(),
           id: doc.id,
         }
       )
     }
-    projectsRef
-      .where('uid', '==', authStore.currentUser!.uid)
-      .onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            this.PUSH_PROJECTS(mapDoc2Project(change.doc))
-          } else if (change.type === 'modified') {
-            this.REPLACE_PROJECT(mapDoc2Project(change.doc))
-          } else if (change.type === 'removed') {
-            this.REMOVE_PROJECT(mapDoc2Project(change.doc))
-          }
-        })
-        this.SORT_PROJECTS()
+    usersProjectsRef = db.collection('users').doc(authStore.currentUser!.uid).collection('projects')
+    usersProjectsRef.onSnapshot((snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          this.PUSH_PROJECTS(mapDoc2Project(change.doc))
+        } else if (change.type === 'modified') {
+          this.REPLACE_PROJECT(mapDoc2Project(change.doc))
+        } else if (change.type === 'removed') {
+          this.REMOVE_PROJECT(mapDoc2Project(change.doc))
+        }
       })
+      this.SORT_PROJECTS()
+    })
   }
 }

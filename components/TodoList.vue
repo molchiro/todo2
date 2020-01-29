@@ -30,7 +30,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
-import { todosStore, authStore, projectsStore } from '@/store'
+import { todosStore, usersProjectsStore } from '@/store'
 import { Todo } from '@/models/todo'
 import TodoListItemShow from '@/components/TodoListItemShow.vue'
 import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
@@ -53,17 +53,14 @@ export default class TodoList extends Vue {
 
   edittingTodoId: string | null = null
 
-  newTodo: Todo = new Todo({
-    uid: authStore.currentUser!.uid,
-    projectId: this.selectedProjectId
-  })
+  newTodo: Todo = new Todo({})
 
   get todos(): Todo[] {
     return todosStore.todos
   }
 
   get selectedProjectId(): string {
-    return projectsStore.selectedProjectId
+    return usersProjectsStore.selectedProjectId
   }
 
   draggableEnd({ oldIndex, newIndex }): void {
@@ -92,10 +89,7 @@ export default class TodoList extends Vue {
   }
 
   onAddTodo(): void {
-    this.newTodo = new Todo({
-      uid: authStore.currentUser!.uid,
-      projectId: this.selectedProjectId
-    })
+    this.newTodo = new Todo({})
   }
 }
 </script>
