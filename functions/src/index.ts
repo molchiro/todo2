@@ -12,20 +12,23 @@ export const addProject = functions.https.onCall(async (payload, context) => {
     payload.updatedByUid = context.auth.uid
     const projectRef = await admin.firestore().collection('projects').add(payload)
     console.log('adding a project was successful')
-    admin.firestore()
-      .collection('users')
-      .doc(context.auth.uid)
-      .collection('projects')
-      .doc(projectRef.id)
-      .set({
-        title: payload.title,
-        priority: 1
+
+    const userRef = admin.firestore().collection('users').doc(context.auth.uid)
+    const userSnapShot = await userRef.get()
+    if (userSnapShot.exists) {
+      const projectIds: string[] = userSnapShot.data()!.projectIds
+      projectIds.splice(0, 0, projectRef.id)
+      userRef.set({
+        'projectIds': projectIds
+      }, {
+        merge: true
       })
       .then(() => {
         console.log('adding a project in the user collection was successful')
       }, error => {
         console.log('adding a project in the user collection was failure', error)
       })
+    }
     return { id: projectRef.id }
   } else {
     console.log('not authed')
@@ -35,9 +38,9 @@ export const addProject = functions.https.onCall(async (payload, context) => {
 
 export const updateProjectTitle = functions.https.onCall(async (payload, context) => {
   if (context.auth){
-    const projectId = payload.id
+    const targetProjectId = payload.id
     const title = payload.title
-    const projectRef = admin.firestore().collection('projects').doc(projectId)
+    const projectRef = admin.firestore().collection('projects').doc(targetProjectId)
     projectRef.set({
         title: title,
         updatedAt: serverTimestamp,
@@ -48,27 +51,6 @@ export const updateProjectTitle = functions.https.onCall(async (payload, context
       }, error => {
         console.log('updating the project title was failure', error)
       })
-    const members: string[] = await new Promise((resolve) => {
-      projectRef.get().then(snapShot => {
-        // @ts-ignore
-        resolve(snapShot.data().members)
-      }, error => {
-        console.log('getting project members was failure', error)
-      })
-    })
-    members.forEach(memberId => {
-      admin.firestore()
-        .collection('users')
-        .doc(memberId)
-        .collection('projects')
-        .doc(projectId)
-        .set({ title }, { merge: true })
-        .then(() => {
-          console.log(`updating ${memberId}'s project title was successful`)
-        }, error => {
-          console.log(`updating ${memberId}'s project title was failure`, error)
-        })
-    })
     return null
   } else {
     console.log('not authed')
@@ -76,9 +58,9 @@ export const updateProjectTitle = functions.https.onCall(async (payload, context
   }
 })
 
-export const deleteProject = functions.https.onCall(async (projectId, context) => {
+export const deleteProject = functions.https.onCall(async (targetProjectId, context) => {
   if (context.auth){
-    const projectRef = admin.firestore().collection('projects').doc(projectId)
+    const projectRef = admin.firestore().collection('projects').doc(targetProjectId)
     const members: string[] = await new Promise((resolve) => {
       projectRef.get().then(snapShot => {
         // @ts-ignore
@@ -94,18 +76,21 @@ export const deleteProject = functions.https.onCall(async (projectId, context) =
       }, error => {
         console.log(`deleting project was failure`, error)
       })
-      members.forEach(memberId => {
-        admin.firestore()
-          .collection('users')
-          .doc(memberId)
-          .collection('projects')
-          .doc(projectId)
-          .delete()
-          .then(() => {
+      members.forEach(async memberId => {
+        const userRef = admin.firestore().collection('users').doc(memberId)
+        const userSnapShot = await userRef.get()
+        if (userSnapShot.exists) {
+          const oldProjectIds: string[] = userSnapShot.data()!.projectIds
+          userRef.set({
+            'projectIds': oldProjectIds.filter(projectId => projectId !== targetProjectId)
+          }, {
+            merge: true
+          }).then(() => {
             console.log(`deleting ${memberId}'s project was successful`)
           }, error => {
             console.log(`deleting ${memberId}'s project was failure`, error)
           })
+        }
       })
     }
     return null

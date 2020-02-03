@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
-import { usersProjectsStore, selectedProjectStore, todosStore } from '@/store'
+import { projectsStore, todosStore } from '@/store'
 import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
 import { db, functions } from '@/plugins/firebase'
@@ -48,12 +48,12 @@ export default class projectPage extends Vue {
 
   get projectId(): string {
     const id: string = this.$route.params.id
-    usersProjectsStore.setSelectedProjectId(id)
+    projectsStore.setSelectedProjectId(id)
     return id
   }
 
   get project(): Project {
-    return selectedProjectStore.project
+    return projectsStore.selectedProject
   }
 
   get isTodosLoading(): boolean {
@@ -75,7 +75,6 @@ export default class projectPage extends Vue {
 
   created(): void {
     todosStore.bindTodos(this.projectId)
-    selectedProjectStore.bindProject(this.projectId)
   }
 
   async validate({ params }): Promise<boolean> {
