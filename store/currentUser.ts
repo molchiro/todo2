@@ -66,4 +66,12 @@ export default class currentUserModule extends VuexModule {
     user.createdAt = serverTimeStamp
     return usersRef.doc(user.id).set(user.data())
   }
+
+  @Action
+  updateProjctIds(projectIds): void {
+    const user = new User({ ...this.currentUser })
+    user.projectIds = projectIds
+    user.updatedAt = serverTimeStamp
+    usersRef.doc(user.id).set(user.data())
+  }
 }
