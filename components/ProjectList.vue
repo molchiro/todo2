@@ -61,14 +61,10 @@ export default class ProjectList extends Vue {
   }
 
   getProjectById(projectId): Project {
-    const project = this.projects.find((project) => {
+    const matchedProject = this.projects.find((project) => {
       return project.id === projectId
     })
-    if (project) {
-      return project
-    } else {
-      return new Project({})
-    }
+    return matchedProject || new Project({})
   }
 }
 </script>
