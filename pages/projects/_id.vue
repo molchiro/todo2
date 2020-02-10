@@ -8,7 +8,7 @@
       | この操作は取り消せません。
     v-container.px-2
       v-row(no-gutters)
-        v-col(cols=11)
+        v-col(cols=10)
           h2
             input.fill-width(
               ref="projectTitleField"
@@ -16,7 +16,12 @@
               @keypress.enter="updateTitle($event)"
             )
         v-col.align-self-center.text-center(cols=1)
-              v-icon(@click="openDeleteDialog()") delete
+          v-icon(
+            @click="enableInvitation()"
+            :color="localProject.canInvite ? 'primary' : 'gray'"
+          ) share
+        v-col.align-self-center.text-center(cols=1)
+          v-icon(@click="openDeleteDialog()") delete
     div.text-center(v-if="isTodosLoading")
       v-progress-circular(
         indeterminate
@@ -35,6 +40,7 @@ import TodoList from '@/components/TodoList.vue'
 import DeleteDialog from '@/components/DeleteDialog.vue'
 import { db, functions } from '@/plugins/firebase'
 import { Project } from '@/models/project'
+import { generateUuid4 } from '@/lib/uuid'
 const projectsRef = db.collection('projects')
 
 @Component({
@@ -92,6 +98,18 @@ export default class projectPage extends Vue {
       projectsStore.updateProject(this.localProject)
     }
     event.srcElement.blur()
+  }
+
+  enableInvitation(): void {
+    this.localProject.canInvite = true
+    this.localProject.invitationCode = generateUuid4()
+    projectsStore.updateProject(this.localProject)
+  }
+
+  disableInvitation(): void {
+    this.localProject.canInvite = false
+    this.localProject.invitationCode = ''
+    projectsStore.updateProject(this.localProject)
   }
 
   async deleteProject(): Promise<void> {
