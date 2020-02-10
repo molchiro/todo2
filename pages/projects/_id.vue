@@ -89,11 +89,7 @@ export default class projectPage extends Vue {
 
   updateTitle(event): void {
     if (this.canUpdate) {
-      const updateProjectTitle = functions.httpsCallable('updateProjectTitle')
-      updateProjectTitle({
-        id: this.localProject.id,
-        title: this.localProject.title
-      })
+      projectsStore.updateProject(this.localProject)
     }
     event.srcElement.blur()
   }

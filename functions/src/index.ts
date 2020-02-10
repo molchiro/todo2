@@ -36,28 +36,6 @@ export const addProject = functions.https.onCall(async (payload, context) => {
   }
 })
 
-export const updateProjectTitle = functions.https.onCall(async (payload, context) => {
-  if (context.auth){
-    const targetProjectId = payload.id
-    const title = payload.title
-    const projectRef = admin.firestore().collection('projects').doc(targetProjectId)
-    projectRef.set({
-        title: title,
-        updatedAt: serverTimestamp,
-        updatedByUid: context.auth.uid
-      }, { merge: true })
-      .then(() => {
-        console.log('updating the project title was successful')
-      }, error => {
-        console.log('updating the project title was failure', error)
-      })
-    return null
-  } else {
-    console.log('not authed')
-    return null
-  }
-})
-
 export const deleteProject = functions.https.onCall(async (targetProjectId, context) => {
   if (context.auth){
     const projectRef = admin.firestore().collection('projects').doc(targetProjectId)

@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { db, functions } from '@/plugins/firebase'
+import { db, functions, serverTimeStamp } from '@/plugins/firebase'
 import { authStore } from '@/store'
 import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
@@ -62,11 +62,9 @@ export default class ProjectsModule extends VuexModule {
 
   @Action
   updateProject(project: Project): void {
-    const updateProjectTitle = functions.httpsCallable('updateProjectTitle')
-      updateProjectTitle({
-        id: project.id,
-        title: project.title
-      })
+    project.updatedAt = serverTimeStamp
+    project.updatedByUid = authStore.currentUser!.uid
+    projectsRef.doc(project.id).update(project.data())
   }
 
   @Action
