@@ -4,6 +4,21 @@ admin.initializeApp()
 
 const serverTimestamp = admin.firestore.FieldValue.serverTimestamp()
 
+const addProjectIntoUsersProjects = async (uid: string, projectId: string) => {
+  const userRef = admin.firestore().collection('users').doc(uid)
+    const userSnapShot = await userRef.get()
+    if (userSnapShot.exists) {
+      const projectIds: string[] = userSnapShot.data()!.projectIds
+      projectIds.splice(0, 0, projectId)
+      userRef.set({ projectIds }, { merge: true })
+      .then(() => {
+        console.log('adding a project in the user collection was successful')
+      }, error => {
+        console.log('adding a project in the user collection was failure', error)
+      })
+    }
+}
+
 export const addProject = functions.https.onCall(async (payload, context) => {
   if (context.auth){
     payload.createdAt = serverTimestamp
@@ -12,23 +27,11 @@ export const addProject = functions.https.onCall(async (payload, context) => {
     payload.updatedByUid = context.auth.uid
     const projectRef = await admin.firestore().collection('projects').add(payload)
     console.log('adding a project was successful')
-
-    const userRef = admin.firestore().collection('users').doc(context.auth.uid)
-    const userSnapShot = await userRef.get()
-    if (userSnapShot.exists) {
-      const projectIds: string[] = userSnapShot.data()!.projectIds
-      projectIds.splice(0, 0, projectRef.id)
-      userRef.set({
-        'projectIds': projectIds
-      }, {
-        merge: true
-      })
-      .then(() => {
-        console.log('adding a project in the user collection was successful')
-      }, error => {
-        console.log('adding a project in the user collection was failure', error)
-      })
-    }
+    addProjectIntoUsersProjects(context.auth.uid, projectRef.id).then(() => {
+      console.log('callong addProjectIntoUsersProjects was successful')
+    }, error => {
+      console.log('callong addProjectIntoUsersProjects was failure', error)
+    })
     return { id: projectRef.id }
   } else {
     console.log('not authed')
@@ -72,6 +75,42 @@ export const deleteProject = functions.https.onCall(async (targetProjectId, cont
       })
     }
     return null
+  } else {
+    console.log('not authed')
+    return null
+  }
+})
+
+export const joinProject = functions.https.onCall(async (invitationCode, context) => {
+  if (context.auth) {
+    let projectId: string = ''
+    admin.firestore()
+      .collection('projects')
+      .where('invitationCode', "==", invitationCode)
+      .get()
+      .then((snapshots) => {
+        snapshots.forEach((snapshot) => {
+          projectId = snapshot.id
+          const members = snapshot.data().members.splice(0, 0, context.auth!.uid)
+          snapshot.ref.set({ members }, { merge: true })
+          .then(() => {
+            console.log('pushing a memberId into the memberIds was successful')
+          }, error => {
+            console.log('pushing a memberId into the memberIds was failure', error)
+          })
+        })
+      })
+      .then(() => {
+        console.log('joining was successful')
+      }, error => {
+        console.log('joining was failure', error)
+      })
+    addProjectIntoUsersProjects(context.auth.uid, projectId).then(() => {
+      console.log('callong addProjectIntoUsersProjects was successful')
+    }, error => {
+      console.log('callong addProjectIntoUsersProjects was failure', error)
+    })
+    return projectId
   } else {
     console.log('not authed')
     return null
