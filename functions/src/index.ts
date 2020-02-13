@@ -83,27 +83,30 @@ export const deleteProject = functions.https.onCall(async (targetProjectId, cont
 
 export const joinProject = functions.https.onCall(async (invitationCode, context) => {
   if (context.auth) {
-    let projectId: string = ''
-    admin.firestore()
-      .collection('projects')
-      .where('invitationCode', "==", invitationCode)
-      .get()
-      .then((snapshots) => {
-        snapshots.forEach((snapshot) => {
-          projectId = snapshot.id
-          const members = snapshot.data().members.splice(0, 0, context.auth!.uid)
-          snapshot.ref.set({ members }, { merge: true })
-          .then(() => {
-            console.log('pushing a memberId into the memberIds was successful')
-          }, error => {
-            console.log('pushing a memberId into the memberIds was failure', error)
-          })
+    const projectSnapshot: FirebaseFirestore.QueryDocumentSnapshot = await new Promise((resolve) => {
+      admin.firestore()
+        .collection('projects')
+        .where('invitationCode', "==", invitationCode)
+        .get()
+        .then((snapshot) => {
+          resolve(snapshot.docs[0]) 
+        }, error => {
+          console.log('getting project snapshot was failure', error)
         })
-      })
+    })
+    if (!projectSnapshot) {
+      console.log('target project was not found')
+      return null
+    }
+    const projectId = projectSnapshot.id
+    const members = projectSnapshot.data().members
+    members.splice(0, 0, context.auth.uid)
+    projectSnapshot.ref
+      .set({ members }, { merge: true })
       .then(() => {
-        console.log('joining was successful')
+        console.log('pushing a memberId into the memberIds was successful')
       }, error => {
-        console.log('joining was failure', error)
+        console.log('pushing a memberId into the memberIds was failure', error)
       })
     addProjectIntoUsersProjects(context.auth.uid, projectId).then(() => {
       console.log('calling addProjectIntoUsersProjects was successful')

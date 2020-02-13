@@ -118,7 +118,7 @@ export default class projectPage extends Vue {
   }
 
   get invitationUrl(): string {
-    return `https://${this.host}/invitation?code=${this.localProject.invitationCode}`
+    return `https://${this.host}/invitation/${this.localProject.invitationCode}`
   }
 
   created(): void {
