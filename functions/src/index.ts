@@ -106,9 +106,9 @@ export const joinProject = functions.https.onCall(async (invitationCode, context
         console.log('joining was failure', error)
       })
     addProjectIntoUsersProjects(context.auth.uid, projectId).then(() => {
-      console.log('callong addProjectIntoUsersProjects was successful')
+      console.log('calling addProjectIntoUsersProjects was successful')
     }, error => {
-      console.log('callong addProjectIntoUsersProjects was failure', error)
+      console.log('calling addProjectIntoUsersProjects was failure', error)
     })
     return projectId
   } else {
