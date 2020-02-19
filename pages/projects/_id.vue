@@ -14,10 +14,11 @@
         v-card-title 共有の設定
         div(v-if="localProject.canInvite")
           v-card-text 招待したい人に以下のURLを共有してください
-          v-text-field(
+          input(
+            ref="invitationCode"
             v-model="invitationUrl"
-            readonly
           )
+          v-btn(@click="copyInvitationCode()") URLをコピー
           v-btn(@click="disableInvitation()") 招待を中止
         div(v-else)
           v-card-text このプロジェクトは共有されていません
@@ -142,13 +143,20 @@ export default class projectPage extends Vue {
     event.srcElement.blur()
   }
 
+  copyInvitationCode(): void {
+    const invitationCodeElement = this.$refs.invitationCode as HTMLInputElement
+    invitationCodeElement.focus()
+    invitationCodeElement.select()
+    document.execCommand('copy')
+    this.snackbarText = '招待URLをコピーしました'
+    this.isShowSnackbar = true
+  }
+
   enableInvitation(): void {
     if (!this.localProject.canInvite) {
       this.localProject.canInvite = true
       this.localProject.invitationCode = generateUuid4()
       projectsStore.updateProject(this.localProject)
-      this.snackbarText = '招待URLをコピーしました'
-      this.isShowSnackbar = true
     }
   }
 
