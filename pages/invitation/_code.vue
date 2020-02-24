@@ -1,24 +1,25 @@
 <template lang="pug">
   v-container
-    //- div プロジェクト名 {{ projectTitle }}
+    div プロジェクト名 {{ project.title }}
     v-btn(@click="joinProject()") 参加する
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'nuxt-property-decorator'
 import { functions } from '@/plugins/firebase'
+import { Project } from '@/models/project'
 
 @Component({})
 export default class invitationPage extends Vue {
-  // async asyncData({ route }) {
-  //   const getProjectNameByInvitationCode = functions.httpsCallable(
-  //     'getProjectNameByInvitationCode'
-  //   )
-  //   const { data } = await getProjectNameByInvitationCode({
-  //     code: route.params.code
-  //   })
-  //   return { projectTitle: data.title }
-  // }
+  async asyncData({ route }) {
+    const getProjectByInvitationCode = functions.httpsCallable(
+      'getProjectByInvitationCode'
+    )
+    const project = await getProjectByInvitationCode(route.params.code)
+    console.log(project.data)
+    // @ts-ignore
+    return { project: new Project({ ...project.data }) }
+  }
 
   get invitationCode(): string {
     return this.$route.params.code
