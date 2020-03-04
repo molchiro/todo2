@@ -1,6 +1,8 @@
 <template lang="pug">
   v-container
-    div プロジェクト名 {{ project.title }}
+    div
+      b {{ project.title }}
+      |  に招待されています。
     v-btn(@click="joinProject()") 参加する
 </template>
 
