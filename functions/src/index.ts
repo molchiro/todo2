@@ -121,25 +121,20 @@ export const joinProject = functions.https.onCall(async (invitationCode, context
 })
 
 export const getProjectByInvitationCode = functions.https.onCall(async (invitationCode, context) => {
-  if (context.auth) {
-    const projectSnapshot: FirebaseFirestore.QueryDocumentSnapshot = await new Promise((resolve) => {
-      admin.firestore()
-        .collection('projects')
-        .where('invitationCode', "==", invitationCode)
-        .get()
-        .then((snapshot) => {
-          resolve(snapshot.docs[0]) 
-        }, error => {
-          console.log('getting project snapshot was failure', error)
-        })
-    })
-    if (!projectSnapshot) {
-      console.log('target project was not found')
-      return null
-    }
-    return JSON.parse(JSON.stringify(projectSnapshot.data()))
-  } else {
-    console.log('not authed')
+  const projectSnapshot: FirebaseFirestore.QueryDocumentSnapshot = await new Promise((resolve) => {
+    admin.firestore()
+      .collection('projects')
+      .where('invitationCode', "==", invitationCode)
+      .get()
+      .then((snapshot) => {
+        resolve(snapshot.docs[0]) 
+      }, error => {
+        console.log('getting project snapshot was failure', error)
+      })
+  })
+  if (!projectSnapshot) {
+    console.log('target project was not found')
     return null
   }
+  return JSON.parse(JSON.stringify(projectSnapshot.data()))
 })

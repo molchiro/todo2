@@ -11,6 +11,7 @@ export default async ({ route, redirect }) => {
       }
     }
   } else {
-    if (route.name !== 'sign_in') redirect('/sign_in')
+    if (route.name === 'sign_in' || route.name === 'invitation-code') return
+    redirect('/sign_in')
   }
 }
