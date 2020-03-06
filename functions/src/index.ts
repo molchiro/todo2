@@ -113,7 +113,7 @@ export const joinProject = functions.https.onCall(async (invitationCode, context
     }, error => {
       console.log('calling addProjectIntoUsersProjects was failure', error)
     })
-    return projectId
+    return { id: projectId }
   } else {
     console.log('not authed')
     return null

@@ -24,7 +24,12 @@ export default class registerPage extends Vue {
     currentUserStore
       .register(new User({ displayName: this.userName }))
       .then(() => {
-        this.$router.push('/')
+        if (this.$route.query.fromPath) {
+          const fromPath = this.$route.query.fromPath as string
+          this.$router.push(fromPath.replace('%2F', '/'))
+        } else {
+          this.$router.push('/')
+        }
       })
   }
 }

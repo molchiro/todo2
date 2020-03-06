@@ -40,9 +40,10 @@ export default class invitationPage extends Vue {
   }
 
   joinProject(): void {
-    console.log(this.$route.params.code)
     const joinProject = functions.httpsCallable('joinProject')
-    joinProject(this.$route.params.code)
+    joinProject(this.$route.params.code).then((result) => {
+      this.$router.push(`/projects/${result.data.id}`)
+    })
   }
 
   signIn(): void {

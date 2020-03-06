@@ -7,7 +7,8 @@ export default async ({ route, redirect }) => {
       if (await currentUserStore.loadCurrentUser()) {
         if (route.name === 'sign_in') redirect('/')
       } else {
-        if (route.name !== 'register') redirect('/register')
+        if (route.name === 'register') return
+        redirect(`/register?fromPath=${route.fullPath}`)
       }
     }
   } else {
