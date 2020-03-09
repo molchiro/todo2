@@ -1,13 +1,13 @@
 <template lang="pug">
-  v-container
+  v-container.fill-height.justify-center.text-center
     div
-      b {{ project.title }}
-      |  に招待されています。
-    div(v-if="isAuthed")
-      v-btn(@click="joinProject()") 参加する
-    div(v-else)
-      div 参加するにはまずサインインを行ってください
-      v-container.fill-height.justify-center
+      div.pb-3
+        b {{ project.title }}
+        |  に招待されています。
+      div(v-if="isAuthed")
+        v-btn(@click="joinProject()") 参加する
+      div(v-else)
+        div.pb-3 参加するにはまずサインインを行ってください
         v-btn(@click="signIn()") SIGNIN
 
 </template>
