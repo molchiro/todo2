@@ -136,5 +136,8 @@ export const getProjectByInvitationCode = functions.https.onCall(async (invitati
     console.log('target project was not found')
     return null
   }
-  return JSON.parse(JSON.stringify(projectSnapshot.data()))
+  return JSON.parse(JSON.stringify({
+    id: projectSnapshot.id,
+    ...projectSnapshot.data()
+  }))
 })

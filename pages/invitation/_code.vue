@@ -49,5 +49,17 @@ export default class invitationPage extends Vue {
   signIn(): void {
     authStore.signIn()
   }
+
+  created(): void {
+    // @ts-ignore
+    const project = this.project
+    if (
+      !!project &&
+      this.isAuthed &&
+      project.members.includes(authStore.currentUser!!.uid)
+    ) {
+      this.$router.push(`/projects/${project.id}`)
+    }
+  }
 }
 </script>
