@@ -56,6 +56,7 @@
     todo-list(
       v-else
       :projectId="projectId"
+      :members="members"
     )
 </template>
 
@@ -76,6 +77,12 @@ const projectsRef = db.collection('projects')
   }
 })
 export default class projectPage extends Vue {
+  async asyncData({ route }) {
+    const getProjectMembers = functions.httpsCallable('getProjectMembers')
+    const members = await getProjectMembers(route.params.id)
+    return { members: members.data }
+  }
+
   isOpenDeleteDialog: boolean = false
 
   isOpenShareDialog: boolean = false

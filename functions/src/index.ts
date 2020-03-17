@@ -141,3 +141,34 @@ export const getProjectByInvitationCode = functions.https.onCall(async (invitati
     ...projectSnapshot.data()
   }))
 })
+
+export const getProjectMembers = functions.https.onCall(async (targetProjectId, context) => {
+  if (context.auth){
+    const projectRef = admin.firestore().collection('projects').doc(targetProjectId)
+    const members: string[] = await new Promise((resolve) => {
+      projectRef.get().then(snapShot => {
+        // @ts-ignore
+        resolve(snapShot.data().members)
+      }, error => {
+        console.log('getting project members was failure', error)
+      })
+    })
+    if (members.includes(context.auth.uid)) {
+      type memberInfo = { uid: string, name: string }
+      const membersInfo: memberInfo[] = []
+      const fn = members.map(async (memberId) => {
+        const userRef = admin.firestore().collection('users').doc(memberId)
+        const userSnapShot = await userRef.get()
+        membersInfo.push({ uid: memberId, name: userSnapShot.data()!.displayName })
+      })
+      await Promise.all(fn)
+      return JSON.parse(JSON.stringify(membersInfo))
+    } else {
+      console.log('not in members')
+      return null
+    }
+  } else {
+    console.log('not authed')
+    return null
+  }
+})

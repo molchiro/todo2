@@ -8,6 +8,7 @@ export interface ITodoData {
   doneByUid: string
   updatedAt: firebase.firestore.FieldValue | null
   updatedByUid: string
+  assignToUid: string
 }
 
 export interface ITodo extends ITodoData {
@@ -25,6 +26,7 @@ export class Todo implements ITodo {
   doneByUid: string
   updatedAt: firebase.firestore.FieldValue | null
   updatedByUid: string
+  assignToUid: string
   
   constructor({
     id = '',
@@ -36,7 +38,9 @@ export class Todo implements ITodo {
     doneAt = null,
     doneByUid = '',
     updatedAt = null,
-    updatedByUid = ''
+    updatedByUid = '',
+    assignToUid = ''
+
   }: Partial<ITodo>) {
     Object.assign(this, {
       id,
@@ -48,7 +52,8 @@ export class Todo implements ITodo {
       doneAt,
       doneByUid,
       updatedAt,
-      updatedByUid
+      updatedByUid,
+      assignToUid
     })
   }
   
@@ -63,6 +68,7 @@ export class Todo implements ITodo {
       doneByUid: this.doneByUid,
       updatedAt: this.updatedAt,
       updatedByUid: this.updatedByUid,
+      assignToUid: this.assignToUid
     }
   }
 

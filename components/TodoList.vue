@@ -11,6 +11,7 @@
         :todo="newTodo"
         :setEdittingTodoId="setEdittingTodoId"
         :onAddTodo="onAddTodo"
+        :members="members"
       )
     draggable(
       :list="todos"
@@ -24,6 +25,7 @@
         :todo="todo"
         :setEdittingTodoId="setEdittingTodoId"
         :onClickDelete="setDeleteTodoDialog"
+        :members="members"
       )
 </template>
 
@@ -46,6 +48,8 @@ import DeleteDialog from '@/components/DeleteDialog.vue'
 })
 export default class TodoList extends Vue {
   @Prop() readonly projectId: string
+
+  @Prop() readonly members: Array<{ uid: string; name: string }>
 
   isOpenedDeleteDialog: boolean = false
 

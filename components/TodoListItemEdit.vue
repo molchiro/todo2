@@ -13,6 +13,14 @@
         rows="2"
       )
     v-row.pl-8
+      v-select(
+        label="担当者"
+        v-model="localTodo.assignToUid"
+        :items="members"
+        item-text="name"
+        item-value="uid"
+      )
+    v-row.pl-8
       v-btn.mt-2.ml-2(
         @click="save()"
         :disabled="!canUpdate"
@@ -47,10 +55,15 @@ export default class TodoListItemEdit extends Vue {
 
   @Prop({ default: () => {} }) readonly onClickDelete: Function
 
+  @Prop() readonly members: Array<{ uid: string; name: string }>
+
   localTodo: Todo = new Todo({ ...this.todo })
 
   get canUpdate(): boolean {
-    const isChanged = this.localTodo.content !== this.todo.content
+    const isContentChanged = this.localTodo.content !== this.todo.content
+    const isAssignToUidChanged =
+      this.localTodo.assignToUid !== this.todo.assignToUid
+    const isChanged = isContentChanged || isAssignToUidChanged
     return isChanged && this.localTodo.isValid()
   }
 
