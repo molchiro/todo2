@@ -12,6 +12,8 @@
           )
         v-col.py-0.pl-1.cursor-text
           div(@click="startEdit()") {{ todo.content }}
+        v-col.py-0.pl-1.cursor-text.hidden-xs-only(cols="2")
+          div(@click="startEdit()") {{ assignToName }}
 </template>
 
 <script lang="ts">
@@ -33,6 +35,8 @@ export default class TodoListItemShow extends Vue {
 
   @Prop({ default: () => {} }) readonly setEdittingTodoId: Function
 
+  @Prop() readonly members: Array<{ uid: string; name: string }>
+
   localTodo: Todo = new Todo({ ...this.todo })
 
   get done(): boolean {
@@ -48,6 +52,13 @@ export default class TodoListItemShow extends Vue {
         doneByUid: val ? authStore.currentUser!.uid : ''
       })
     )
+  }
+
+  get assignToName(): string {
+    const assignedMember = this.members.filter((member) => {
+      return member.uid === this.todo.assignToUid
+    })
+    return assignedMember[0] ? assignedMember[0].name : ''
   }
 
   startEdit(): void {
