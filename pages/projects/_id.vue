@@ -16,7 +16,6 @@
           v-card-text 招待したい人に以下のURLを共有してください
           div(ref="invitationCode") {{ invitationUrl }}
           v-btn(@click="copyInvitationCode()") URLをコピー
-          v-btn(@click="disableInvitation()") 招待を中止
         div(v-else)
           v-card-text このプロジェクトは共有されていません
           v-btn(@click="enableInvitation()") 招待URLを取得
@@ -43,9 +42,7 @@
               @keypress.enter="updateTitle($event)"
             )
         v-col.align-self-center.text-center(cols=1)
-          v-icon(
-            @click="isOpenShareDialog = true"
-          ) share
+          v-icon(@click="isOpenShareDialog = true") share
         v-col.align-self-center.text-center(cols=1)
           v-icon(@click="openDeleteDialog()") delete
     div.text-center(v-if="isTodosLoading")
@@ -118,12 +115,8 @@ export default class projectPage extends Vue {
     return isChanged && this.localProject.isValid()
   }
 
-  get host(): string {
-    return location.host
-  }
-
   get invitationUrl(): string {
-    return `https://${this.host}/invitation/${this.localProject.invitationCode}`
+    return `https://${location.host}/invitation/${this.localProject.invitationCode}`
   }
 
   created(): void {
@@ -164,14 +157,6 @@ export default class projectPage extends Vue {
     if (!this.localProject.canInvite) {
       this.localProject.canInvite = true
       this.localProject.invitationCode = generateUuid4()
-      projectsStore.updateProject(this.localProject)
-    }
-  }
-
-  disableInvitation(): void {
-    if (this.localProject.canInvite) {
-      this.localProject.canInvite = false
-      this.localProject.invitationCode = ''
       projectsStore.updateProject(this.localProject)
     }
   }

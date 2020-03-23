@@ -39,11 +39,11 @@ export default class invitationPage extends Vue {
     return !!authStore.currentUser
   }
 
-  joinProject(): void {
+  async joinProject(): Promise<void> {
     const joinProject = functions.httpsCallable('joinProject')
-    joinProject(this.$route.params.code).then((result) => {
-      this.$router.push(`/projects/${result.data.id}`)
-    })
+    // レスポンス遅いので適切なフィードバックが必要
+    const joinProjectResult = await joinProject(this.$route.params.code)
+    this.$router.push(`/projects/${joinProjectResult.data.id}`)
   }
 
   signIn(): void {
@@ -51,6 +51,7 @@ export default class invitationPage extends Vue {
   }
 
   created(): void {
+    // ts-ignoreを一箇所にまとめるためにthis.projectを変数化
     // @ts-ignore
     const project = this.project
     if (

@@ -4,7 +4,7 @@ import { authStore } from '@/store'
 import { Todo } from '@/models/todo'
 
 let unsubscribe: Function | null = null
-let todoRef: firebase.firestore.CollectionReference | null = null
+let todosRef: firebase.firestore.CollectionReference | null = null
 
 @Module({
   namespaced: true,
@@ -84,19 +84,19 @@ export default class TodosModule extends VuexModule {
     todo.createdByUid = authStore.currentUser!.uid
     todo.updatedAt = serverTimeStamp
     todo.updatedByUid = authStore.currentUser!.uid
-    todoRef!.add(todo.data())
+    todosRef!.add(todo.data())
   }
 
   @Action
   deleteTodo(todo: Todo): void {
-    todoRef!.doc(todo.id).delete()
+    todosRef!.doc(todo.id).delete()
   }
 
   @Action
   updateTodo(todo: Todo): void {
     todo.updatedAt = serverTimeStamp
     todo.updatedByUid = authStore.currentUser!.uid
-    todoRef!.doc(todo.id).update(todo.data())
+    todosRef!.doc(todo.id).update(todo.data())
   }
 
   @Action
@@ -134,8 +134,8 @@ export default class TodosModule extends VuexModule {
     if (typeof(unsubscribe) === 'function') {
       unsubscribe()
     }
-    todoRef = db.collection('projects').doc(projectId).collection('todos')
-    unsubscribe = todoRef
+    todosRef = db.collection('projects').doc(projectId).collection('todos')
+    unsubscribe = todosRef
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {

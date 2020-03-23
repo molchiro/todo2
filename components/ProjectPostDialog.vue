@@ -52,28 +52,31 @@ export default class ProjectPostDialog extends Vue {
     this.$emit('input', val)
   }
 
+  get currentUserUid() {
+    return authStore.currentUser!.uid
+  }
+
   valid: boolean = true
 
   project: Project = new Project({
-    createdByUid: authStore.currentUser!.uid,
-    members: [authStore.currentUser!.uid]
+    createdByUid: this.currentUserUid,
+    members: [this.currentUserUid]
   })
 
-  addProject(): void {
+  async addProject(): Promise<void> {
     const form = this.$refs.form as VForm
     if (form.validate()) {
       this.isOpened = false
       const addProject = functions.httpsCallable('addProject')
-      addProject(JSON.parse(JSON.stringify(this.project.data()))).then(
-        (result) => {
-          this.$router.push(`/projects/${result.data.id}`)
-          this.project = new Project({
-            createdByUid: authStore.currentUser!.uid,
-            members: [authStore.currentUser!.uid]
-          })
-          form.resetValidation()
-        }
+      const addProjectResult = await addProject(
+        JSON.parse(JSON.stringify(this.project.data()))
       )
+      this.$router.push(`/projects/${addProjectResult.data.id}`)
+      this.project = new Project({
+        createdByUid: this.currentUserUid,
+        members: [this.currentUserUid]
+      })
+      form.resetValidation()
     }
   }
 }

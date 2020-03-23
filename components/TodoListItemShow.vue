@@ -55,10 +55,10 @@ export default class TodoListItemShow extends Vue {
   }
 
   get assignToName(): string {
-    const assignedMember = this.members.filter((member) => {
+    const assignedMember = this.members.find((member) => {
       return member.uid === this.todo.assignToUid
     })
-    return assignedMember[0] ? assignedMember[0].name : ''
+    return assignedMember ? assignedMember.name : ''
   }
 
   startEdit(): void {

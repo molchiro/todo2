@@ -20,17 +20,14 @@ import { User } from '@/models/user'
 export default class registerPage extends Vue {
   userName: string = ''
 
-  register(): void {
-    currentUserStore
-      .register(new User({ displayName: this.userName }))
-      .then(() => {
-        if (this.$route.query.fromPath) {
-          const fromPath = this.$route.query.fromPath as string
-          this.$router.push(fromPath.replace('%2F', '/'))
-        } else {
-          this.$router.push('/')
-        }
-      })
+  async register(): Promise<void> {
+    await currentUserStore.register(new User({ displayName: this.userName }))
+    if (this.$route.query.fromPath) {
+      const fromPath = this.$route.query.fromPath as string
+      this.$router.push(fromPath.replace('%2F', '/'))
+    } else {
+      this.$router.push('/')
+    }
   }
 }
 </script>
