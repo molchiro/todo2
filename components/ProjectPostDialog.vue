@@ -44,7 +44,7 @@ import { VForm } from '@/types/index'
 export default class ProjectPostDialog extends Vue {
   @Prop() readonly value: boolean = false
 
-  get isOpened() {
+  get isOpened(): boolean {
     return this.value
   }
 
@@ -52,7 +52,7 @@ export default class ProjectPostDialog extends Vue {
     this.$emit('input', val)
   }
 
-  get currentUserUid() {
+  get currentUserUid(): string {
     return authStore.currentUser!.uid
   }
 

@@ -111,7 +111,7 @@ export default class projectPage extends Vue {
   }
 
   get canUpdate(): boolean {
-    const isChanged = this.localProject.title !== this.project.title
+    const isChanged: boolean = this.localProject.title !== this.project.title
     return isChanged && this.localProject.isValid()
   }
 

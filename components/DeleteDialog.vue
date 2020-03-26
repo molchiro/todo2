@@ -37,7 +37,7 @@ export default class DeleteDialog extends Vue {
 
   @Prop({ default: false }) readonly value: boolean
 
-  get isOpened() {
+  get isOpened(): boolean {
     return this.value
   }
 

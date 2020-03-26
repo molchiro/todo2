@@ -27,7 +27,6 @@ export default class invitationPage extends Vue {
       'getProjectByInvitationCode'
     )
     const project = await getProjectByInvitationCode(route.params.code)
-    // @ts-ignore
     return { project: new Project({ ...project.data }) }
   }
 
@@ -57,7 +56,7 @@ export default class invitationPage extends Vue {
     if (
       !!project &&
       this.isAuthed &&
-      project.members.includes(authStore.currentUser!!.uid)
+      project.members.includes(authStore.currentUser!.uid)
     ) {
       this.$router.push(`/projects/${project.id}`)
     }
