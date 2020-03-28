@@ -12,13 +12,13 @@
     )
       v-card
         v-card-title 共有の設定
-        div(v-if="localProject.canInvite")
-          v-card-text 招待したい人に以下のURLを共有してください
-          div(ref="invitationCode") {{ invitationUrl }}
-          v-btn(@click="copyInvitationCode()") URLをコピー
-        div(v-else)
-          v-card-text このプロジェクトは共有されていません
-          v-btn(@click="enableInvitation()") 招待URLを取得
+        div.text-center(v-if="localProject.canInvite")
+          v-card-text URLを招待する人に共有してください
+          div.url-box.caption.mx-5.pa-2(ref="invitationCode") {{ invitationUrl }}
+          v-btn.my-5(@click="copyInvitationCode()") URLをコピー
+        div.text-center(v-else)
+          v-card-text 招待URLを取得し共有を開始します
+          v-btn.mb-5(@click="enableInvitation()") URLを取得
         v-divider
         v-card-actions
           v-row(no-gutters)
@@ -181,4 +181,7 @@ export default class projectPage extends Vue {
 <style lang="sass" scoped>
 .fill-width
   width: 100%
+.url-box
+  border: solid 1px
+  border-radius: 10px
 </style>

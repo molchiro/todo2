@@ -13,10 +13,11 @@
         rows="2"
       )
     v-row.pl-8
-      v-select(
+      v-select.ma-3(
         label="担当者"
         v-model="localTodo.assignToUid"
         :items="members"
+        hide-details
         item-text="name"
         item-value="uid"
       )
