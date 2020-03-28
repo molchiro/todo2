@@ -28,6 +28,7 @@
           v-btn(
             @click="addProject()"
             :disabled="!valid"
+            :loading="isAdding"
             text
             color="blue darken-1"
           ) 作成
@@ -58,6 +59,8 @@ export default class ProjectPostDialog extends Vue {
 
   valid: boolean = true
 
+  isAdding: boolean = false
+
   project: Project = new Project({
     createdByUid: this.currentUserUid,
     members: [this.currentUserUid]
@@ -66,7 +69,7 @@ export default class ProjectPostDialog extends Vue {
   async addProject(): Promise<void> {
     const form = this.$refs.form as VForm
     if (form.validate()) {
-      this.isOpened = false
+      this.isAdding = true
       const addProject = functions.httpsCallable('addProject')
       const addProjectResult = await addProject(
         JSON.parse(JSON.stringify(this.project.data()))
@@ -76,6 +79,8 @@ export default class ProjectPostDialog extends Vue {
         createdByUid: this.currentUserUid,
         members: [this.currentUserUid]
       })
+      this.isOpened = false
+      this.isAdding = false
       form.resetValidation()
     }
   }

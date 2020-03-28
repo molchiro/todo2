@@ -5,7 +5,7 @@
   )
     v-list
       v-subheader PROJECTS
-      project-list
+      project-list(@onClickProject="isOpened = false")
       v-divider
       v-subheader OTHERS
       v-list-item(@click="signOut()")

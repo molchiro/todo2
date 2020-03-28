@@ -8,7 +8,7 @@
       v-list-item.cursor-pointer(
         v-for="projectId in projectIds"
         :key="projectId"
-        @click="$router.push(`/projects/${projectId}`)"
+        @click="onClickProject(projectId)"
         :class="projectId === selectedProjectId ? 'grey lighten-3' : ''"
         v-ripple
       )
@@ -65,6 +65,11 @@ export default class ProjectList extends Vue {
       return project.id === projectId
     })
     return matchedProject || new Project({})
+  }
+
+  onClickProject(projectId): void {
+    this.$emit('onClickProject')
+    this.$router.push(`/projects/${projectId}`)
   }
 }
 </script>

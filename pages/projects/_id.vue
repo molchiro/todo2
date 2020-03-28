@@ -4,6 +4,7 @@
       v-model="isOpenDeleteDialog"
       :onClickDelete="deleteProject"
       :onClickCancel="closeDeleteDialog"
+      :isDeleteInProgress="isDeleteInProgress"
     ) このプロジェクトに紐づくTODOも全て削除されます。
       | この操作は取り消せません。
     v-dialog(
@@ -86,6 +87,8 @@ export default class projectPage extends Vue {
 
   isShowSnackbar: boolean = false
 
+  isDeleteInProgress: boolean = false
+
   snackbarText: string = ''
 
   get projectId(): string {
@@ -162,8 +165,10 @@ export default class projectPage extends Vue {
   }
 
   async deleteProject(): Promise<void> {
+    this.isDeleteInProgress = true
     const deleteProject = functions.httpsCallable('deleteProject')
     await deleteProject(this.localProject.id)
+    this.isDeleteInProgress = false
     this.closeDeleteDialog()
     this.$router.push('/')
   }

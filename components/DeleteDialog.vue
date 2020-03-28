@@ -20,6 +20,7 @@
           v-col.pa-0
             v-btn(
               @click="onClickDelete"
+              :loading="isDeleteInProgress"
               text
               block
               color="red"
@@ -36,6 +37,8 @@ export default class DeleteDialog extends Vue {
   @Prop() readonly onClickCancel: Function
 
   @Prop({ default: false }) readonly value: boolean
+
+  @Prop({ default: false }) readonly isDeleteInProgress: boolean
 
   get isOpened(): boolean {
     return this.value
