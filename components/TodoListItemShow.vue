@@ -12,7 +12,10 @@
           )
         v-col.py-0.pl-1.cursor-text
           div(@click="startEdit()") {{ todo.content }}
-        v-col.py-0.pl-1.cursor-text.hidden-xs-only(cols="2")
+        v-col.py-0.pl-1.cursor-text.hidden-xs-only(
+          v-if="isShared"
+          cols="2"
+        )
           div(@click="startEdit()") {{ assignToName }}
 </template>
 
@@ -32,6 +35,8 @@ export default class TodoListItemShow extends Vue {
   @Prop() readonly todo: Todo
 
   @Prop({ default: false }) readonly isNew: boolean
+
+  @Prop({ default: false }) readonly isShared: boolean
 
   @Prop({ default: () => {} }) readonly setEdittingTodoId: Function
 

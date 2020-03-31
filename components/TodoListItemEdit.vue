@@ -12,7 +12,7 @@
         row-height="20"
         rows="2"
       )
-    v-row.pl-8
+    v-row.pl-8(v-if="isShared")
       v-select.ma-3(
         label="担当者"
         v-model="localTodo.assignToUid"
@@ -49,6 +49,8 @@ export default class TodoListItemEdit extends Vue {
   @Prop() readonly todo: Todo
 
   @Prop({ default: false }) readonly isNew: boolean
+
+  @Prop({ default: false }) readonly isShared: boolean
 
   @Prop({ default: () => {} }) readonly onAddTodo: Function
 

@@ -12,6 +12,7 @@
         :setEdittingTodoId="setEdittingTodoId"
         :onAddTodo="onAddTodo"
         :members="members"
+        :isShared="isShared"
       )
     draggable(
       :list="todos"
@@ -26,6 +27,7 @@
         :setEdittingTodoId="setEdittingTodoId"
         :onClickDelete="setDeleteTodoDialog"
         :members="members"
+        :isShared="isShared"
       )
 </template>
 
@@ -65,6 +67,10 @@ export default class TodoList extends Vue {
 
   get selectedProjectId(): string {
     return projectsStore.selectedProjectId
+  }
+
+  get isShared(): boolean {
+    return projectsStore.selectedProject.isShared
   }
 
   draggableEnd({ oldIndex, newIndex }): void {
