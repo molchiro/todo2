@@ -5,7 +5,7 @@ export interface IProjectData {
   updatedByUid: string
   title: string
   members: string[]
-  canInvite: boolean
+  isShared: boolean
   invitationCode: string
 }
 
@@ -21,7 +21,7 @@ export class Project implements IProject {
   updatedByUid: string
   title: string
   members: string[]
-  canInvite: boolean
+  isShared: boolean
   invitationCode: string
 
   constructor({
@@ -32,7 +32,7 @@ export class Project implements IProject {
     updatedByUid = '',
     title = '',
     members = [],
-    canInvite = false,
+    isShared = false,
     invitationCode = ''
   }: Partial<IProject>) {
     Object.assign(this,{
@@ -43,7 +43,7 @@ export class Project implements IProject {
       updatedByUid,
       title,
       members,
-      canInvite,
+      isShared,
       invitationCode
     })
   }
@@ -56,7 +56,7 @@ export class Project implements IProject {
       updatedByUid: this.updatedByUid,
       title: this.title,
       members: this.members.slice(),
-      canInvite: this.canInvite,
+      isShared: this.isShared,
       invitationCode: this.invitationCode
     }
   }

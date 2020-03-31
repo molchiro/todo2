@@ -13,7 +13,7 @@
     )
       v-card
         v-card-title 共有の設定
-        div.text-center(v-if="localProject.canInvite")
+        div.text-center(v-if="localProject.isShared")
           v-card-text URLを招待する人に共有してください
           div.url-box.caption.mx-5.pa-2(ref="invitationCode") {{ invitationUrl }}
           v-btn.my-5(@click="copyInvitationCode()") URLをコピー
@@ -157,8 +157,8 @@ export default class projectPage extends Vue {
   }
 
   enableInvitation(): void {
-    if (!this.localProject.canInvite) {
-      this.localProject.canInvite = true
+    if (!this.localProject.isShared) {
+      this.localProject.isShared = true
       this.localProject.invitationCode = generateUuid4()
       projectsStore.updateProject(this.localProject)
     }
