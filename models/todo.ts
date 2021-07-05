@@ -1,12 +1,14 @@
-import { Project } from "./project";
-
 export interface ITodoData {
-  uid: string
+  createdAt: firebase.firestore.FieldValue | null
+  createdByUid: string
   content: string
   priority: number
   done: boolean
   doneAt: firebase.firestore.FieldValue | null
-  projectId: string
+  doneByUid: string
+  updatedAt: firebase.firestore.FieldValue | null
+  updatedByUid: string
+  assignToUid: string
 }
 
 export interface ITodo extends ITodoData {
@@ -15,37 +17,62 @@ export interface ITodo extends ITodoData {
 
 export class Todo implements ITodo {
   id: string
-  uid: string
+  createdAt: firebase.firestore.FieldValue | null
+  createdByUid: string
   content: string
   priority: number
   done: boolean
   doneAt: firebase.firestore.FieldValue | null
-  projectId: string
+  doneByUid: string
+  updatedAt: firebase.firestore.FieldValue | null
+  updatedByUid: string
+  assignToUid: string
   
   constructor({
     id = '',
-    uid = '',
+    createdAt = null,
+    createdByUid = '',
     content = '',
     priority = 1,
     done = false,
     doneAt = null,
-    projectId = ''
+    doneByUid = '',
+    updatedAt = null,
+    updatedByUid = '',
+    assignToUid = ''
+
   }: Partial<ITodo>) {
-    Object.assign(this, {id, uid, content, priority, done, doneAt, projectId})
+    Object.assign(this, {
+      id,
+      createdAt,
+      createdByUid,
+      content,
+      priority,
+      done,
+      doneAt,
+      doneByUid,
+      updatedAt,
+      updatedByUid,
+      assignToUid
+    })
   }
   
   data(): ITodoData {
     return {
-      uid: this.uid,
+      createdAt: this.createdAt,
+      createdByUid: this.createdByUid,
       content: this.content,
       priority: this.priority,
       done: this.done,
       doneAt: this.doneAt,
-      projectId: this.projectId
+      doneByUid: this.doneByUid,
+      updatedAt: this.updatedAt,
+      updatedByUid: this.updatedByUid,
+      assignToUid: this.assignToUid
     }
   }
 
   isValid(): boolean {
-    return !!this.content && !!this.uid
+    return !!this.content
   }
 }

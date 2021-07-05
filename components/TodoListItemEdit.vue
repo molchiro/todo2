@@ -12,6 +12,15 @@
         row-height="20"
         rows="2"
       )
+    v-row.pl-8(v-if="isShared")
+      v-select.ma-3(
+        label="担当者"
+        v-model="localTodo.assignToUid"
+        :items="members"
+        hide-details
+        item-text="name"
+        item-value="uid"
+      )
     v-row.pl-8
       v-btn.mt-2.ml-2(
         @click="save()"
@@ -41,16 +50,23 @@ export default class TodoListItemEdit extends Vue {
 
   @Prop({ default: false }) readonly isNew: boolean
 
+  @Prop({ default: false }) readonly isShared: boolean
+
   @Prop({ default: () => {} }) readonly onAddTodo: Function
 
   @Prop({ default: () => {} }) readonly setEdittingTodoId: Function
 
   @Prop({ default: () => {} }) readonly onClickDelete: Function
 
+  @Prop() readonly members: Array<{ uid: string; name: string }>
+
   localTodo: Todo = new Todo({ ...this.todo })
 
   get canUpdate(): boolean {
-    const isChanged = this.localTodo.content !== this.todo.content
+    const isContentChanged = this.localTodo.content !== this.todo.content
+    const isAssignToUidChanged =
+      this.localTodo.assignToUid !== this.todo.assignToUid
+    const isChanged = isContentChanged || isAssignToUidChanged
     return isChanged && this.localTodo.isValid()
   }
 

@@ -28,6 +28,7 @@
           v-btn(
             @click="addProject()"
             :disabled="!valid"
+            :loading="isAdding"
             text
             color="blue darken-1"
           ) 作成
@@ -35,7 +36,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
-import { authStore, projectsStore } from '@/store'
+import { functions } from '@/plugins/firebase'
+import { authStore } from '@/store'
 import { Project } from '@/models/project'
 import { VForm } from '@/types/index'
 
@@ -43,7 +45,7 @@ import { VForm } from '@/types/index'
 export default class ProjectPostDialog extends Vue {
   @Prop() readonly value: boolean = false
 
-  get isOpened() {
+  get isOpened(): boolean {
     return this.value
   }
 
@@ -51,19 +53,35 @@ export default class ProjectPostDialog extends Vue {
     this.$emit('input', val)
   }
 
+  get currentUserUid(): string {
+    return authStore.currentUser!.uid
+  }
+
   valid: boolean = true
 
-  project: Project = new Project({ uid: authStore.currentUser!.uid })
+  isAdding: boolean = false
 
-  addProject(): void {
+  project: Project = new Project({
+    createdByUid: this.currentUserUid,
+    members: [this.currentUserUid]
+  })
+
+  async addProject(): Promise<void> {
     const form = this.$refs.form as VForm
     if (form.validate()) {
-      this.isOpened = false
-      projectsStore.addProject(this.project).then((ref) => {
-        this.$router.push(`/projects/${ref.id}`)
-        this.project = new Project({ uid: authStore.currentUser!.uid })
-        form.resetValidation()
+      this.isAdding = true
+      const addProject = functions.httpsCallable('addProject')
+      const addProjectResult = await addProject(
+        JSON.parse(JSON.stringify(this.project.data()))
+      )
+      this.$router.push(`/projects/${addProjectResult.data.id}`)
+      this.project = new Project({
+        createdByUid: this.currentUserUid,
+        members: [this.currentUserUid]
       })
+      this.isOpened = false
+      this.isAdding = false
+      form.resetValidation()
     }
   }
 }

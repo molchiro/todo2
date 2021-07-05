@@ -12,11 +12,16 @@
           )
         v-col.py-0.pl-1.cursor-text
           div(@click="startEdit()") {{ todo.content }}
+        v-col.py-0.pl-1.cursor-text.hidden-xs-only(
+          v-if="isShared"
+          cols="2"
+        )
+          div(@click="startEdit()") {{ assignToName }}
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
-import { todosStore } from '@/store'
+import { todosStore, authStore } from '@/store'
 import { Todo } from '@/models/todo'
 import { serverTimeStamp } from '@/plugins/firebase'
 import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
@@ -31,7 +36,11 @@ export default class TodoListItemShow extends Vue {
 
   @Prop({ default: false }) readonly isNew: boolean
 
+  @Prop({ default: false }) readonly isShared: boolean
+
   @Prop({ default: () => {} }) readonly setEdittingTodoId: Function
+
+  @Prop() readonly members: Array<{ uid: string; name: string }>
 
   localTodo: Todo = new Todo({ ...this.todo })
 
@@ -44,9 +53,17 @@ export default class TodoListItemShow extends Vue {
       new Todo({
         ...this.todo,
         done: val,
-        doneAt: val ? serverTimeStamp : null
+        doneAt: val ? serverTimeStamp : null,
+        doneByUid: val ? authStore.currentUser!.uid : ''
       })
     )
+  }
+
+  get assignToName(): string {
+    const assignedMember = this.members.find((member) => {
+      return member.uid === this.todo.assignToUid
+    })
+    return assignedMember ? assignedMember.name : ''
   }
 
   startEdit(): void {

@@ -1,10 +1,10 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { db } from '@/plugins/firebase'
+import { db, serverTimeStamp } from '@/plugins/firebase'
 import { authStore } from '@/store'
 import { Todo } from '@/models/todo'
-const todosRef = db.collection('todos')
 
 let unsubscribe: Function | null = null
+let todosRef: firebase.firestore.CollectionReference | null = null
 
 @Module({
   namespaced: true,
@@ -80,17 +80,23 @@ export default class TodosModule extends VuexModule {
   @Action
   addTodo(todo: Todo): void {
     todo.priority = this.maxPriority + 1
-    todosRef.add(todo.data())
+    todo.createdAt = serverTimeStamp
+    todo.createdByUid = authStore.currentUser!.uid
+    todo.updatedAt = serverTimeStamp
+    todo.updatedByUid = authStore.currentUser!.uid
+    todosRef!.add(todo.data())
   }
 
   @Action
   deleteTodo(todo: Todo): void {
-    todosRef.doc(todo.id).delete()
+    todosRef!.doc(todo.id).delete()
   }
 
   @Action
   updateTodo(todo: Todo): void {
-    todosRef.doc(todo.id).update(todo.data())
+    todo.updatedAt = serverTimeStamp
+    todo.updatedByUid = authStore.currentUser!.uid
+    todosRef!.doc(todo.id).update(todo.data())
   }
 
   @Action
@@ -128,9 +134,8 @@ export default class TodosModule extends VuexModule {
     if (typeof(unsubscribe) === 'function') {
       unsubscribe()
     }
+    todosRef = db.collection('projects').doc(projectId).collection('todos')
     unsubscribe = todosRef
-      .where('uid', '==', authStore.currentUser!.uid)
-      .where('projectId', '==', projectId)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {

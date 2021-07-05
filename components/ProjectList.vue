@@ -2,20 +2,19 @@
   v-container.pa-0
     project-post-dialog(v-model="isShowPostDialog")
     draggable(
-      :list="projects"
+      v-model="projectIds"
       :delay="50"
-      @end="draggableEnd($event)"
     )
       v-list-item.cursor-pointer(
-        v-for="project in projects"
-        :key="project.id"
-        @click="$router.push(`/projects/${project.id}`)"
-        :class="project.id === selectedProjectId ? 'grey lighten-3' : ''"
+        v-for="projectId in projectIds"
+        :key="projectId"
+        @click="onClickProject(projectId)"
+        :class="projectId === selectedProjectId ? 'grey lighten-3' : ''"
         v-ripple
       )
         v-list-item-icon.mr-1
         v-list-item-content
-          v-list-item-title {{ project.title }}
+          v-list-item-title {{ getProjectById(projectId).title }}
     v-list-item.cursor-pointer(
       @click="isShowPostDialog = true"
       v-ripple
@@ -29,7 +28,7 @@
 import { Vue, Component } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
 import ProjectPostDialog from '@/components/ProjectPostDialog.vue'
-import { projectsStore } from '@/store'
+import { projectsStore, currentUserStore } from '@/store'
 import { Project } from '@/models/project'
 
 @Component({
@@ -45,6 +44,14 @@ export default class ProjectList extends Vue {
     return projectsStore.projects
   }
 
+  get projectIds(): string[] {
+    return currentUserStore.currentUser.projectIds
+  }
+
+  set projectIds(newVal) {
+    currentUserStore.updateProjctIds(newVal)
+  }
+
   get selectedProjectId(): string {
     return projectsStore.selectedProjectId
   }
@@ -53,8 +60,16 @@ export default class ProjectList extends Vue {
     projectsStore.bindProjects()
   }
 
-  draggableEnd({ oldIndex, newIndex }): void {
-    projectsStore.moveProject({ oldIndex, newIndex })
+  getProjectById(projectId): Project {
+    const matchedProject = this.projects.find((project) => {
+      return project.id === projectId
+    })
+    return matchedProject || new Project({})
+  }
+
+  onClickProject(projectId): void {
+    this.$emit('onClickProject')
+    this.$router.push(`/projects/${projectId}`)
   }
 }
 </script>

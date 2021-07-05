@@ -5,7 +5,7 @@
   )
     v-list
       v-subheader PROJECTS
-      project-list
+      project-list(@onClickProject="isOpened = false")
       v-divider
       v-subheader OTHERS
       v-list-item(@click="signOut()")
@@ -29,7 +29,7 @@ import ProjectList from '@/components/ProjectList.vue'
 export default class TheSideNav extends Vue {
   @Prop({ default: false }) readonly value: boolean
 
-  get isOpened() {
+  get isOpened(): boolean {
     return this.value
   }
 

@@ -1,7 +1,12 @@
 export interface IProjectData {
-  uid: string
+  createdAt: firebase.firestore.FieldValue | null
+  createdByUid: string
+  updatedAt: firebase.firestore.FieldValue | null
+  updatedByUid: string
   title: string
-  priority: number
+  members: string[]
+  isShared: boolean
+  invitationCode: string
 }
 
 export interface IProject extends IProjectData {
@@ -10,28 +15,53 @@ export interface IProject extends IProjectData {
 
 export class Project implements IProject {
   id: string
-  uid: string
+  createdAt: firebase.firestore.FieldValue | null
+  createdByUid: string
+  updatedAt: firebase.firestore.FieldValue | null
+  updatedByUid: string
   title: string
-  priority: number
-  
+  members: string[]
+  isShared: boolean
+  invitationCode: string
+
   constructor({
     id = '',
-    uid = '',
+    createdAt = null,
+    createdByUid = '',
+    updatedAt = null,
+    updatedByUid = '',
     title = '',
-    priority = 1
+    members = [],
+    isShared = false,
+    invitationCode = ''
   }: Partial<IProject>) {
-    Object.assign(this, {id, uid, title, priority})
+    Object.assign(this,{
+      id,
+      createdAt,
+      createdByUid,
+      updatedAt,
+      updatedByUid,
+      title,
+      members,
+      isShared,
+      invitationCode
+    })
   }
   
   data(): IProjectData {
     return {
-      uid: this.uid,
+      createdAt: this.createdAt,
+      createdByUid: this.createdByUid,
+      updatedAt: this.updatedAt,
+      updatedByUid: this.updatedByUid,
       title: this.title,
-      priority: this.priority
+      members: this.members.slice(),
+      isShared: this.isShared,
+      invitationCode: this.invitationCode
     }
   }
 
   isValid(): boolean {
-    return !!this.title && !!this.uid
+    return !!this.title && this.members != []
   }
 }

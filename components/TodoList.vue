@@ -11,6 +11,8 @@
         :todo="newTodo"
         :setEdittingTodoId="setEdittingTodoId"
         :onAddTodo="onAddTodo"
+        :members="members"
+        :isShared="isShared"
       )
     draggable(
       :list="todos"
@@ -24,13 +26,15 @@
         :todo="todo"
         :setEdittingTodoId="setEdittingTodoId"
         :onClickDelete="setDeleteTodoDialog"
+        :members="members"
+        :isShared="isShared"
       )
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import draggable from 'vuedraggable'
-import { todosStore, authStore, projectsStore } from '@/store'
+import { todosStore, projectsStore } from '@/store'
 import { Todo } from '@/models/todo'
 import TodoListItemShow from '@/components/TodoListItemShow.vue'
 import TodoListItemEdit from '@/components/TodoListItemEdit.vue'
@@ -47,16 +51,15 @@ import DeleteDialog from '@/components/DeleteDialog.vue'
 export default class TodoList extends Vue {
   @Prop() readonly projectId: string
 
+  @Prop() readonly members: Array<{ uid: string; name: string }>
+
   isOpenedDeleteDialog: boolean = false
 
   todoToDelete: Todo | null = null
 
   edittingTodoId: string | null = null
 
-  newTodo: Todo = new Todo({
-    uid: authStore.currentUser!.uid,
-    projectId: this.selectedProjectId
-  })
+  newTodo: Todo = new Todo({})
 
   get todos(): Todo[] {
     return todosStore.todos
@@ -64,6 +67,10 @@ export default class TodoList extends Vue {
 
   get selectedProjectId(): string {
     return projectsStore.selectedProjectId
+  }
+
+  get isShared(): boolean {
+    return projectsStore.selectedProject.isShared
   }
 
   draggableEnd({ oldIndex, newIndex }): void {
@@ -92,10 +99,7 @@ export default class TodoList extends Vue {
   }
 
   onAddTodo(): void {
-    this.newTodo = new Todo({
-      uid: authStore.currentUser!.uid,
-      projectId: this.selectedProjectId
-    })
+    this.newTodo = new Todo({})
   }
 }
 </script>

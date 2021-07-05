@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { db } from '@/plugins/firebase'
+import { db, functions, serverTimeStamp } from '@/plugins/firebase'
 import { authStore } from '@/store'
 import { Project } from '@/models/project'
 const projectsRef = db.collection('projects')
@@ -23,10 +23,6 @@ export default class ProjectsModule extends VuexModule {
     return selectedProject ? selectedProject : new Project({})
   }
 
-  get maxPriority(): number {
-    return Math.max(0, ...this.innerProjects.map(x => x.priority))
-  }
-
   @Mutation
   private SET_SELECTED_PROJECT_ID(id: string): void {
     this.selectedProjectId = id
@@ -48,13 +44,6 @@ export default class ProjectsModule extends VuexModule {
     this.innerProjects.splice(updatedprojectIndex, 1, project)
   }
 
-  @Mutation
-  private SORT_PROJECTS(): void {
-    this.innerProjects = [
-      ...this.innerProjects.sort((a, b) => b.priority - a.priority)
-    ]
-  }
-
   @Action
   setSelectedProjectId(id: string): void {
     this.SET_SELECTED_PROJECT_ID(id)
@@ -62,46 +51,20 @@ export default class ProjectsModule extends VuexModule {
 
   @Action
   addProject(project: Project): Promise<firebase.firestore.DocumentReference> {
-    project.priority = this.maxPriority + 1
     return projectsRef.add(project.data())
   }
 
   @Action
-  deleteProject(project: Project): void {
-    projectsRef.doc(project.id).delete().then(() => {
-      db.collection('todos')
-        .where('uid', '==', project.uid)
-        .where('projectId', '==', project.id)
-        .get().then((snapshot) => {
-          snapshot.forEach((doc) => {
-            doc.ref.delete()
-          })
-        })
-    })
+  async deleteProject(project: Project): Promise<void> {
+    const deleteProject = functions.httpsCallable('deleteProject')
+    await deleteProject(project.id)
   }
 
   @Action
   updateProject(project: Project): void {
+    project.updatedAt = serverTimeStamp
+    project.updatedByUid = authStore.currentUser!.uid
     projectsRef.doc(project.id).update(project.data())
-  }
-
-  @Action
-  moveProject({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }): void {
-    let newPriority: number = 0
-    if (newIndex === 0) {
-      newPriority = this.maxPriority + 1
-    } else if (newIndex === this.innerProjects.length - 1) {
-      newPriority = this.innerProjects[this.innerProjects.length - 1].priority * 0.9
-    } else {
-      const prevIndex = newIndex > oldIndex ? newIndex + 1 : newIndex
-      const prevPriority = this.innerProjects[prevIndex - 1].priority
-      const nextPriority = this.innerProjects[prevIndex].priority
-      newPriority = (prevPriority + nextPriority) / 2
-    }
-    this.updateProject(new Project({
-      ...this.innerProjects[oldIndex],
-      priority: newPriority
-    }))
   }
 
   @Action
@@ -115,7 +78,7 @@ export default class ProjectsModule extends VuexModule {
       )
     }
     projectsRef
-      .where('uid', '==', authStore.currentUser!.uid)
+      .where('members', "array-contains" , authStore.currentUser!.uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
@@ -126,7 +89,6 @@ export default class ProjectsModule extends VuexModule {
             this.REMOVE_PROJECT(mapDoc2Project(change.doc))
           }
         })
-        this.SORT_PROJECTS()
       })
   }
 }
